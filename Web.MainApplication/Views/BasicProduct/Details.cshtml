@@ -1,0 +1,70 @@
+﻿@model Repository.Application.DataModel.BasicProduct
+
+@{
+    ViewBag.Title = "Basic Product Details";
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <h1 class="box-title"><b>@ViewBag.Title</b></h1>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Basic Product Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BasicProductId)
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.Label("BP Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BasicProductName)
+                </div>
+            </div>
+
+
+            <div class="row">
+                @Html.Label("BP Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BasicProductDesc)
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.Label("Currency Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.CurrencyId)
+                </div>
+            </div>
+
+
+            <div class="row">
+                @Html.Label("FCL", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.FclId)
+                </div>
+            </div>
+
+
+            <div class="row">
+                @Html.Label("Refund", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RefundId)
+                </div>
+            </div>
+
+
+            <div class="box-footer">
+                <div class="form-actions color">
+                    <a href="/BasicProduct" class="btn btn-default">Back</a>
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.BasicProductId }, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

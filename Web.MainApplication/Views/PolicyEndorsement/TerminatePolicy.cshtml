@@ -1,0 +1,164 @@
+﻿@model Repository.Application.DataModel.Policy
+
+<div>
+    <h4>Policy</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PolicyNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PolicyNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EntryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EntryDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MatureDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MatureDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEndorseDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEndorseDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndorseNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndorseNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExitDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExitDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TerminateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TerminateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IssueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IssueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentFrequency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentFrequency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OpenOrClose)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OpenOrClose)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Agent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PolicyStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PolicyStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.Type)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PolicyId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

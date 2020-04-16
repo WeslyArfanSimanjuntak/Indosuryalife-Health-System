@@ -1,0 +1,44 @@
+﻿@model Repository.Application.DataModel.AspNetGroupUser
+@{
+    ViewBag.Title = "Delete";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+}
+
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Group Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.AspNetGroups.GroupDescription)
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("FullName", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.AspNetUsers.FullName)
+                </div>
+            </div><br />
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                  <div class="form-actions no-color">
+                      @Html.Hidden("groupName", Model.GroupName)
+                      @Html.Hidden("username", Model.Username)
+
+                      @*@Html.ActionLink("Back", "Index", null, new { @Class = "btn btn-default" })*@
+                      <input type="submit" value="Delete" class="btn btn-primary" style = "background-color:#008CBA; color:white;" data-toggle="modal" data-target="#deleted"/>
+
+                  </div>
+            }
+        </div>

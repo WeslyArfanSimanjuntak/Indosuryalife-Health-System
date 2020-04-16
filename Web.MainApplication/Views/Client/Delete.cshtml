@@ -1,0 +1,230 @@
+﻿@model Repository.Application.DataModel.Client
+
+@{
+    ViewBag.Title = "Delete Client Personal";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+
+}
+
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+            @*<h3><b>Are you sure you want to delete this?</b></h3>*@
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Type)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Contact Person", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ContactPerson)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Client Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        @Html.DisplayFor(model => model.PrefixClientTitle)
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DisplayFor(model => model.FullName)
+                    </div>
+                    <div class="col-md-1">
+                        @Html.DisplayFor(model => model.EndfixClientTitle)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Email)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Short Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ShortName)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.EmailAddress1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EmailAddress1)
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Birth Place", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BirthPlace)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.EmailAddress2, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EmailAddress2)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Birth Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Mobile Phone", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MobilePhone1)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("ID Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.IdNumber)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.MObilePhone2, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MObilePhone2)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Material Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MaritalStatus)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.MobilePhone3, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MobilePhone3)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Sex", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Sex)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Relate To", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RelateTo)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Client Relation", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClientRelation)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("ID Bank", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountCode)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Address", htmlAttributes: new { @class = "control-label col-md-2"})
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Address )
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Bank Account Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Bank Account Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountNumber)
+                    </div>
+                </div>
+            </div><br />
+
+
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <div class="box-footer">
+                        <div class="form-group">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleted" style="background-color:#008CBA; color:white;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="deleted" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            @*<div class="modal-header">
+                                <h5 class="modal-title">Delete Client</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>*@
+                            <div class="modal-body">
+                                <p><b>Are you sure to delete this client?</b></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                @*<button type="button" class="btn btn-primary">Delete</button>*@
+                                <input type="submit" value="Delete" class="btn btn-default" style="background-color:#008CBA; color:white;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

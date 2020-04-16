@@ -1,0 +1,43 @@
+﻿@model Repository.Application.DataModel.Benefit
+
+@{
+    ViewBag.Title = "Benefit Details";
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <h1 class="box-title"><b>@ViewBag.Title</b></h1>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Benefit Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BenefitCode)
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.Label("Benefit Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BenefitName)
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.Label("Is Active", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.IsActive)
+                </div>
+            </div>
+
+            <div class="box-footer">
+                @Html.ActionLink("Back", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+                @Html.ActionLink("Edit", "Edit", new { id = Model.BenefitCode }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

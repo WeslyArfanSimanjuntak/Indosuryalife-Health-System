@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Benefit>
+
+@{
+    ViewBag.Title = "Benefit";
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered table-striped dataTable no-footer" id="benefitTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BenefitCode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BenefitName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BenefitDesc)
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BenefitCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BenefitName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BenefitDesc)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.BenefitCode }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.BenefitCode }) 
+                            @*@Html.ActionLink("Delete", "Delete", new { id = item.BenefitCode })*@
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    (function ($) {
+
+        $('#benefitTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+</script>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Member>
+@{
+    Layout = null;
+    var endorsement = (Repository.Application.DataModel.Endorsement)ViewBag.Endorsement;
+}
+<table class="table table-bordered table-striped" id="TableLoadMember">
+    <thead>
+        <tr>
+            <th id="idNoHeader">
+                No
+            </th>
+            <th>
+                Select
+                @Html.CheckBox("selectAllMember")
+            </th>
+            @{
+                if (endorsement.EndorseType == EndorseType.Renewal)
+                {
+                    <th>
+                        Print N.Card
+                    </th>
+                }
+            }
+            <th>
+                Member Number
+            </th>
+            <th>
+                Member Name
+            </th>
+            <th>
+                Relate To - Relation
+            </th>
+
+
+            <th>Plan</th>
+            <th>Product Limit</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{ int counter = 0;}
+        @foreach (var item in Model.OrderBy(x => x.Client.FullName))
+        {
+
+            <tr>
+                @{
+                    counter++;
+                }
+
+                <td>@counter</td>
+                <td>
+                    @Html.CheckBox(item.MemberId.ToString(), false, new { @class = "memberCheckboxSelect" })
+                </td>
+                @{
+                    if (endorsement.EndorseType == EndorseType.Renewal)
+                    {
+                        <td>
+                            @Html.CheckBox("PrintNewCard_" + item.MemberId.ToString())
+                        </td>
+                    }
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.FullName)
+                </td>
+                <td>
+                    @(item.Client.Client3 != null ? item.Client.Client3?.FullName + " - " + @item.Client.ClientRelation : "")
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlanId)
+                </td>
+                @{
+                    var planDetail = string.Empty;
+                    foreach (var memberPlan in item.MemberPlan)
+                    {
+                        planDetail = planDetail + memberPlan.BasicProductLimitCode + "  ";
+                    }
+                }
+                <td> @planDetail</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<script>
+
+    $(document).ready(function () {
+        $("#selectAllMember").on('click', function () {
+            $(".memberCheckboxSelect").prop('checked', $(this).prop('checked'));
+        });
+    });
+    function adjustTable() {
+        $('#TableLoadMember').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': -1,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true,
+
+        }).draw();
+    }
+
+</script>

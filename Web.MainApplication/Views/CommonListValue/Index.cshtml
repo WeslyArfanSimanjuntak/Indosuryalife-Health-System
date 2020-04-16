@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Repository.Application.DataModel.CommonListValue>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="box box-solid">
+
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b>Common List Value</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", "CommonListValue", null, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="userTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Value)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Text)
+                    </th>
+                    <th>Parent</th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Desc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Value)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Text)
+                            @*@Html.ActionLink("Details", "Details", new { id = item.Id })*@
+                            @*@Html.ActionLink(item.Text == null ? "Details" : item.Text, "Details", new { id = item.Id })*@
+                        </td>
+                        <td>
+                            @(item.CommonListValue2 != null ? item.CommonListValue2.Value + " - " + item.Text : "")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Desc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    (function ($) {
+            
+        
+        $('#userTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+    window.setTimeout(function () {
+        // This will execute 5 seconds later
+        var label = document.getElementById('messageContainer');
+        if (label != null) {
+            label.style.display = 'none';
+        }
+    }, 5000);
+</script>
+
+@*<script type="text/javascript">
+    
+</script>*@

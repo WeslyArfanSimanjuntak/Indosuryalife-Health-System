@@ -1,0 +1,149 @@
+﻿@model Repository.Application.DataModel.AspNetRoles
+
+@{
+    ViewBag.Title = "Create";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            Create - Roles
+        </h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParentId, "ParentId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("ParentId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ParentId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control",@required="required" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Type", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("IsActive", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @Html.Hidden("AddFunction")
+            <div class="form-group" id="RolesFunction">
+                <label class="control-label col-md-2">Include Functions</label>
+
+                <div class="checkbox col-sm-10">
+                    <label>
+                        <input type="checkbox" name="Name" value="Index"> Index
+                    </label>
+                </div>
+
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="Name" value="Create"> Create
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="Name" value="Details"> Details
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="Name" value="Edit"> Edit
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="Name" value="Delete"> Delete
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        }
+        <div class="box-footer">
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var arrayAddFunction = [];
+        //$("#RolesFunction").hide();
+
+        $("#ParentId").on("change", function () {
+            var ParentId = $("#ParentId").val();
+            if (!(ParentId !== null && ParentId !== "")) {
+                $("#RolesFunction").show();
+            }
+            else {
+                $("#RolesFunction").hide();
+                $('input[type="checkbox"]').prop("checked", false);
+                arrayAddFunction = [];
+            }
+        });
+        $("#ParentId").change();
+        $('input[type="checkbox"]').click(function () {
+            $(this).each(function () {
+                if ($(this).is(":checked")) {
+                    arrayAddFunction.push($(this).val());
+                }
+                else if (!$(this).is(':checked')) {
+                    for (var i = 0; i < arrayAddFunction.length; i++) {
+                        if (arrayAddFunction[i] == $(this).val()) {
+                            arrayAddFunction.splice(i, 1);
+                            
+                        }
+                    }
+                }
+                console.log(arrayAddFunction);
+            });
+        });
+
+        $("form").submit(function (event) {
+            
+            $("#AddFunction").val(arrayAddFunction.toString());
+            console.log($("#AddFunction").val());
+        });
+        
+    });
+</script>

@@ -1,0 +1,501 @@
+﻿@model Repository.Application.DataModel.Policy
+
+
+<style>
+    dt {
+        text-align: left;
+    }
+
+
+
+    /* Modal Content */
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 0;
+        /*border: 1px solid #888;*/
+        width: 80%;
+        /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);*/
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s
+    }
+
+    /* The Close Button */
+    /*.close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }*/
+
+    /*.close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }*/
+
+    /*.modal-header {
+        padding: 2px 16px;
+        background-color: #605ca8;
+        color: white;
+    }*/
+
+    /*.modal-body {
+        padding: 2px 16px;
+    }*/
+
+    /*.modal-footer {
+        padding: 2px 16px;
+        background-color: #605ca8;
+        color: white;
+    }*/
+</style>
+@{
+    ViewBag.Title = "Policy Details";
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PolicyNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Policy Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Client.FullName)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4" id="openOrClose">
+                        @(Model.OpenOrClose == "1" ? "Open" : "Close")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.TerminateDate.HasValue ? Model.TerminateDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div id="matureDate" class="col-md-4">
+                        @(Model.MatureDate.HasValue ? Model.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Last Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.LastEndorseDate.HasValue ? Model.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PaymentFrequency)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Agent", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Agent)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @{
+            if (string.IsNullOrEmpty(Model.PolicyNumber))
+            {
+                <div class="box-footer">
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.PolicyId }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+                </div>
+            }
+        }
+    </div>
+</div>
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li @((((string)ViewBag.Tab) == "plan" || ((string)ViewBag.Tab) == "") ? "class=active" : "" )><a href="#tab_1" data-toggle="tab">Plan</a></li>
+                <li @(((string)ViewBag.Tab) == "member" ? "class=active" : "" )><a href="#tab_2" data-toggle="tab">Member</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane @((((string)ViewBag.Tab) == "plan" || ((string)ViewBag.Tab) == "") ? "active" : "" )" id="tab_1">
+                    @{
+                        //if (string.IsNullOrEmpty(Model.PolicyNumber))
+                        //{
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                @Html.ActionLink("Create Plan", "Create", "Plan", new { policyId = Model.PolicyId }, htmlAttributes: new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+                            </h3>
+                        </div>
+                        //}
+                    }
+
+
+                    <div class="box-body">
+                        <table class="table table-bordered table-striped" id="PlanTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Plan Id
+                                    </th>
+                                    <th>
+                                        Plan Name
+                                    </th>
+                                    <th>
+                                        Product Limit
+                                    </th>
+                                    <th>
+                                        Start Date
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.Plan)
+                                {
+                                    <tr>
+                                        <td id="plant_@item.PlanId.Replace(' ','_')">
+                                            @item.PlanId
+                                        </td>
+                                        <td>
+                                            @item.PlanName
+                                        </td>
+                                        <td>
+                                            @{
+                                                string productLimit = "";
+                                                foreach (var itemPL in item.Policy.PlanDetail.Where(X => X.PlanId == item.PlanId))
+                                                {
+
+                                                    productLimit = productLimit + itemPL.BasicProductLimitCode + " ";
+                                                }
+                                            }
+                                            @productLimit
+                                        </td>
+                                        <td>
+                                            @(item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                                        </td>
+
+                                        @{
+                                            bool canBeDeleted = true;
+                                            if (item.Policy.MemberPlan.Where(x => x.PlanId == item.PlanId).FirstOrDefault() != null)
+                                            {
+                                                canBeDeleted = false;
+                                            }
+                                            if (item.Policy.MemberPlan_Endorse.Where(x => x.PlanId == item.PlanId).FirstOrDefault() != null)
+                                            {
+                                                canBeDeleted = false;
+                                            }
+
+                                            if (canBeDeleted)
+                                            {
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", "Plan", new { id = item.PlanId, policyId = item.PolicyId }, htmlAttributes: new { }) |
+                                                    @*@Html.ActionLink("Delete", "Delete", "Plan", new { planId = item.PlanId, policyId = item.PolicyId, layoutIsNull = true }, htmlAttributes: new { style = "cursor: pointer;", data_toggle = "modal", data_target = "#deleted" })*@
+                                                    @Ajax.ActionLink("Delete", "Delete", "Plan", new { planId = item.PlanId, policyId = item.PolicyId, layoutIsNull = true }, new AjaxOptions() {
+                                                       OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                                       OnSuccess = "HideSpinner();",
+                                                       LoadingElementDuration = 3000,
+                                                       OnComplete = "$('#myModalTemporary').modal('show');",
+                                                       UpdateTargetId = "myModalTemporaryContent",
+                                                       HttpMethod = "GET",
+                                                       InsertionMode = InsertionMode.Replace
+                                                   })
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", "Plan", new { id = item.PlanId, policyId = item.PolicyId }, htmlAttributes: new { })
+                                                </td>
+
+                                            }
+                                        }
+
+
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal" id="deleted" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.tab-pane -->
+                <div class="tab-pane @(((string)ViewBag.Tab) =="member" ?"active":"" )" id="tab_2">
+                    <div class="box-header with-border">
+                        @{
+                            if (string.IsNullOrEmpty(Model.PolicyNumber))
+                            {
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.ActionLink("Create", "Create", "Member", new { policyId = Model.PolicyId }, htmlAttributes: new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+                                        <button class="btn btn-primary" data-target="#upload" data-toggle="modal" style="background-color:#008CBA; color:white;">Upload</button>
+                                        @Ajax.ActionLink("Delete All", "DeleteAllMember", new { policyId = Model.PolicyId, DeleteAllMember = "true" }, Html.AjaxOptionsDefault(), new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+                                    </div>
+                                    <div class="col-md-8 text-right">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="h4">Total Premium</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="CalculationResult" class="form-control money-format4" readonly="readonly" name="calculate">
+                                            </div>
+                                            <div class="col-md-1">
+                                                @Ajax.ActionLink("Calculate", "Details", new { id = Model.PolicyId},new AjaxOptions() {
+                                               //Confirm = "baluhap",
+                                               HttpMethod = "GET",
+                                               OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                               OnSuccess = "HideSpinner();",
+                                               OnComplete = "$('#myModalTemporary').modal('show');$('#CalculationResult').val($('#ddSumOfPremiDemanded').text());$('#ddSumOfPremi').number(true, 4);$('#ddSumOfPremiDemanded').number(true, 4);",
+                                               UpdateTargetId = "myModalTemporaryContent",
+                                               InsertionMode = InsertionMode.Replace
+
+                                           },new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    @using (Html.BeginForm("Upload", "Member", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary()
+                                        <div class="modal" id="upload" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                @Html.Hidden("PolicyId", Model.PolicyId)
+                                                <div class="box-body">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <label>Upload Member</label><br />
+                                                            *Sesuaikan form dengan
+                                                            @*<a href='~/Templatexls/coba.xlsx' target="_blank">Mendownload Template</a>*@
+                                                            <a href="~/Templatexls/Template Form Movement AsKes Penambahan Peserta.xls">mendownload template</a>
+                                                            terlebih dahulu
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" enctype="multipart/form-data">
+                                                                <div>
+                                                                    <input name="file" type="file" id="dataFile" accept=".xlsx" required />
+                                                                    <hr>
+                                                                    <button type="submit" class="btn btn-primary" style="background-color:#008CBA; color:white; width:20%" value="Upload">Upload</button>
+                                                                    <button type="button" class="btn btn-default" style="width:20% ; float:right" data-dismiss="modal">cancel</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                            }
+                        }
+                        <div class="text-right">
+                        </div>
+
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-bordered table-striped" id="MemberTable">
+                            <thead>
+                                <tr>
+                                    <th>Member Id</th>
+                                    <th>Member Number</th>
+                                    <th>Member Name</th>
+                                    <th>Seq</th>
+                                    <th>Relate To - Relation</th>
+                                    <th>Start Date</th>
+                                    <th>Mature Date</th>
+                                    <th>Card Number</th>
+                                    <th>Plan</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Member)
+                                {
+                                    <tr>
+                                        <td id="details@(item.MemberId)">
+                                            @item.MemberId
+                                        </td>
+                                        <td>
+                                            @item.MemberNumber
+                                        </td>
+                                        <td>
+                                            @Ajax.ActionLink(item.ClientId+" - "+item.Client.FullName, "Details","Client", new {id  = item.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                                                OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                                OnSuccess = "HideSpinner();",
+                                                LoadingElementDuration = 3000,
+                                                OnComplete = "$('#myModalTemporary').modal('show');",
+                                                UpdateTargetId = "myModalTemporaryContent",
+                                                HttpMethod = "GET",
+                                                InsertionMode = InsertionMode.Replace
+                                           })
+                                        </td>
+                                        <td>
+                                            @item.SequencialNo
+                                        </td>
+                                        <td>@(item.Client.Client3?.FullName) - @item.Client.ClientRelation</td>
+                                        <td>
+                                            @(item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                                        </td>
+                                        <td>
+                                            @(item.EndDate.HasValue ? item.EndDate.Value.ToString("dd/MM/yyyy") : "-")
+                                        </td>
+                                        <td>
+                                            @item.CardNumber
+                                        </td>
+                                        @{ var planDetail = "";
+                                            foreach (var memberPlan in item.MemberPlan.OrderBy(x => x.BasicProductLimitCode))
+                                            {
+                                                planDetail = planDetail + memberPlan.BasicProductLimitCode + " ";
+                                            }
+
+                                        }
+                                        <td>@item.PlanId - @planDetail</td>
+                                        <td>
+                                            @item.MemberStatus
+                                        </td>
+                                        @{
+                                            if (item.Policy.PolicyNumber == null)
+                                            {
+                                                <td>
+                                                    @Html.ActionLink("Edit", "Edit", "Member", new { id = item.MemberId, PolicyId = Model.PolicyId }, htmlAttributes: new { }) |
+                                                    @Html.ActionLink("Details", "Details", "Member", new { id = item.MemberId }, htmlAttributes: new { })
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", "Member", new { id = item.MemberId }, htmlAttributes: new { })
+                                                </td>
+
+                                            }
+                                        }
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- /.tab-pane -->
+
+            </div>
+            <!-- /.tab-content -->
+        </div>
+
+
+        <div class="form-group">
+            <div>
+                @Html.ActionLink("Back", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#StartDate').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+        $('#MatureDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+    });
+
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+    var planTable = $('#PlanTable').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': 10,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+    });
+    var memberTable = $('#MemberTable').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': 10,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+
+    });
+
+    $("#Calculate").on("click", function () {
+
+        var policyId = '@Model.PolicyId';
+        $("#CalculationResult").val("");
+        AjaxCall(function (output) {
+            $("#CalculationResult").val(output["calculateResult"]);
+            console.log(output);
+                  }, baseUrl + '/Policy/Details/'+policyId+'?type=calculate');
+    });
+</script>

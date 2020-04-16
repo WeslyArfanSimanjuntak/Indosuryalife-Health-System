@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Insurance.Bancassurance.DataModel.ASPNETROLESUSERS>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">Index</h3>
+
+        <p>
+            @Html.ActionLink("Create New", "AspNetRolesUsersCreate")
+        </p>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+
+
+
+        <table id="tableRolesUsers" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ASPNETUSERS.USERNAME)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ASPNETUSERS.EMAIL)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ASPNETROLES.NAME)
+                    </th>
+                    <th>
+                        PATH
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ASPNETUSERS.USERNAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ASPNETUSERS.EMAIL)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ASPNETROLES.NAME)
+                        </td>
+                        <td>
+
+                            @(item.ASPNETROLES.ASPNETROLES2 != null ? item.ASPNETROLES.ASPNETROLES2.NAME + " - " : "")
+
+                            @item.ASPNETROLES.NAME
+
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "AspNetRolesUsersEdit", new { id = item.ID }) |
+                            @Html.ActionLink("Details", "AspNetRolesUsersDetails", new { id = item.ID }) |
+                            @Html.ActionLink("Delete", "AspNetRolesUsersDelete", new { id = item.ID })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+﻿@model Repository.Application.DataModel.Plan
+
+@{
+    ViewBag.Title = "Delete Plan";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Plan Name", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.PlanName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Plan Desc", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.PlanDesc)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6" id="#StartDate">
+                        @Html.DisplayFor(model => model.StartDate)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                    </div>
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleted" style="background-color:#008CBA; color:white;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="deleted" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p><b>Are you sure to delete this client?</b></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" value="Delete" class="btn btn-default" style="background-color:#008CBA; color:white;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $('#StartDate').datetimepicker({
+            format: 'DD/MM/YYYY',
+        });
+        $('#MatureDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+    });
+    $('#btn-close-modal').click(function () {
+        $('#deleted').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    });
+</script>

@@ -1,0 +1,395 @@
+﻿@{
+    /**/
+
+    string baseUrl = Html.ViewContext.RequestContext.HttpContext.Request.Url.Scheme + "://" + Html.ViewContext.RequestContext.HttpContext.Request.Url.Authority;
+    string entityApiUrl = baseUrl + "/EntityApi/GetData";
+
+    string currentController = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    string currentAction = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var listNavigationBack = new Dictionary<int, string>();
+    if (Session["NavigationBack" + Web.MainApplication.Resources.SystemResources.ApplicationName] != null)
+    {
+        listNavigationBack = (Dictionary<int, string>)Session["NavigationBack" + Web.MainApplication.Resources.SystemResources.ApplicationName];
+    }
+    bool byNavigationBack = false;
+    byNavigationBack = Session["ByNavigationBack"] != null ? (bool)Session["ByNavigationBack"] : false;
+    Session["ByNavigationBack"] = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@Web.MainApplication.Resources.SystemResources.CompanyName</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    @Styles.Render("~/Content/adminlte/bower_components/bootstrap/dist/css/bootstrap.min.css")
+    <!-- Font Awesome -->
+    @Styles.Render("~/Content/adminlte/bower_components/font-awesome/css/font-awesome.min.css")
+    <!-- Ionicons -->
+    @Styles.Render("~/Content/adminlte/bower_components/Ionicons/css/ionicons.min.css")
+    <!-- Theme style -->
+    @Styles.Render("~/Content/adminlte/dist/css/AdminLTE.min.css")
+
+    <!-- Jquery-ui style -->
+    @Styles.Render("~/Content/adminlte/plugins/jQueryUI/jquery-ui.min.css")
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+             folder instead of downloading all of them to reduce the load. -->
+    @*@Styles.Render("~/Content/adminlte/dist/css/skins/_all-skins.min.css")*@
+    <link href="~/Content/adminlte/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <!-- Data table -->
+    <link rel="stylesheet" href="~/Content/css/dataTables.bootstrap.min.css" />
+    @*DatePicker*@
+    <link rel="stylesheet" href="~/Content/adminlte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+
+    @*Select2*@
+    <link rel="stylesheet" href="~/Content/adminlte/bower_components/select2/dist/css/select2.min.css" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link rel="stylesheet" href="~/Content/css/googlefont/fontgoogle.css">
+    <link rel="stylesheet" href="~/Content/css/bootstrap-datetimepicker.min.css">
+    @Scripts.Render("~/Content/adminlte/bower_components/jquery/dist/jquery.min.js")
+    <!-- Bootstrap 3.3.7 -->
+    @Scripts.Render("~/Content/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js")
+    <!-- SlimScroll -->
+    @Scripts.Render("~/Content/adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js")
+    <!-- FastClick -->
+    @Scripts.Render("~/Content/adminlte/bower_components/fastclick/lib/fastclick.js")
+    <!-- AdminLTE App -->
+    @Scripts.Render("~/Content/adminlte/dist/js/adminlte.min.js")
+    <!-- AdminLTE for demo purposes -->
+    @Scripts.Render("~/Content/adminlte/dist/js/demo.js")
+    <!-- Data Table -->
+    <script src="~/Content/adminlte/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="~/Content/adminlte/plugins/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
+    @*<script src="~/Content/adminlte/plugins/datatables/jquery.dataTables.odata-v4.js" type="text/javascript"></script>*@
+    <script src="~/Content/adminlte/plugins/datatables/jquery.dataTables.odata.js" type="text/javascript"></script>
+    <script src="~/Content/adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Content/adminlte/bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+    <script src="~/Content/adminlte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/Content/adminlte/bower_components/moment/moment.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/jQuery.numberOnly.min.js"></script>
+    <script src="~/Scripts/jquery.number.min.js"></script>
+    <script src="~/Content/adminlte/plugins/jqueryValidation/dist/jquery.validate.min.js"></script>
+    @*<script src="~/Content/adminlte/bower_components/jquery-ui/ui/minified/autocomplete.min.js"></script>*@
+    <script src="~/Content/adminlte/plugins/jQueryUI/jquery-ui.min.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/dataTables.buttons.min.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/jszip.min.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/pdfmake.min.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/vfs_fonts.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/buttons.html5.min.js"></script>
+    <script src="~/Content/adminlte/plugins/datatables/extensions/DataGenerator/buttons.flash.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script type="text/javascript">
+        var baseUrl = '@baseUrl';
+        var entityApiUrl = '@entityApiUrl';
+        function AjaxCall(HandleResult, url, type, duration=750) {
+            type = (typeof b !== 'undefined') ? type : "GET";
+            $.ajax({
+                type: type,
+                url: url,
+                beforeSend: function () {
+                    if (duration > 0) {
+                        $('#myModal').modal("show");
+                    }
+                },
+                complete: function () {
+                        setTimeout(function () {
+                            $('#myModal').modal("hide");
+                        }, duration);
+
+                },
+                success: function (data) {
+                    HandleResult(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        function PopItUp(url) {
+            newwindow=window.open(url,'name','height=700,width=900');
+            if (window.focus) {newwindow.focus()}
+            return false;
+        }
+        $(document).ready(function () {
+            $(".money-format").each(function (index) {
+                $(this).number(true, 2);
+            });
+            $(".money-format0").each(function (index) {
+                $(this).number(true, 0);
+            });
+            $(".money-format1").each(function (index) {
+                $(this).number(true, 1);
+            });
+            $(".money-format3").each(function (index) {
+                $(this).number(true, 3);
+            });
+            $(".money-format4").each(function (index) {
+                $(this).number(true, 4);
+            });
+            $("[format='float']").each(function () {
+                $(this).number($(this).text(), 2)
+            })
+        });
+
+        function AmountTonM3Converter(node, from, toId) {
+            @{
+                var tonUnitToM3Unit = 0d;
+                double.TryParse(ViewBag.tonUnitToM3Unit != null ? ViewBag.tonUnitToM3Unit.ToString() : "0", out tonUnitToM3Unit);
+             }
+            var tonUnitToM3Unit = @tonUnitToM3Unit;
+
+            if (from === "ton") {
+                $('#' + toId).val((parseFloat(node.value) * parseFloat(tonUnitToM3Unit)));
+            } else if (from == "m3") {
+                $('#' + toId).val((parseFloat(node.value) / parseFloat(tonUnitToM3Unit)));
+            }
+    }
+    </script>
+    <style>
+        .ui-autocomplete-loading {
+            background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+        }
+    </style>
+    <style>
+
+        .no-pad-left {
+            padding-left: 0 !important;
+        }
+
+
+
+        .no-pad-right {
+            padding-right: 0 !important;
+        }
+        /* Important part */
+        body {
+            padding-right: 0 !important
+        }
+
+        .modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            min-height: calc(100vh - 400px);
+        }
+    </style>
+</head>
+<!-- ADD THE CLASS sidebar-collapse TO HIDE THE SIDEBAR PRIOR TO LOADING THE SITE -->
+<body class="skin-purple-light sidebar-mini wysihtml5-supported">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="@Url.Action("Index", "Policy")" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">@Web.MainApplication.Resources.SystemResources.ApplicationNameShort</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">@Web.MainApplication.Resources.SystemResources.ApplicationName</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </nav>
+        </header>
+        <!-- =============================================== -->
+        <!-- Left side column. contains the sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <ul class="sidebar-menu" data-widget="tree">
+                    @Html.Raw(User.Identity.MenuString())
+                    @* @Html.Partial("_Menu", User.Identity.MenuString())*@
+                </ul>
+
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- =============================================== -->
+        <!-- Content Wrapper. Contains page content -->
+
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header"></section>
+
+
+            <!-- Main content -->
+            <section class="content">
+                @Html.Partial("_MessageToView")
+                @Html.Partial("_LoadingSpinner")
+                <!-- Modal -->
+                <div class="modal fade bd-example-modal-lg" style="overflow:auto !important;" id="myModalTemporary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-lg" role="document">
+
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                            </div>
+                            <div class="modal-body" id="myModalTemporaryContent">
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="form-actions no-color">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modalLgParent">
+
+                </div>
+                @RenderBody()
+                @*@Html.TextBox("back","button",new { @type="button", @onclick= "goBack()",@class= "glyphicon glyphicon-arrow-left" });*@
+                @{
+                    if (listNavigationBack.Count > 0)
+                    {
+                        //   <a href="@Url.Action("NavigationBack", "Home",new { url = listNavigationBack.Last().Value, isButtonClicked = true, navigationBackKey = listNavigationBack.Last().Key })"><i class="fa fa-fw fa-arrow-circle-left"></i></a>
+                        //@Html.ActionLink("Back", "NavigationBack", "Home", new { url = listNavigationBack.Last().Value, isButtonClicked = true, navigationBackKey = listNavigationBack.Last().Key }, null)*@
+                    }
+                }
+            </section>
+            <!-- /.content -->
+        </div>
+
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.4.0
+            </div>
+            <strong> <a href="@Web.MainApplication.Resources.SystemResources.CompanyWebSite">@Web.MainApplication.Resources.SystemResources.CompanyName</a>.</strong> All rights
+            reserved.
+
+        </footer>
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <!-- ./wrapper -->
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var styleValueActiveColor = "color:#00a65a;";
+        $(document).ready(function () {
+            var currentController = '@currentController';
+            var currentAction = '@currentAction';
+            var id = currentController + "_" + currentAction;
+            if ($("#" + id).length) {
+                SetClassParentToMenuOpen(id)
+                $("#" + id).attr("class", "active");
+                $("#" + id).children("a").children("i").first().attr("style", styleValueActiveColor);
+                $("#" + id).children("a").children("span").first().attr("style", styleValueActiveColor);
+            } else {
+                if ($("#" + currentController+"_index").length) {
+                    SetClassParentToMenuOpen(currentController + "_index")
+                    $("#" + currentController + "_index").attr("class", "active");
+                    $("#" + currentController + "_index").children("a").children("i").first().attr("style", styleValueActiveColor);
+                    $("#" + currentController + "_index").children("a").children("span").first().attr("style", styleValueActiveColor);
+                }
+
+            }
+
+
+        });
+        function SetClassParentToMenuOpen(id) {
+            var parentLi = $("#" + id).parent().parent(".treeview");
+            $("#" + id).parent(".treeview-menu").first().attr("style", "display: block;");
+            if (parentLi.length == 1) {
+                parentLi.addClass("active menu-open");
+                parentLi.children("a").children("i").first().attr("style", styleValueActiveColor);
+                parentLi.children("a").children("span").first().attr("style", styleValueActiveColor);
+                SetClassParentToMenuOpen(parentLi[0]["id"]);
+            }
+
+        }
+        function ShowSpinner() {
+            $("#myModal").modal("show");
+        }
+        function HideSpinner() {
+            $("#myModal").modal("hide");
+        }
+        //numeric only
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+            return true;
+        }
+        // merapikan judul kolom pada table
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust().draw();
+        });
+        function goBack() {
+            location.replace(document.referrer);
+            //console.log($.cookie("previousUrl", window.location.href, { path: "/" }));
+            //console.log(window.history);
+            //window.history.back();
+        }
+        $(document).ready(function () {
+
+            if ('@byNavigationBack.ToString().ToLower()'=='false') {
+                AjaxCall(function(output) {
+                    console.log(output);
+
+            }, baseUrl + '/Home/NavigationBack?url=@Request.Url',null,0);
+
+    }
+
+
+        });
+        function formJsonDate(jasonDate, completeDate = false, separator = "/") {
+
+            var year, month, day, hour, minute, d, finalDate;
+			if(jasonDate !== null){
+			str = jasonDate.replace(/\D/g, "");
+            d = new Date(parseInt(str));
+
+            year = d.getFullYear();
+            month = pad(d.getMonth() + 1);
+            day = pad(d.getDate());
+            hour = pad(d.getHours());
+            minute = pad(d.getMinutes());
+                if (completeDate) {
+                    finalDate = year + separator + month + separator + day + " " + hour + ":" + minute;
+            } else {
+                finalDate = day + separator + month + separator + year;
+            }
+			}
+
+
+        return finalDate;
+        }
+        function pad(num) {
+            num = "0" + num;
+            return num.slice(-2);
+        }
+    </script>
+
+</body>
+
+
+</html>

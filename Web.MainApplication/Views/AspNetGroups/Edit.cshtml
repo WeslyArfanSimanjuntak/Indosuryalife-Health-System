@@ -1,0 +1,90 @@
+﻿@model Repository.Application.DataModel.AspNetGroups
+@{
+    var roles = (List<Repository.Application.DataModel.AspNetRoles>)ViewBag.Roles;
+    var dictionaryRoles = new Dictionary<string, string>();
+    roles.ForEach(x =>
+    {
+        dictionaryRoles.Add(x.Id.ToString(), x.AspNetRoles2 != null ? x.AspNetRoles2.Name + " ---- " + x.Name : x.Name);
+    });
+
+}
+<!-- /.box-header -->
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.GroupName)
+
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">
+                Edit Group
+            </b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Group Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.GroupDescription, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.GroupDescription, "", new { @class = "text-danger" })
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Remark", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Is Active", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("IsActive", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Roles", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @{
+                        foreach (var item in dictionaryRoles.OrderBy(x => x.Value))
+                        {
+                            <label>
+                                @Html.CheckBox(item.Key, Model.AspNetRoleGroup.Where(x => x.RolesId.ToString() == item.Key).FirstOrDefault() != null ? true : false)
+                                @{
+                                    if (Model.AspNetRoleGroup.Where(x => x.RolesId.ToString() == item.Key).FirstOrDefault() != null)
+                                    {
+                                        @Html.Label(item.Value, htmlAttributes: new { @style = "color:#00a65a" })
+                                    }
+                                    else
+                                    {
+
+                                        @Html.Label(item.Value, htmlAttributes: new { @style = "color:#dd4b39" })
+                                    }
+                                }
+                            </label>
+                            <br />
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="box-footer">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-4">
+                        @Html.ActionLink("Back", "Index", null, new { @Class = "btn btn-default" })
+                        <input type="submit" value="Save" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+}

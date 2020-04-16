@@ -1,0 +1,200 @@
+﻿@model Repository.Application.DataModel.Client
+
+@{
+    ViewBag.Title = "Details";
+    if (Request.Params["layoutIsNull"] != null && (Convert.ToBoolean(Request.Params["layoutIsNull"])) == true)
+    {
+
+        Layout = null;
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Type)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b>Contact Person</b></div>
+                    <div class="col-md-4">
+                        @*@Html.DisplayFor(model => model.ContactPerson)*@
+                        @*@Html.DisplayFor(model => model.Client2.FullName)*@
+                        @{
+                            if (Model.Client2 != null)
+                            {
+                                @Html.ActionLink(Model.Client2.FullName, "Details", "Client", new { id = Model.Client2.ClientId }, new {target = "_blank" })
+                            }
+                        }
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Client Name</b></div>
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.FullName)
+                    </div>
+                </div>
+                <div>
+                    <div class="col-md-2"><b>Email</b></div>
+                    @*@Html.LabelFor(model => model.EmailAddress1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Email)
+
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Short Name</b></div>
+                    @*@Html.LabelFor(model => model.ShortName, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ShortName)
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.EmailAddress1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EmailAddress1)
+
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Founded Date </b></div>
+                    @*@Html.LabelFor(model => model.BirthDate, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @*@Html.DisplayFor(model => model.BirthDate)*@
+                        @(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.EmailAddress2, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EmailAddress2)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>SIUP Number</b></div>
+                    @*@Html.LabelFor(model => model.IdNumber, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.IdNumber)
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b>Mobile Phone</b></div>
+                    @*@Html.LabelFor(model => model.MobilePhone1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MobilePhone1)
+
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                @*<div>
+                        <div class="col-md-2"><b>Branch Code</b></div>
+                        @Html.LabelFor(model => model.IdNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.BranchCode)
+                        </div>
+                    </div>*@
+                <div>
+                    <div class="col-md-2"><b>ID Bank</b></div>
+                    @*@Html.LabelFor(model => model.BankAccountCode, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountCode)
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.MobilePhone1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MObilePhone2)
+
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Bank Account Name</b></div>
+                    @*@Html.LabelFor(model => model.BankAccountName, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountName)
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b> </b></div>
+                    @*@Html.LabelFor(model => model.MObilePhone2, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MobilePhone3)
+
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Bank Account Number</b></div>
+                    @*@Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.BankAccountNumber)
+                    </div>
+                    <div>
+                        <div class="col-md-2"><b>Address</b></div>
+                        @*@Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Address)
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+
+
+        </div>
+
+        @*<div class="box-footer">
+                @Html.ActionLink("Edit", "Edit", new { @class = "btn btn-default" })
+                <a href="/client" class="btn btn-default">Back</a>
+            </div>*@
+
+        @{ if (Layout != null)
+            {
+                <div class="box-footer">
+                    <div class="form-actions color">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="/client" class="btn btn-default">Back</a>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.ClientId }, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+}

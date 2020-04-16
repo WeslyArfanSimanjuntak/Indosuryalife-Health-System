@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Policy>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Policy Master Endorsement</b>
+        </h3>
+    </div>
+
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="policyMaster">
+            <thead>
+                <tr>
+                    <th>Policy Id</th>
+                    <th>
+                        Policy Number
+                    </th>
+                    <th>
+                        Policy Holder
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        Mature Date
+                    </th>
+                    <th>
+                        Policy Status
+                    </th>
+                    <th>Total Member</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.Where(x => x.PolicyNumber != null))
+                {
+                    <tr>
+                        <td>@item.PolicyId</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PolicyNumber)
+                        </td>
+                        <td>
+                            @Ajax.ActionLink(item.ClientId+" - "+item.Client.FullName, "Details","Client", new {id  = item.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                                            OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                            OnSuccess = "HideSpinner();",
+                                            LoadingElementDuration = 3000,
+                                            OnComplete = "$('#myModalTemporary').modal('show');",
+                                            UpdateTargetId = "myModalTemporaryContent",
+                                            HttpMethod = "GET",
+                                            InsertionMode = InsertionMode.Replace
+                                       })
+                        </td>
+                        <td>
+                            @(item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </td>
+                        <td>
+                            @(item.MatureDate.HasValue ? item.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </td>
+                        <td>
+                            @(item.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+                        </td>
+                        <td>@item.Member.Count()</td>
+                        <td>
+                            @Ajax.ActionLink("Terminate Policy", "Details","Client", new {id  = item.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                                            OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                            OnSuccess = "HideSpinner();",
+                                            LoadingElementDuration = 3000,
+                                            OnComplete = "$('#myModalTemporary').modal('show');",
+                                            UpdateTargetId = "myModalTemporaryContent",
+                                            HttpMethod = "GET",
+                                            InsertionMode = InsertionMode.Replace
+                                       })
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", "Policy", new { id = item.PolicyId }, null)
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script type="text/javascript">
+    (function ($) {
+
+        $('#userTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+        $('#policyMaster').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+    function BeforePopItUp(url) {
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+        var newURL = url + '&startDate=' + startDate + '&endDate=' + endDate;
+        PopItUp(newURL);
+
+
+    }
+</script>

@@ -1,0 +1,218 @@
+﻿@model Repository.Application.DataModel.Member
+@{
+    if ((bool)ViewBag.LayoutIsNull == true)
+    {
+        Layout = null;
+    }
+
+}
+<div>
+    <h4>Member</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MemberNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CardNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CardNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlanId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlanId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequencialNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequencialNo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EntryDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EntryDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEndorseDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEndorseDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndorseNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndorseNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastClaimDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastClaimDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClaimNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClaimNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExitDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExitDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TerminateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TerminateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IssueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IssueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProcessDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProcessDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MemberStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdmedikaCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdmedikaCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Client.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Policy.PolicyNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Policy.PolicyNumber)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MemberId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

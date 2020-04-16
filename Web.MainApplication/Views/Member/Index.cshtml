@@ -1,0 +1,162 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Member>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b>Member List</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create")
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="MemberTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CardNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PlanId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SequencialNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastEndorseDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LastClaimDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExitDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TerminateDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.MemberStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdatedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdatedDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Client.Type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Policy.PolicyNumber)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CardNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PlanId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SequencialNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastEndorseDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastClaimDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ExitDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TerminateDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MemberStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Client.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Policy.PolicyNumber)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.MemberId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.MemberId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.MemberId })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    (function ($) {
+
+        $('#MemberTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+</script>

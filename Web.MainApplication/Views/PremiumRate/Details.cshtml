@@ -1,0 +1,276 @@
+﻿@model Repository.Application.DataModel.PremiumRate
+
+@{
+    /**/
+
+    ViewBag.Title = "Details Premium Rate";
+    var listPremiumRateDetail = (List<Repository.Application.DataModel.PremiumRateDetails>)ViewBag.PremiumRateDetails;
+}
+<div>
+    <div class="box box-solid">
+
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("InsurerId", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.InsurerId)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Schedule Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ScheduleId)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Actuary Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ActuaryId)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Rate Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RateType)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Class Of Risk Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClassOfRiskId)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PaymentDuration)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Coverage Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.CoverageDuration)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PaymentFrequency)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Factor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Factor)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Record Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RecordStatus)
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-footer">
+                <div class="form-actions color">
+                    @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })
+                    @Html.ActionLink("Edit", "Edit", new { RateId = Model.RateId }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Premium Rate Detail</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Ajax.ActionLink("Create New", "Create","PremiumRateDetail", new { rateId  = Model.RateId, layoutIsNull = true }, new AjaxOptions() {
+           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+           OnSuccess = "HideSpinner();",
+           LoadingElementDuration = 3000,
+           OnComplete = "$('#myModalTemporary').modal('show');",
+           UpdateTargetId = "myModalTemporaryContent",
+           HttpMethod = "GET",
+           InsertionMode = InsertionMode.Replace
+       }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped dataTable no-footer" id="PremiumRateDetail">
+            <thead>
+                <tr>
+                    <th>
+                        Payment Duration
+                    </th>
+                    <th>
+                        Coverage Duration
+                    </th>
+                    <th>
+                        Is Adult
+                    </th>
+                    <th>
+                        Sex
+                    </th>
+                    <th>
+                        Is Smoking
+                    </th>
+                    <th>
+                        Range UpMin
+                    </th>
+                    <th>
+                        Range UpMax
+                    </th>
+                    <th>
+                        Range AgeMin
+                    </th>
+                    <th>
+                        Range AgeMax
+                    </th>
+                    <th>
+                        Premium Rate
+                    </th>
+                    <th>
+                        Record Status
+                    </th>
+
+                    <th>
+                        Insurer Id
+                    </th>
+                    <th> Action </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in listPremiumRateDetail)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentDuration)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CoverageDuration)
+                        </td>
+                        <td>
+                            @(item.IsAdult == "Y" ? "Yes" : "No")
+                        </td>
+                        <td>
+                            @(item.Sex == "B" ? "Both" : item.Sex == "M" ? "Male" : "Female")
+                        </td>
+                        <td>
+                            @(item.IsSmoking == "Y" ? "Yes" : "No")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RangeUpMin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RangeUpMax)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RangeAgeMin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RangeAgeMax)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PremiumRate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RecordStatus)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PremiumRate1.InsurerId)
+                        </td>
+                        <td>
+                            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
+                            @*@Html.ActionLink("Delete", "Delete", "PremiumRateDetail", new { id = item.Id, layoutIsNull = true }, htmlAttributes: new { style = "cursor: pointer;", data_toggle = "modal", data_target = "#deleted" })*@
+                            @Ajax.ActionLink("Edit", "Edit", "PremiumRateDetail", new { id = item.Id, layoutIsNull = true }, new AjaxOptions() {
+                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                           OnSuccess = "HideSpinner();",
+                           LoadingElementDuration = 3000,
+                           OnComplete = "$('#myModalTemporary').modal('show');",
+                           UpdateTargetId = "myModalTemporaryContent",
+                           HttpMethod = "GET",
+                           InsertionMode = InsertionMode.Replace
+                       }) |
+                            @Ajax.ActionLink("Details", "Details", "PremiumRateDetail", new { id = item.Id, layoutIsNull = true }, new AjaxOptions() {
+                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                           OnSuccess = "HideSpinner();",
+                           LoadingElementDuration = 3000,
+                           OnComplete = "$('#myModalTemporary').modal('show');",
+                           UpdateTargetId = "myModalTemporaryContent",
+                           HttpMethod = "GET",
+                           InsertionMode = InsertionMode.Replace
+                       }) |
+                            @Ajax.ActionLink("Delete", "Delete","PremiumRateDetail", new { id = item.Id, layoutIsNull = true }, new AjaxOptions() {
+                      OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                      OnSuccess = "HideSpinner();",
+                      LoadingElementDuration = 3000,
+                      OnComplete = "$('#myModalTemporary').modal('show');",
+                      UpdateTargetId = "myModalTemporaryContent",
+                      HttpMethod = "GET",
+                      InsertionMode = InsertionMode.Replace
+                  })
+                        </td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+

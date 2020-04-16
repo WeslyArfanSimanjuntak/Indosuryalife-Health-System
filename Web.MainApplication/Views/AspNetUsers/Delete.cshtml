@@ -1,0 +1,56 @@
+﻿@model Repository.Application.DataModel.AspNetUsers
+@{
+    ViewBag.Title = "Delete Users";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+}
+
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Username", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Username)
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Full Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.FullName)
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Password)
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Email)
+                </div>
+            </div>
+        </div><br />
+
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                @*@Html.ActionLink("Back", "Index", null, new { @Class = "btn btn-default" })*@
+                <input type="submit" value="Delete" class="btn btn-primary" style="background-color:#008CBA; color:white;" data-toggle="modal" data-target="#deleted" />
+            </div>
+        }
+    </div>

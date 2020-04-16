@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1c9d9e8443b747098d2103f591d00a65" Name="Diagram1" ZoomLevel="63">
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetGroups" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetGroupUser" Width="1.5" PointX="3" PointY="0.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetRoleGroup" Width="1.5" PointX="3" PointY="4.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="5.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetUsers" Width="1.5" PointX="0.75" PointY="14.25" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AspSequential" Width="1.5" PointX="7.75" PointY="2.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProduct" Width="1.5" PointX="3" PointY="20.875" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimit" Width="1.5" PointX="5.25" PointY="21.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimitHdr" Width="1.5" PointX="5.25" PointY="27" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Benefit" Width="1.5" PointX="3" PointY="17.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Client" Width="1.5" PointX="1.5" PointY="27.25" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.CommonListValue" Width="1.5" PointX="5.75" PointY="2.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Endorsement" Width="1.5" PointX="3" PointY="59.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransaction" Width="1.5" PointX="3" PointY="49.875" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransactionDetail" Width="1.5" PointX="5.25" PointY="52.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member" Width="1.5" PointX="3" PointY="37.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Endorse" Width="1.5" PointX="11.25" PointY="55.25" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement" Width="1.5" PointX="11.25" PointY="46.625" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement_Client" Width="1.5" PointX="10.75" PointY="2.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberClientEndorse" Width="1.5" PointX="13.5" PointY="56" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan" Width="1.5" PointX="5.25" PointY="37.625" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_Endorse" Width="1.5" PointX="13.5" PointY="50.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_H" Width="1.5" PointX="8.25" PointY="49.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Menu" Width="1.5" PointX="3" PointY="8.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF" Width="1.5" PointX="8.25" PointY="40.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF_Endorse" Width="1.5" PointX="16.5" PointY="51.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan" Width="1.5" PointX="3" PointY="46" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan_Endorse" Width="1.5" PointX="5.25" PointY="48" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail" Width="1.5" PointX="6" PointY="42.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail_Endorse" Width="1.5" PointX="8.25" PointY="55" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Policy" Width="1.5" PointX="0.75" PointY="40.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Policy_Endorse" Width="1.5" PointX="5.25" PointY="57.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PremiumRate" Width="1.5" PointX="5.75" PointY="8.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PremiumRateDetails" Width="1.5" PointX="8" PointY="8.125" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetGroupUser_ToGroup" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetRoleGroup_ToGroup" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetGroupUser_ToUser" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetRoleGroup_ToRoles" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetRoles_ToAspNetRoles" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Menu_ToMenuAspNetRoles" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_BasicProductBenefit_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_BasicProductLimit_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_FinanceTransactionDetail_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCF_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_EndorseToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_ToBasicProduct" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_BasicProductLimit_ToBenefit" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Client_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Client_ToClientRelateTo" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_Client_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientClientId" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientContactPerson" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientRelateTo" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Policy_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PolicyEndorseToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_CommonListValue_ToCommonListValue" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Endorsement_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Endorsement_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_H_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_EndorseToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanEndorse_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PolicyEndorseToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_FinanceTransaction_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_FinanceTransactionDetail_ToFinanceTransaction" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_H_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCF_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Menu_ToMenuParent" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCF_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Plan_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanEndorse_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_EndorseToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PolicyEndorseToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PremiumRateDetails_ToRate" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

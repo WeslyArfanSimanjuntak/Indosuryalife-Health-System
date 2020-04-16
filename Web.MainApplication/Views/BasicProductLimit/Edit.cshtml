@@ -1,0 +1,133 @@
+﻿@model Repository.Application.DataModel.BasicProductLimitHdr
+
+@{
+    /**/
+
+    ViewBag.Title = "Edit Basic Product Limit";
+    var benefitList = (List<Repository.Application.DataModel.Benefit>)ViewBag.ListOfBenefit;
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="      box box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-body">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div>
+                    @Html.Label("Basic Product Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BasicProductId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.BasicProductId, "", new { @class = "text-danger" })
+                    </div>
+                    <div>
+                        @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.BPLimitId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BPLimitId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.BPLimitId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="box-body">
+                <table class="table table-bordered table-striped dataTable no-footer" id="benefitTable">
+                    <thead>
+                        <tr>
+                            <th>Benefit Id</th>
+                            <th>Benefit Name</th>
+                            <th>Limit Type</th>
+                            <th>Number</th>
+                            <th>Amount</th>
+                            <th>Pre</th>
+                            <th>Post</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in benefitList)
+                        {
+                            <tr>
+                                <td>@Html.CheckBox(item.BenefitCode, item.IsActive == 1 ? true : false) @item.BenefitCode</td>
+                                <td>@item.BenefitName</td>
+                                <td>@Html.TextBox(item.BenefitCode + "_LimitType", item.BasicProductLimit.FirstOrDefault() != null ? item.BasicProductLimit.FirstOrDefault().LimitType : "", htmlAttributes: new { @placeholder = "Limit Type", @class = "form-control" })</td>
+                                <td>@Html.TextBox(item.BenefitCode + "_LimitNumber", item.BasicProductLimit.FirstOrDefault() != null ? item.BasicProductLimit.FirstOrDefault().LimitNumber.ToString() : "", htmlAttributes: new { @size = "5", @type = "number", @placeholder = "Number", @class = "form-control" })</td>
+                                <td>@Html.TextBox(item.BenefitCode + "_LimitAmount", item.BasicProductLimit.FirstOrDefault() != null ? item.BasicProductLimit.FirstOrDefault().LimitAmount.ToString() : "", htmlAttributes: new { @class = "form-control money-format2", @placeholder = "Amount" })</td>
+                                <td>@Html.TextBox(item.BenefitCode + "_Pre", item.BasicProductLimit.FirstOrDefault() != null ? item.BasicProductLimit.FirstOrDefault().Pre.ToString() : "", htmlAttributes: new { @size = "5", @type = "number", @class = "form-control", @placeholder = "Pre" })</td>
+                                <td>@Html.TextBox(item.BenefitCode + "_Post", item.BasicProductLimit.FirstOrDefault() != null ? item.BasicProductLimit.FirstOrDefault().Post.ToString() : "", htmlAttributes: new { @size = "5", @type = "number", @class = "form-control", @placeholder = "Post" })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="box-footer">
+                <div class="form-actions color">
+                    <div class="col-md-offset-2 col-md-10">
+                        <h3 class="box-title">
+                            @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })
+                            <input type="submit" value="Save" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+<script>
+    $(document).ready(function () {
+        var benefitTable = $("#benefitTable").DataTable({
+            scrollX: true,
+            columnDefs: [
+                { width: "250px", targets: 1 }
+            ],
+            order: []
+        });
+        $('form').on('submit', function (e) {
+            var form = this;
+
+            // Encode a set of form elements from all pages as an array of names and values
+            var params = benefitTable.$('input,select,textarea').serializeArray();
+
+            // Iterate over all form elements
+            $.each(params, function () {
+                // If element doesn't exist in DOM
+                if (!$.contains(document, form[this.name])) {
+                    // Create a hidden element
+                    $(form).append(
+                        $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', this.name)
+                            .val(this.value)
+                    );
+                }
+            });
+        });
+    });
+</script>

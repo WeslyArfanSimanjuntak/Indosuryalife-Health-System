@@ -1,0 +1,311 @@
+﻿@model Repository.Application.DataModel.Client
+
+@{
+    ViewBag.Title = "Edit Client Company";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.Hidden("ClientId", Model.ClientId)
+            @*<input type="hidden" value="@Model.ClientId" />*@
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"><b>Contact Person</b></div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-3" style="padding-left: 0 !important;padding-right: 0 !important;border-right:0">
+                                @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @readonly = "true", @class = "form-control", @required = "required" } })
+                            </div>
+                            <div class="col-md-9 no-pad-right" style="padding-left: 0 !important;border-left:0">
+                                <div class="input-group col-md-12">
+                                    @Html.TextBox("ContactPersonDesc", null, htmlAttributes: new { @Value = (Model.ContactPerson != null ? Model.Client2.ShortName + " - " + Model.Client2.FullName : ""), @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        @*<div class="input-group">
+                                @Html.TextBox("ContactPersonDesc", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                                <div class="input-group-addon">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Client Name</b></div>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div>
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Short Name</b></div>
+                    @*@Html.LabelFor(model => model.ShortName, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ShortName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ShortName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="col-md-2"> </div>
+                    @*@Html.LabelFor(model => model.EmailAddress1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.EmailAddress1, new { htmlAttributes = new { @class = "form-control", type = "email" } })
+                        @Html.ValidationMessageFor(model => model.EmailAddress1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+            <br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>SIUP Number</b></div>
+                    @*@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.IdNumber, new { htmlAttributes = new { @class = "form-control", @required = "required", type = "text", maxlength = "16", @oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" } })
+                        @Html.ValidationMessageFor(model => model.IdNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div>
+                    <div class="col-md-2"> </div>
+                    @*@Html.LabelFor(model => model.EmailAddress2, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.EmailAddress2, new { htmlAttributes = new { @class = "form-control", type = "email" } })
+                        @Html.ValidationMessageFor(model => model.EmailAddress2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+            </div><br />
+
+            <div class="row">
+                @*<div>
+                        <div class="col-md-2"><b>Branch Code</b></div>
+                        @Html.LabelFor(model => model.BranchCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.BranchCode, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                            @Html.ValidationMessageFor(model => model.BranchCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+                <div>
+                    <div class="col-md-2"><b>Founded Date</b></div>
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control" } })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="col-md-2"><b>Mobile Phone</b></div>
+                    @*@Html.LabelFor(model => model.MobilePhone1, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.TextBox("MobilePhone1", null, htmlAttributes: new { @class = "form-control", @required = "required", type = "text", maxlength = "14", @oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" })
+                        @Html.ValidationMessageFor(model => model.MobilePhone1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>ID Bank</b></div>
+                    @*@Html.LabelFor(model => model.BankAccountCode, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.BankAccountCode, new { htmlAttributes = new { @class = "form-control"} })*@
+                        @Html.DropDownList("BankAccountCode", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.BankAccountCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+                <div>
+                    <div class="col-md-2"> </div>
+                    @*@Html.Label("MobilePhone 2", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.TextBox("MObilePhone2", null, htmlAttributes: new { @class = "form-control", type = "text", maxlength = "14", @oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" })
+                        @Html.ValidationMessageFor(model => model.MObilePhone2, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div><br />
+
+            <div class="row">
+                <div>
+                    <div class="col-md-2"><b>Bank Account Name</b></div>
+                    @*@Html.LabelFor(model => model.BankAccountName, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BankAccountName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.BankAccountName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="col-md-2"> </div>
+                    @*@Html.LabelFor(model => model.MobilePhone3, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-4">
+                        @Html.TextBox("MobilePhone3", null, htmlAttributes: new { @class = "form-control", type = "text", maxlength = "14", @oninput = "javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" })
+                        @Html.ValidationMessageFor(model => model.MobilePhone3, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div><br />
+
+            <div class="row">
+
+                <div class="col-md-2"><b>Bank Account Number</b></div>
+                @*@Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.BankAccountNumber, new { htmlAttributes = new { @class = "form-control", @onkeypress = "return isNumberKey(event)" } })
+                    @Html.ValidationMessageFor(model => model.BankAccountNumber, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-2"><b>Address</b></div>
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.Address, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+
+        @*<div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>*@
+        <div class="box-footer">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-4">
+                    <a href="/client" class="btn btn-default">Back</a>
+                    <input type="submit" value="Save" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script>
+
+    $(function () {
+        $('#BirthDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+    });
+
+     $("#ContactPersonDesc").autocomplete({
+
+        source: function (request, response) {
+            $("#ContactPerson").val("");
+            $("#ContactPerson").change();
+            var filterEntitas = 'Type == "Personal" and FullName.Contains("' + $("#ContactPersonDesc").val() + '")';
+            $.ajax({
+                url: '@Url.Action("GetData", "EntityApi")',
+                dataType: "json",
+                data: {
+                    filter: filterEntitas,
+                    entitas : "Client"
+                },
+                success: function (data) {
+                    //ini untuk menghilangakan id CP kalau text CPDesc ada yg di delate
+                    $("#ContactPerson").val("");
+                    $("#ContactPerson").val("");
+                    $("#Email").val("");
+                    $("#EmailAddress1").val("");
+                    $("#EmailAddress2").val("");
+                    $("#MobilePhone1").val("");
+                    $("#MObilePhone2").val("");
+                    $("#MobilePhone3").val("");
+
+                    response($.map(data["data"], function (item) {
+                        //console.log(item.ShortName);
+                        return {
+                            label: item.ShortName + " - " + item.FullName,
+                            value: item.ShortName + " - " + item.FullName,
+                            id: item.ClientId,
+                            email: item.Email,
+                            email1: item.EmailAddress1,
+                            email2: item.EmailAddress2,
+                            mp: item.MobilePhone1,
+                            mp1: item.MObilePhone2,
+                            mp2: item.MobilePhone3
+                        };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        },
+        minLength: 3,
+        select: function (event, ui) {
+            //untuk menampilkan
+            $("#ContactPerson").val(ui.item.id);
+            $("#Email").val(ui.item.email);
+            $("#EmailAddress1").val(ui.item.email1);
+            $("#EmailAddress2").val(ui.item.email2);
+            $("#MobilePhone1").val(ui.item.mp);
+            $("#MObilePhone2").val(ui.item.mp1);
+            $("#MobilePhone3").val(ui.item.mp2);
+
+            console.log(ui.item ?
+                "Selected: " + ui.item.label :
+                "Nothing selected, input was " + this.value);
+        },
+      open: function () {
+            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+        },
+        close: function () {
+            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+        }
+    });
+</script>

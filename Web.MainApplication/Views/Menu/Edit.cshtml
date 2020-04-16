@@ -1,0 +1,122 @@
+﻿@model Repository.Application.DataModel.Menu
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            Edit - Menu
+        </h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.MenuId)
+            @Html.HiddenFor(model => model.ShowAsChild)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MenuName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MenuName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.MenuName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MenuParentId, "MenuParentId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("MenuParentId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MenuParentId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Sequence, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("Sequence", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                    @*@Html.EditorFor(model => model.Sequence, new { htmlAttributes = new { @class = "form-control" } })*@
+                    @Html.ValidationMessageFor(model => model.Sequence, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AspNetRoles, "AspNetRoles", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("AspNetRoles", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.AspNetRoles, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MenuIClass, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MenuIClass, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MenuIClass, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Remark, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("IsActive", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    <div class="box-footer">
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MenuParentId").on("change", function () {
+            $("#Sequence option").not(':first-child').each(function (index) {
+                $(this).remove();
+            });
+            var menuParentId = $("#MenuParentId").val();
+            if (menuParentId != "") {
+                AjaxCall(function (output) {
+                    var last = 0;
+                    $.each(output.data, function (key, value) {
+                        last = value["Sequence"];
+                        $("#Sequence").append('<option selected value="' + value["Sequence"] + '">' + value["Sequence"] + '</option>');
+                    });
+                    last = last + 1;
+                    $("#Sequence").append('<option selected value="' + last + '">' + last + '</option>');
+
+                }, entityApiUrl + '?entitas=Menu&orderby=Sequence Ascending&filter=MenuParentId==' + menuParentId);
+            }
+            else {
+                AjaxCall(function (output) {
+                    var last = 0;
+                    $.each(output.data, function (key, value) {
+                        last = value["Sequence"];
+                        $("#Sequence").append('<option selected value="' + value["Sequence"] + '">' + value["Sequence"] + '</option>');
+                    });
+                    last = last + 1;
+                    $("#Sequence").append('<option selected value="' + last + '">' + last + '</option>');
+
+                }, entityApiUrl + '?entitas=Menu&orderby=Sequence Ascending&filter=MenuParentId == null');
+            }
+        });
+    });
+</script>

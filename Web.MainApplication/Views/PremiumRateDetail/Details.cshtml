@@ -1,0 +1,151 @@
+﻿@model Repository.Application.DataModel.PremiumRateDetails
+
+@{
+    ViewBag.Title = "Details Premium Rate Detail";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PaymentDuration)
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div>
+                    @Html.Label("CoverageDuration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.CoverageDuration)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div>
+                    @Html.Label("Is Adult", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.IsAdult)
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div>
+                    @Html.Label("Sex", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Sex)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div>
+                    @Html.Label("Is Smoking", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.IsSmoking)
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Range Up Min", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RangeUpMin)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div>
+                    @Html.Label("Range Up Max", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RangeUpMax)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Range Age Min", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RangeAgeMin)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Range Age Max", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RangeAgeMax)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Premium Rate", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PremiumRate)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    @Html.Label("Record Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.RecordStatus)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    @Html.Label("Insurer Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PremiumRate1.InsurerId)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box-footer">
+            <div class="form-actions color">
+                
+                @*@Html.ActionLink("Back", "Index", null, htmlAttributes: new { @class = "btn btn-default" })
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })*@
+               
+            </div>
+        </div>
+
+    </div>
+   
+
+    </div>
+<script>
+
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
+</script>

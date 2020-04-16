@@ -1,0 +1,449 @@
+﻿@model Repository.Application.DataModel.Member_Endorse
+
+@{
+    ViewBag.Title = "Create Member";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @*CREATE MEMBER*@
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <b>Create Member</b>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                @Html.Hidden("EndorseNumber", Model.EndorseNumber)
+                @Html.Hidden("PolicyId", Model.PolicyId)
+                <div>
+                    @Html.Label("Endorsement Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EndorseNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Model.Endorsement.EndorseType
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    @Html.HiddenFor(model => model.PolicyId)
+                    @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Policy Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Client.FullName)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.OpenOrClose == "1" ? "Open" : "Close")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @id = "StartDatePolicy", @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.StartDate.HasValue ? Model.Policy.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.TerminateDate.HasValue ? Model.Policy.TerminateDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.MatureDate.HasValue ? Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Last Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.LastEndorseDate.HasValue ? Model.Policy.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PaymentFrequency, new { })
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Agen Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Agent)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    @*MEMBER INFORMATION*@
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <b>Member Information</b>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Member Number", htmlAttributes: new { @class = "control-label col-md-2" })
+
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.MemberNumber, new { htmlAttributes = new { @class = "form-control", @value = "Auto Generated", @disabled = "true" } })
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.MemberStatus, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Member Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-3" style="padding-left: 0 !important;padding-right: 0 !important;border-right:0">
+                                @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @readonly = "true", @class = "form-control" } })
+                            </div>
+                            <div class="col-md-9 no-pad-right" style="padding-left: 0 !important;border-left:0">
+                                <div class="input-group col-md-12">
+                                    @Html.TextBox("MemberName", null, htmlAttributes: new { @Value = (Model.ClientId != null ? Model.Client.ShortName + " - " + Model.Client.FullName : ""), @class = "form-control", @Required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Policy.Client.FullName, "", new { @class = "text-danger" })
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Policy.LastEndorseDate, new { htmlAttributes = new { @class = "form-control", @readOnly = "true", @id = "EndorseDate" } })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Plan Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("PlanId", null, htmlAttributes: new { @class = "form-control", @Required = "Required" })
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Endorse Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.EndorseNumber, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @id = "StartDateMember", @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Claim Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.LastClaimDate, new { htmlAttributes = new { @class = "form-control", @readOnly = "true", @id = "ClaimDate" } })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @{
+                                if (Model.Policy.OpenOrClose == "1")
+                                {
+                                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                                    <span class="fa fa-calendar form-control-feedback"></span>
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @Value = Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy"), @class = "form-control", @readOnly = "true" } })
+                                    <span class="fa fa-calendar form-control-feedback disabled"></span>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.ClaimNumber, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        </div>
+                    </div>
+                </div><br />
+
+            </div>
+
+        </div>
+
+    </div>
+    @*TAB PANE*@
+    <div class="box box-solid">
+        <div class="box-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Plan</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">PCF</a></li>
+                    <li><a href="#tab_3" data-toggle="tab">Claim</a></li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- / Tab-pane 1 - Plan -->
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="box-body">
+                            <table class="table table-bordered table-striped" id="PlanIdTable">
+                                <thead>
+                                    <tr>
+                                        <th>Basic Product</th>
+                                        <th>Basic Product Name</th>
+                                        <th>Limit Code</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>                    <!-- / Tab-pane 2 - PCF -->
+                    <div class="tab-pane" id="tab_2">
+                        <div class="box-body">
+                            <table class="table table-bordered table-striped" id="PCFTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Basic Product</th>
+                                        <th>Basic Product Name</th>
+                                        <th>Limit Code</th>
+                                        <th>Amount</th>
+                                        <th>Invoice Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- / Tab-pane 3 - Claim -->
+                    <div class="tab-pane" id="tab_3">
+                        <div class="box-body">
+                            Will be available soon
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            @*Button Create and Back*@
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Back", "Details", "Policy", new { @id = Model.PolicyId.ToString(), @tab = "member" }, new { @class = "btn btn-default" })
+                        <input type="submit" value="Create" class="btn btn-default" style="background-color:#008CBA; color:white;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+}
+
+
+<script>
+
+    //DateTimePicker
+    $(document).ready(function () {
+        $('#EndDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+        $('#EndorseDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+        $('#ClaimDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+        $("#StartDateMember").change(function () {
+            var StartDatePolicy = document.getElementById("StartDatePolicy").value;
+            var StartDateMember = document.getElementById("StartDateMember").value;
+
+            if ((Date.parse(StartDateMember) < Date.parse(StartDatePolicy))) {
+                alert("Start Date member should be greater than Start Date Policy");
+                document.getElementById("StartDateMember").value = "";
+            }
+        });
+
+        $('#StartDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+    });
+
+    $(function () {
+        $("#PlanId").change();
+    });
+
+    $(function () {
+        $("#MemberName").show();
+    });
+
+    //AutoComplete Member Name
+    $("#MemberName").autocomplete({
+        source: function (request, response) {
+            var filterEntitas = 'Type == "Personal" and FullName.Contains("' + $("#MemberName").val() + '")';
+            $.ajax({
+                url: '@Url.Action("GetData", "EntityApi")',
+                dataType: "json",
+                data: {
+                    filter: filterEntitas,
+                    entitas : "Client"
+                },
+                success: function (data) {
+                    $("#ClientId").val("");
+                    $("#ClientId").change();
+                    response($.map(data["data"], function (item) {
+                        return {
+                            label: item.ShortName + " - " + item.FullName,
+                            value: item.ShortName + " - " + item.FullName,
+                            id: item.ClientId
+                        };
+                    }));
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        },
+        minLength: 3,
+        select: function (event, ui) {
+            $("#ClientId").val(ui.item.id);
+            $("#ClientId").change();
+            console.log(ui.item);
+            console.log(ui.item ?
+                "Selected: " + ui.item.label :
+                "Nothing selected, input was " + this.value);
+        },
+      open: function () {
+            $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+        },
+        close: function () {
+            $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+        }
+    });
+
+    //Data Table Plan
+    var planDetailTable =  $("#PlanIdTable").DataTable();
+    $("#PlanId").on("change", function () {
+        var policyId = $("#PolicyId").val();
+        planDetailTable.clear().draw();
+        var selectedPlanId = $("#PlanId").val();
+
+            if (selectedPlanId != "") {
+                AjaxCall(function (output) {
+                    console.log(output);
+                    $.each(output.data, function (key, value) {
+                        console.log(value);
+                        planDetailTable.row.add([
+                    value["BasicProductId"],
+                    value["BasicProductName"],
+                    value["BasicProductLimitCode"],
+                            '<a target="_blank" href="../Policy/PolicyMemberBenefit?policyId=' + policyId + '&bpLimitId=' + value["BasicProductLimitCode"] +'&id='+value['BasicProductId']+'">Details</a>'
+                ]).draw(false);
+
+                    });
+
+                }, entityApiUrl + '?entitas=PlanDetail_Endorse&filter=PlanId=="' + selectedPlanId + '" and PolicyId=="@Model.PolicyId"'+ ' and EndorseNumber=="@Model.EndorseNumber"');
+            }
+    });
+
+
+    //Data Table PCF
+    @*var PCFDetailTable = $("#PCFTable").DataTable();
+    $("#PlanId").on("change", function () {
+        var policyId = $("#PolicyId").val();
+        planDetailTable.clear().draw();
+        var selectedPlanId = $("#PlanId").val();
+
+            if (selectedPlanId != "") {
+                AjaxCall(function (output) {
+                    console.log(output);
+                    $.each(output.data, function (key, value) {
+                        console.log(value);
+                        PCFDetailTable.row.add([
+                            value["InvoiceDate"],
+                            value["BasicProductId"],
+                            value["BasicProductName"],
+                            value["BasicProductLimitCode"],
+                            value["Amount"],
+                            value["InvoiceNumber"],
+                ]).draw(false);
+
+                    });
+
+                }, entityApiUrl + '?entitas=PlanDetail&filter=PlanId=="' + selectedPlanId + '" and PolicyId=="@Model.PolicyId"');
+            }
+    });*@
+
+</script>
+
+@*<style type="text/css">
+        .table th, table td {
+            text-align: center;
+        }
+    </style>*@
+

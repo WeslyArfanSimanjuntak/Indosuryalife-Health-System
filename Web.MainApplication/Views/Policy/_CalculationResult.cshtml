@@ -1,0 +1,179 @@
+﻿@model Repository.Application.DataModel.Policy
+@{
+    Layout = null;
+}
+@*<div class="modal-body" style="overflow:auto !important;">*@
+<div class="box box-solid">
+    <div class="box-header with-border">
+
+        @Html.Partial("_MessageToView")
+
+       
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-body">
+        <div class="col-md-6">
+
+            <div>
+                <dl class="dl-horizontal">
+
+
+                    <dt>
+                        Total Member
+                    </dt>
+
+                    <dd>
+                        @(Model.Member.Count)
+                    </dd>
+                    <dt style="font-size:large">
+                        Demanded Premi
+                    </dt>
+
+                    <dd id="ddSumOfPremiDemanded" class="money-format" style="font-size:large;color:orangered">
+                        @{
+                            string sumOfPremiDemanded = Convert.ToString(ViewBag.SumOfDemandedPremi);
+                            sumOfPremiDemanded = sumOfPremiDemanded.Replace(',', '.');
+                        }
+                        @sumOfPremiDemanded
+                    </dd>
+                    <dt style="font-size:large">
+                        Total Premi
+                    </dt>
+
+                    <dd id="ddSumOfPremi" class="money-format" style="font-size:large;color:orangered">
+                        @{
+                            string sumOfPremi = Convert.ToString(ViewBag.SumOfPremi);
+                            sumOfPremi = sumOfPremi.Replace(',', '.');
+                        }
+                        @sumOfPremi
+                    </dd>
+
+
+
+                </dl>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <dl class="dl-horizontal">
+
+
+                    <dt>
+                        Policy Holder
+                    </dt>
+
+                    <dd>
+                        @(Model.Client?.FullName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PolicyNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PolicyNumber)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EntryDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.EntryDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.MatureDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.MatureDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.LastEndorseDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.LastEndorseDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.EndorseNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.EndorseNumber)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ExitDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.ExitDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TerminateDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.TerminateDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IssueDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IssueDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PaymentFrequency)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PaymentFrequency)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OpenOrClose)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OpenOrClose)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Agent)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Agent)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PolicyStatus)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PolicyStatus)
+                    </dd>
+
+
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@

@@ -1,0 +1,106 @@
+﻿@model Tuple<Repository.Application.DataModel.Member_Endorse, Repository.Application.DataModel.Member_Endorse>
+@{
+    Layout = null;
+
+}
+<div class="row">
+    <div class="col-md-4">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Current Plan Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <dl>
+                    @{
+                        var plan = Model.Item1.Endorsement.Plan_Endorse.Where(x => x.PlanId == Model.Item1.PlanId).FirstOrDefault();
+                        var planDetails = Model.Item1.Endorsement.PlanDetail_Endorse.Where(x => x.PlanId == Model.Item1.PlanId).ToList();
+                    }
+                    <dt>Plan Name</dt>
+                    <dd>@(plan?.PlanName)</dd>
+
+                </dl>
+                <br />
+                <dl>
+                    <dt>Plan Detail Information</dt>
+                    @foreach (var item in planDetails)
+                    {
+                        <dd>@(item.BasicProduct.BasicProductName) - @(item.BasicProductLimitCode)</dd>
+                    }
+
+
+                </dl>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <div class="col-md-4">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Choose Target Plan</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.Hidden("MemberId",Model.Item1.MemberId)
+                        @Html.DropDownList("PlanId", null, htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- ./col -->
+    <div class="col-md-4">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Target Plan Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <dl>
+                    <dt>Plan Name</dt>
+                    <dd id="planNameTarget"></dd>
+
+                </dl>
+                <br />
+                <dl id="planDetailTargetInformation">
+                    <dt>Plan Detail Information</dt>
+
+
+
+                </dl>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- ./col -->
+</div>
+
+<script>
+    $(function () {
+
+        $("#PlanId").change(function () {
+            var selectedPlan = $(this).val();
+
+            if (selectedPlan != "") {
+                $("#planNameTarget").html(selectedPlan);
+                AjaxCall(function (output) {
+                    $("#planDetailTargetInformation").html($("<dt>Plan Detail Information</dt>"));
+
+                    console.log(output);
+                    $.each(output.data, function (key, value) {
+
+                        $("#planDetailTargetInformation").append('<dd>' + value["BasicProduct"]["BasicProductName"] + ' - ' + value["BasicProductLimitCode"]+'</dd>');
+                    });
+
+                }, baseUrl + '/PolicyEndorsement/MemberChangePlan/@Model.Item1.MemberId?getPlanDetail=true&planId=' + selectedPlan);
+            }
+        });
+    });
+</script>

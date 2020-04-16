@@ -1,0 +1,232 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Client>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Clients Personal</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", new { type = "Personal" }, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="personalTable">
+            <thead>
+                <tr>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.ClientId)*@
+                        ID CLient
+                    </th>
+                    <th>
+                        Client Name
+                    </th>
+                    <th>Relate To As</th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.BirthDate)*@
+                        Birth Date
+                    </th>
+                    <th>
+                        @*@Html.DisplayNameFor(model => model.IdNumber)*@
+                        ID Number
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Where(x => x.Type == "Personal").OrderByDescending(x => x.ClientId))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ClientId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrefixClientTitle)
+                            @Html.DisplayFor(modelItem => item.FullName)
+                            @Html.DisplayFor(modelItem => item.EndfixClientTitle)
+                        </td>
+                        <td>
+                            @(item.Client3?.FullName)  @(item.Client3 != null ? "as" : "") @item.ClientRelation
+                        </td>
+                        <td>
+                            @*@(item.BirthDate.Value.ToString("DD/MM/YYYY"))*@
+                            @(item.BirthDate.HasValue ? item.BirthDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ClientId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ClientId }) |
+                            @Ajax.ActionLink("Delete", "Delete", new { id = item.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                           OnSuccess = "HideSpinner();",
+                           LoadingElementDuration = 3000,
+                           OnComplete = "$('#myModalTemporary').modal('show');",
+                           UpdateTargetId = "myModalTemporaryContent",
+                           HttpMethod = "GET",
+                           InsertionMode = InsertionMode.Replace
+                       })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Clients Company</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", new { type = "Company" }, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="companyTable">
+            <thead>
+                <tr>
+                    <th>
+                        ID Client
+                    </th>
+                    <th>
+                        Client Name
+                    </th>
+                    <th>
+                        Founded
+                    </th>
+                    <th>
+                        Contact Person
+                    </th>
+                    <th>
+                        SIUP Number
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Status)
+                    </th>
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Where(x => x.Type == "Company").OrderByDescending(x => x.ClientId))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ClientId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @(item.BirthDate.HasValue ? item.BirthDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </td>
+                        <td>
+                            @Ajax.ActionLink(item.Client2?.FullName, "Details","Client", new {id  = item.Client2?.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                                            OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                            OnSuccess = "HideSpinner();",
+                                            LoadingElementDuration = 3000,
+                                            OnComplete = "$('#myModalTemporary').modal('show');",
+                                            UpdateTargetId = "myModalTemporaryContent",
+                                            HttpMethod = "GET",
+                                            InsertionMode = InsertionMode.Replace
+                                       })
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ClientId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ClientId }) |
+                            @Ajax.ActionLink("Delete", "Delete", new { id = item.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                           OnSuccess = "HideSpinner();",
+                           LoadingElementDuration = 3000,
+                           OnComplete = "$('#myModalTemporary').modal('show');",
+                           UpdateTargetId = "myModalTemporaryContent",
+                           HttpMethod = "GET",
+                           InsertionMode = InsertionMode.Replace
+                       })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    (function ($) {
+
+        $('#personalTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true,
+            'order': []
+        });
+    }(jQuery));
+
+    (function ($) {
+
+        $('#companyTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true,
+            'order': []
+        });
+    }(jQuery));
+
+    window.setTimeout(function () {
+        //This will execute 5 seconds later
+        var label = document.getElementById('messageContainer');
+        if (label != null) {
+            label.style.display = 'none';
+        }
+    }, 5000);
+
+</script>

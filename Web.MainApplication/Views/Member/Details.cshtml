@@ -1,0 +1,376 @@
+﻿@model Repository.Application.DataModel.Member
+
+@{
+    ViewBag.Title = "Policy Details";
+
+}
+
+
+@*MEMBER DETAIL*@
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div>
+                @Html.HiddenFor(model => model.PolicyId)
+                @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                </div>
+            </div>
+            <div>
+                @Html.Label("Policy Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Policy.Client.FullName)
+                </div>
+            </div>
+            <div>
+                @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.OpenOrClose == "1" ? "Open" : "Close")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.StartDate.HasValue ? Model.Policy.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+            <div>
+                @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.TerminateDate.HasValue ? Model.Policy.TerminateDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.MatureDate.HasValue ? Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+            <div>
+                @Html.Label("Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Policy.LastEndorseDate.HasValue ? Model.Policy.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Policy.PaymentFrequency, new { @onchange = "setValue(this.value)" })
+                </div>
+            </div>
+            <div>
+                @Html.Label("Agen Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Policy.Agent)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*MEMBER INFORMATION DETAIL*@
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title"><b>Member Information</b></h3>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div>
+                @Html.Label("Member Number", htmlAttributes: new { @class = "control-label col-md-2" })
+
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.MemberNumber)
+                </div>
+            </div>
+            <div>
+                @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.MemberStatus)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Member Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Client.FullName)
+                </div>
+            </div>
+            <div>
+                @Html.Label("Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.LastEndorseDate.HasValue ? Model.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Plan Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.PlanId)
+                </div>
+            </div>
+            <div>
+                @Html.Label("Endorse Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.EndorseNumber)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+            <div>
+                @Html.Label("Claim Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.LastClaimDate.HasValue ? Model.LastClaimDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("dd/MM/yyyy") : "-")
+                </div>
+            </div>
+            <div>
+                @Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ClaimNumber)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.TerminateDate?.ToString("dd/MM/yyyy"))
+                </div>
+            </div>
+            <div>
+                @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ClaimNumber)
+                </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                @Html.Label("Card Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.CardNumber)
+                </div>
+            </div>
+            <div>
+                @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ClaimNumber)
+                </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                @Html.Label("Age", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.Age) year(s)
+                </div>
+            </div>
+            <div>
+                @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ClaimNumber)
+                </div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                @Html.Label("Admedika Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @(Model.AdmedikaCode)
+                </div>
+            </div>
+            <div>
+                @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ClaimNumber)
+                </div>*@
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab">Plan</a></li>
+                <li><a href="#tab_2" data-toggle="tab">PCF</a></li>
+                <li><a href="#tab_3" data-toggle="tab">Claim</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                    <div class="box-body">
+                        <table class="table table-bordered table-striped" id="PlanIdTable">
+                            <thead>
+                                <tr>
+                                    <th>Basic Product</th>
+                                    <th>Basic Product Name</th>
+                                    <th>Limit Code</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MemberPlan)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BasicProductId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BasicProductLimitCode)
+                                        <td>
+                                            @Html.ActionLink("Details", "PolicyMemberBenefit", "Policy", new { id = item.BasicProductId, bpLimitId = item.BasicProductLimitCode }, htmlAttributes: new { @target = "_blank" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- / next tab-pane -->
+                <div class="tab-pane" id="tab_2">
+                    <div class="box-body">
+                        <table class="table table-bordered table-striped" id="PCFTable_@Model.MemberId">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>TransType</th>
+                                    <th>Basic Product</th>
+                                    <th>Basic Product Name</th>
+                                    <th>Limit Code</th>
+                                    <th>Amount</th>
+                                    <th>Invoice Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PCF)
+                                {
+                                <tr>
+                                    <td>
+                                        @(item.InvoiceDate.ToString("dd/MM/yyyy"))
+                                    </td>
+                                    <td>@item.TransType</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BasicProductId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
+                                    </td>
+                                    <td>
+                                        @(Model.MemberPlan.Where(x => x.PolicyId == Model.PolicyId && Model.MemberId == x.MemberId && x.BasicProductId == item.BasicProductId).FirstOrDefault()?.BasicProductLimitCode)
+                                    </td>
+                                    <td class="text-right" format="float">
+                                        @(item.Amount.ToString().Replace(',', '.'))
+                                    </td>
+                                    <td>@item.TransactionNumber</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- / next tab-pane -->
+                <div class="tab-pane" id="tab_3">
+                    <div class="box-body">
+                        Will be available soon
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        @*Button Create and Back*@
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-md-2">
+                    @Html.ActionLink("Back", "Details", "Policy", new { @id = Model.PolicyId.ToString(), @tab = "member" }, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    //$('#CreatedDate').datepicker({
+    //    dateFormat = ("DD/MM/YYYY")
+    //});
+
+    $('#PlanIdTable').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': -1,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+    });
+    $('#PCFTable_@Model.MemberId').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': -1,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+    });
+</script>
+
+@*<style type="text/css">
+    .table th, table td {
+        text-align: center;
+    }
+</style>*@

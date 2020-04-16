@@ -1,0 +1,66 @@
+﻿@model Repository.Application.DataModel.Member_Endorse
+@{
+    Layout = null;
+}
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+
+    @Html.HiddenFor(model => model.MemberId)
+    <div class="form-group">
+        @Html.Label("Name", "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@Model.Client.FullName</div>
+            @Html.ValidationMessageFor(model => model.TerminateDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Date Of Birth", "Date Of Birth", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@Model.Client.BirthDate.Value.ToString("dd/MM/yyyy")</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Policy No", "Policy No", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@Model.Policy.PolicyNumber</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Start Date", "Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@(Model.StartDate?.ToString("dd/MM/yyyy"))</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("End Date", "End Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@(Model.EndDate?.ToString("dd/MM/yyyy"))</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Terminate Date", "Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TerminateDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TerminateDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Terminate Type", "Terminate Type", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("TerminateType", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+            @Html.ValidationMessageFor(model => model.PolicyId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('#TerminateDate').datetimepicker({
+            format: "DD/MM/YYYY",
+        });
+    });
+</script>

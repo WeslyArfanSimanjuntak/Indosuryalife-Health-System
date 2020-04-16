@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Repository.Application.DataModel.AspNetUsers>
+
+@{
+    ViewBag.Title = "User";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b>Users</b>
+        </h3>
+    </div>
+
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="userTable">
+            <thead>
+                <tr>
+                    <th>
+                        Username
+                    </th>
+                    <th>
+                        Full Name
+                    </th>
+                    <th>
+                        Password
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    @*<th>
+                            Last Password Change
+                        </th>
+                        <th>
+                            Error Tried
+                        </th>
+                        <th>
+                            Is Locked
+                        </th>
+                        <th>
+                            Remark
+                        </th>*@
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Username)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.LastPasswordChange)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ErrorTried)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsLocked)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>*@
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Username }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.Username }) |
+                            @*@Html.ActionLink("Delete", "Delete", new { id = item.Username })*@
+
+                            @Ajax.ActionLink("Delete", "Delete", new { id = item.Username, layoutIsNull = true }, new AjaxOptions() {
+                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                           OnSuccess = "HideSpinner();",
+                           LoadingElementDuration = 3000,
+                           OnComplete = "$('#myModalTemporary').modal('show');",
+                           UpdateTargetId = "myModalTemporaryContent",
+                           HttpMethod = "GET",
+                           InsertionMode = InsertionMode.Replace
+                       })
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+        $('#userTable').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+</script>

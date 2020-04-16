@@ -1,0 +1,66 @@
+﻿@model Repository.Application.DataModel.Member_Endorse
+@{
+    Layout = null;
+}
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.Hidden("MemberId", Model.MemberId)
+    @Html.Hidden("MemberNumber", Model.MemberNumber)
+    <div class="form-group">
+        @Html.Hidden("EndorseNumber", Model.EndorseNumber)
+        @Html.Label("Name", "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@Model.Client.FullName</div>
+            @Html.ValidationMessageFor(model => model.TerminateDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Start Date", "Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@(Model.StartDate?.ToString("dd/MM/yyyy"))</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("End Date", "End Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="form-control" readonly>@(Model.EndDate?.ToString("dd/MM/yyyy"))</div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Policy Destiny", "Policy Destiny", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("PolicyTarget", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Plan Target", "Plan Target", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("PlanId", null, htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#PolicyTarget").on("change", function () {
+            var policyTargetId = $("#PolicyTarget").val();
+            $("#PlanId").html("");
+
+            if (policyTargetId !== null && policyTargetId !== '') {
+                var option = "";
+                AjaxCall(function (output) {
+
+                    console.log(output);
+                    $.each(output, function (key, value) {
+                        option = option + ' <option value="' + value["Value"] + '">' + value["Text"] + '</option>';
+                    });
+                    $("#PlanId").append(option);
+            }, baseUrl + '/PolicyEndorsement/MemberMutate/@Model.MemberId?policyTargetId=' + policyTargetId +'&onChangedPolicyTargetIsHit=true',"GET", 200);
+
+            }
+
+
+        });
+
+    });
+</script>

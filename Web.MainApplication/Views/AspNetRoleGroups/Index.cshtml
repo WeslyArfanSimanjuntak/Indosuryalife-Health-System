@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Repository.Application.DataModel.AspNetRoleGroup>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create")
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b>Role Groups</b>
+        </h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="userTable">
+            <thead>
+
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AspNetGroups.GroupDescription)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AspNetRoles.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Remark)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsActive)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AspNetGroups.GroupDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AspNetRoles.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remark)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+
+
+        $('#userTable').DataTable({
+            'paging': true,
+           'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+			  'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+</script>

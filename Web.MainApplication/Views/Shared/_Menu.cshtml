@@ -1,0 +1,171 @@
+﻿ <!-- sidebar menu: : style can be found in sidebar.less -->
+@model string
+@{ if (User.Identity.IsAuthenticated)
+    {
+        @*<ul class="sidebar-menu" data-widget="tree">*@
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Contract</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Contract")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("IndexClientContract","Contract")"><i class="fa fa-circle-o"></i>Client Contract</a></li>
+                <li id=""><a href="@Url.Action("Create","Contract")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Client Delivery Request</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("IndexClient","DeliveryRequest")"><i class="fa fa-circle-o"></i>Index</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Client</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Client")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Client")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Finance Transaction</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","FinanceTransaction")"><i class="fa fa-circle-o"></i>Index</a></li>
+                <li id=""><a href="@Url.Action("Deposit","FinanceTransaction")"><i class="fa fa-circle-o"></i>Deposit</a></li>
+                @*<li id=""><a href="@Url.Action("Create","Client")"><i class="fa fa-circle-o"></i>Create</a></li>*@
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Armada</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Armada")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Armada")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Batch</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Batch")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Batch")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Employee</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Employee")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Employee")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Product</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Product")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Product")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Ritase</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Ritase")"><i class="fa fa-circle-o"></i>Index</a></li>
+                <li id=""><a href="@Url.Action("Create","Ritase")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="@Url.Action("StockDetails","TransactionProduct")">
+                <i class="fa fa-book"></i> <span>Stock Details</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Transaction Product</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","TransactionProduct")"><i class="fa fa-circle-o"></i>Index</a></li>
+                <li id=""><a href="@Url.Action("AdjustProduct","TransactionProduct")"><i class="fa fa-circle-o"></i>Adjustment</a></li>
+                <li id=""><a href="@Url.Action("ConvertProduct","TransactionProduct")"><i class="fa fa-circle-o"></i>Convertion</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Delivery Request</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","DeliveryRequest")"><i class="fa fa-circle-o"></i>Index</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-pie-chart"></i>
+                <span>Site</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li id=""><a href="@Url.Action("Index","Site")"><i class="fa fa-circle-o"></i>Master</a></li>
+                <li id=""><a href="@Url.Action("Create","Site")"><i class="fa fa-circle-o"></i>Create</a></li>
+            </ul>
+        </li>
+        @*</ul>*@
+
+    }
+}

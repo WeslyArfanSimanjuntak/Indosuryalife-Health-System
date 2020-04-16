@@ -1,0 +1,62 @@
+﻿<div id="myModal" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" style="vertical-align: middle;">
+    <div class="modal-dialog modal-sm">
+        <div id="loadingSpinner">
+            <div class="text-center">
+                <img src='@(Html.ViewContext.RequestContext.HttpContext.Request.Url.Scheme + "://" + Html.ViewContext.RequestContext.HttpContext.Request.Url.Authority)/content/icon/index.ripple-radio-preloader.svg'>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal {
+        text-align: center;
+        padding: 0 !important;
+    }
+
+        .modal:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -4px;
+        }
+
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+</style>
+<script>
+    function setModalMaxHeight(element) {
+        this.$element = $(element);
+        this.$content = this.$element.find('.modal-content');
+        var borderWidth = this.$content.outerHeight() - this.$content.innerHeight();
+        var dialogMargin = $(window).width() < 768 ? 20 : 60;
+        var contentHeight = $(window).height() - (dialogMargin + borderWidth);
+        var headerHeight = this.$element.find('.modal-header').outerHeight() || 0;
+        var footerHeight = this.$element.find('.modal-footer').outerHeight() || 0;
+        var maxHeight = contentHeight - (headerHeight + footerHeight);
+
+        this.$content.css({
+            'overflow': 'hidden'
+        });
+
+        this.$element
+            .find('.modal-body').css({
+                'max-height': maxHeight,
+                'overflow-y': 'auto'
+            });
+    }
+
+    $('.modal').on('show.bs.modal', function () {
+        $(this).show();
+        setModalMaxHeight(this);
+    });
+
+    $(window).resize(function () {
+        if ($('.modal.in').length != 0) {
+            setModalMaxHeight($('.modal.in'));
+        }
+    });
+</script>

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Repository.Application.DataModel.ASPNETUSERS>
+@{
+    ViewBag.Title = "Manage";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">Users</h3>
+        <p>
+            @Html.ActionLink("Create New", "ASPNETUSERSCreate")
+        </p>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+
+
+        <table id="masterUser" class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>User Type</th>
+                    <th>Last Password Change</th>
+                    <th>Created By</th>
+                    <th>Updated By</th>
+                    <th>Last Updated Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>@item.FULLNAME</td>
+                            <td>@item.USERNAME</td>
+                            <td>@item.EMAIL</td>
+                            <td>@item.PHONENUMBER</td>
+                            <td>@item.USERTYPEINTERNALEXTERNAL</td>
+                            <td>@item.LASTPASSWORDCHANGE</td>
+                            <td>@item.CreateId</td>
+                            <td>@item.ModifyId</td>
+                            <td>@item.ModifyDate</td>
+                            <td>
+                                @Html.ActionLink("Edit", "ASPNETUSERSEdit", new { id = item.USERNAME }) |
+                                @Html.ActionLink("Details", "ASPNETUSERSDetails", new { id = item.USERNAME }) |
+                                @Html.ActionLink("Delete", "ASPNETUSERSDelete", new { id = item.USERNAME })
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+
+        $('#masterUser').DataTable({
+            'paging': true,
+            'lengthChange': false,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true
+        });
+    }(jQuery));
+
+</script>

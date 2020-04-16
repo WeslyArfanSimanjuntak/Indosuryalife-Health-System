@@ -1,0 +1,66 @@
+﻿@model Repository.Application.DataModel.Policy
+@{
+    Layout = null;
+}
+<div class="col-md-12">
+    <dl class="dl-horizontal">
+        <dt>
+            Policy Holder
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client.FullName)
+        </dd>
+
+        <dt>
+            Total Member
+        </dt>
+
+        <dd>
+            @Model.Member.Count
+        </dd>
+
+        <dt>
+            Start Date
+        </dt>
+
+        <dd>
+            @Model.StartDate.Value.ToString("dd/MM/yyyy")
+        </dd>
+
+        <dt>
+            Mature Date
+        </dt>
+
+        <dd>
+            @Model.MatureDate.Value.ToString("dd/MM/yyyy")
+        </dd>
+
+
+
+        <dt>
+            Payment Frequency
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentFrequency)
+        </dd>
+
+        <dt>
+            Open or Close
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OpenOrClose)
+        </dd>
+
+        <dt>
+            Agent Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent)
+        </dd>
+    </dl>
+</div>
+

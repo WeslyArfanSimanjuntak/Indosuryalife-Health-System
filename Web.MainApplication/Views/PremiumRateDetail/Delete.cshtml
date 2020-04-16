@@ -1,0 +1,189 @@
+﻿@model Repository.Application.DataModel.PremiumRateDetails
+@*<style>
+        dt {
+            text-align: left;
+        }
+
+
+
+        /* Modal Content */
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            /*border: 1px solid #888;*/
+            width: 80%;
+            /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);*/
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #605ca8;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2px 16px;
+        }
+
+        .modal-footer {
+            padding: 2px 16px;
+            /*background-color: #605ca8;*/
+            color: white;
+        }
+    </style>*@
+@{
+    ViewBag.Title = "Delete Premium Rate Details";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+
+        </div><br />
+        @*<span class="close" onclick="modal.style.display = "none";">&times;</span>*@
+        @*<h3>Are you sure you want to delete this?</h3>*@
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Payment Duration", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.PaymentDuration)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Coverage Duration", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.CoverageDuration)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Is Adult", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.IsAdult)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Sex", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Sex)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Is Smoking", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.IsSmoking)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Range Up Min", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RangeUpMin)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Range Up Max", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RangeUpMax)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Range Age Min", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RangeAgeMin)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Range Age Max", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RangeAgeMax)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Premium Rate", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.PremiumRate)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Record Status", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RecordStatus)
+                </div>
+            </div>
+
+            <div class="row">
+                @Html.Label("Insurer Id", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.PremiumRate1.InsurerId)
+                </div>
+            </div>
+
+        </div>
+
+        @*<div class="no-color modal-footer">
+                <button type="button" class="btn btn-secondary" id="#btn-close-modal" data-dismiss="modal">Close</button>
+                <input type="submit" value="Delete" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+
+            </div>*@
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <div class="box-footer">
+                    <div class="form-group" style="text-align:right">
+                        @*<div class="col-md-offset-2 col-md-10">*@
+                        @*<a href="/premiumratedetail" class="btn btn-default">Back</a>*@
+
+                        <input type="submit" value="Delete" class="btn btn-default" style="background-color:#008CBA; color:white;" />
+                        @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleted" style="background-color:#008CBA;color:white;">Delete</button>*@
+                        @*</div>*@
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="modal" id="deleted" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <p><b>Are you sure to delete this?</b></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Delete" class="btn btn-default" style="background-color:#008CBA; color:white;" />
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        }
+
+    </div>
+</div>

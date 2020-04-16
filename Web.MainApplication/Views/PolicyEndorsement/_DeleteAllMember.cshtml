@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Member_Endorse>
+@{
+    Layout = null;
+}
+<div>
+    <h4>Are you sure want to delete all members of this Policy?</h4>
+    @{ foreach (var item in Model)
+        {
+
+            <dl class="dl-horizontal">
+                <dt>
+                    Member Name
+                </dt>
+
+                <dd>
+                    @item.Client.FullName
+                </dd>
+            </dl>
+        }}
+</div>

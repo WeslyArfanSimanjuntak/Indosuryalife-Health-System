@@ -1,0 +1,116 @@
+﻿@model Repository.Application.DataModel.BasicProduct
+
+@{
+    ViewBag.Title = "Delete Basic Product";
+}
+
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                @Html.Label("Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Id)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("BpInsurer Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BpInsurerId)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Basic Product Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BasicProductName)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Basic Product Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.BasicProductDesc)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Currency Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.CurrencyId)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Product Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.ProductType)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Refund Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.RefundId)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Fcl Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.FclId)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Created By", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.CreatedDate)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Updated Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.UpdatedDate)
+                </div>
+            </div>
+            <div class="row">
+                @Html.Label("Is Active", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.IsActive)
+                </div>
+            </div><br />
+
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <div class="box-footer">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <a href="/basicproduct" class="btn btn-default">Back</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deleted" style="background-color:#008CBA; color:white;">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="deleted" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" style="width:400px">
+
+                            <div class="modal-body">
+                                <p><b>Are you sure to delete this?</b></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                <input type="submit" value="Delete" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+</div>
+    </div>

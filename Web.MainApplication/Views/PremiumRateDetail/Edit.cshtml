@@ -1,0 +1,194 @@
+﻿@model Repository.Application.DataModel.PremiumRateDetails
+
+@{
+    ViewBag.Title = "Edit Premium Rate Detail";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="box box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-body">
+            <br />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="row">
+                <div>
+                    @Html.Label("RateId", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.RateId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.RateId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PaymentDuration, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.PaymentDuration, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Coverage Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.CoverageDuration, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.CoverageDuration, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Is Adult", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("IsAdult", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @Html.ValidationMessageFor(model => model.IsAdult, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Sex", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("Sex", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @Html.ValidationMessageFor(model => model.Sex, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Is Smoking", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("IsSmoking", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @Html.ValidationMessageFor(model => model.IsSmoking, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Range Up", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.RangeUpMin, new { htmlAttributes = new { @class = "form-control", @placeholder = "Min", @Required = "required" } })
+                        @Html.ValidationMessageFor(model => model.RangeUpMin, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.RangeUpMax, new { htmlAttributes = new { @class = "form-control", @placeholder = "Max", @Required = "required" } })
+                        @Html.ValidationMessageFor(model => model.RangeUpMax, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.Label("Range Age", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.RangeAgeMin, new { htmlAttributes = new { @class = "form-control", @placeholder = "Min", @Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.RangeAgeMin, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.RangeAgeMax, new { htmlAttributes = new { @class = "form-control", @placeholder = "Max", @Required = "required" } })
+                    @Html.ValidationMessageFor(model => model.RangeAgeMax, "", new { @class = "text-danger" })
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Premium Rate", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PremiumRate, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                        @Html.ValidationMessageFor(model => model.PremiumRate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Record Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.RecordStatus, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.RecordStatus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="box-footer">
+                <div class="form-actions color">
+                    <div class="col-md-offset-2 col-md-10">
+                        <h3 class="box-title">
+                            @*@Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })*@
+                            <input type="submit" value="Save" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script>
+
+    $("#RangeUpMin, #RangeUpMax").change(function (e) {
+        var lil = parseInt($("#RangeUpMin").val());
+        var big = parseInt($("#RangeUpMax").val());
+
+        $('#lil').text(lil);
+        $('#big').text(big);
+
+        if (lil > big) {
+            var targ = $(e.target);
+
+            if (targ.is("#RangeUpMax")) {
+                alert("Max must be greater than Min");
+                $('#RangeUpMax').val(lil);
+            }
+            if (targ.is("#RangeUpMin")) {
+                alert("Min must be less than Max");
+                $('#RangeUpMin').val(big);
+            }
+
+
+        }
+
+
+    });
+
+    $("#RangeAgeMin, #RangeAgeMax").change(function (e) {
+        var lil = parseInt($("#RangeAgeMin").val());
+        var big = parseInt($("#RangeAgeMax").val());
+        $('#lil').text(lil);
+        $('#big').text(big);
+        if (lil > big) {
+            var targ = $(e.target);
+            if (targ.is("#RangeAgeMax")) {
+                alert("Max must be greater than Min");
+                $('#RangeUpMax').val(lil);
+            }
+            if (targ.is("#RangeAgeMin")) {
+                alert("Min must be less than Max");
+                $('#RangeAgeMin').val(big);
+            }
+        }
+    });
+
+</script>
+
+
+

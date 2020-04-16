@@ -1,0 +1,385 @@
+﻿@model Web.MainApplication.Models.DatatableIndexModels
+<!-- start @Model.TableId----------------------------------------------------------------------------------------------- -->
+<table id="@Model.TableId" class="table  table-hover">
+    <thead>
+        <tr>
+            @{
+                var index = 0;
+                foreach (var item in Model.ColumnHeader)
+                {
+                    <th id="@Model.ListOfColumns.ElementAt(index).Data">@item</th>
+                    index += 1;
+                }
+            }
+        </tr>
+    </thead>
+    @{
+        if (Model.FooterShow)
+        {
+            <tfoot>
+                <tr>
+                    @{
+                        foreach (var item in Model.ListOfColumns.Where(x => x.Name.ToLower() != "id"))
+                        {
+                            <th>@item.Name</th>
+                        }
+                    }
+                </tr>
+            </tfoot>
+        }
+    }
+</table>
+<script>
+   var columnsInfo_@Model.TableId =[
+   @{
+       int counter = 0;
+       foreach (var item in Model.ListOfColumns) {
+           counter++;
+           if (counter < Model.ListOfColumns.Count) {
+               if (item.Type == typeof(DateTime).Name) {
+           <text>
+               {
+                   name : "@item.Name", data:"@item.Data", type:"@item.Type",
+                       render: function (data) {
+                           if (data === null) return "";
+                           if (moment(data).format("DD/MM/YYYY") == "01/01/1900") return "";
+                               return moment(data).format("DD/MM/YYYY");
+                       }
+                   },
+                   </text>
+               }
+               else if (item.Type == typeof(Decimal).Name) {
+           <text>
+               {
+                   name : "@item.Name", data:"@item.Data", type:"@item.Type",
+           render: $.fn.dataTable.render.number('.', ',', 2),
+           className: "text-right"
+       },
+                   </text>
+               }
+               else {
+           <text>{name : "@item.Name", data:"@item.Data", type:"@item.Type"},</text>
+               }
+           }
+           else {
+               if (item.Type == typeof(DateTime).Name) {
+           <text>
+               {
+                   name : "@item.Name", data:"@item.Data", type:"@item.Type",
+                       render: function (data) {
+                           if (data === null) return "";
+   if (moment(data).format("DD/MM/YYYY") == "01/01/1900") return "";
+   return moment(data).format("DD/MM/YYYY");
+   }
+   },
+                   </text>
+               }
+               else if (item.Type == typeof(Decimal).Name) {
+           <text>
+               {
+                   name : "@item.Name", data:"@item.Data", type:"@item.Type",
+           render: $.fn.dataTable.render.number('.', ',', 2),
+           className: "text-right"
+       },
+                   </text>
+               }
+               else {
+           <text>{name : "@item.Name", data:"@item.Data", type:"@item.Type"},</text>
+               }
+           }
+       }
+   }
+   ];
+   $('#@Model.TableId thead tr').clone(true).appendTo('#@Model.TableId thead');
+   $('#@Model.TableId thead tr:eq(1) th').each(function (i) {
+       var title = $(this).text();
+       id = ($(this).attr("id")) + '@Model.TableId';
+       if (title != "") {
+           $(this).html('<input type="text" style="border:0;border-bottom:solid 1px #707070;outline:none;width:90%" id="'+id+'" />');
+       }
+       $('input', this).on('keyup change', function () {
+           if (@{<text>@Model.TableId</text>}.column(i).search() !== this.value) {
+               if (String(this.value).length > 2 || String(this.value).length == 0) {
+                   @*@{<text>@Model.TableId</text>}.column(i)
+                       .search(this.value)
+                       .draw();*@
+                   Search_@{<text>@Model.TableId</text>}();
+               }
+
+           }
+       });
+       });
+
+   var listOfColumn = @{
+       @Html.Raw(Json.Encode(Model.ListOfColumns))
+   }
+   var targetCount = @Model.ListOfColumns.Count - 1;
+
+   var columnDefsInfo_@Model.TableId =[
+
+   @if (Model.ViewShow || Model.EditShow || Model.IconTreeName != "")
+   {
+
+   <text>
+   {
+       orderable: false,
+       width: '80px',
+       targets: [0],
+       data: "@Model.ListOfColumns.FirstOrDefault().Name",
+       className: "text-center",
+       render: function (data, type, full, meta) {
+           return data;
+       }
+   }
+    </text>
+   }
+   else {
+   <text>
+       ,{
+           orderable: false,
+           width: '80px',
+           targets: [0],
+           data: "@Model.ListOfColumns.FirstOrDefault().Name",
+           className: "text-center",
+           render: function (data, type, full, meta) {
+                   return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+           }
+           }
+   </text>
+   }
+   @if (Model.ShowLink != null) {
+       if (Model.ShowLink.Count() > 0) {
+       <text>
+           ,{
+            orderable: false,
+           targets: [targetCount],
+           data: "@Model.ListOfColumns.FirstOrDefault().Name",
+           className: "text-center",
+           render: function(data, type, full, meta) {
+               return '<ul class="icons-list"> ' +
+                       @{
+                           foreach (var item in Model.ShowLink)
+                           {
+                               <text>
+                                   '<li><a href="@item.Data/' + data +'" style="color:blue">@item.Name</a></li>' +
+                               </text>
+                           }
+                       }
+                       '</ul>';
+           }
+   }
+   </text>
+                               }
+                           }
+   ];
+
+
+   var @{<text>@Html.Raw("ajaxUrlInfo" + Model.TableId)</text>}  = '@Html.Raw(@Model.Url + @Model.FilterString)';
+   var @Model.TableId = $('#@Model.TableId').DataTable({
+   processing: true,
+       orderCellsTop: true,
+       searchDelay: 300,
+   fixedHeader: true,
+   serverSide: true,
+   stateSave: false,
+   scrollX: true,
+   language:
+       {
+       processing: "<img src='" + baseUrl +"/content/icon/index.ripple-radio-preloader.svg'>",
+       },
+   @{
+       if (Model.Order != null)
+       {
+   <text>
+       order: [
+       @{
+           foreach (var item in Model.Order)
+           {
+           <text>[@item.Name, "@item.Data"],</text>
+           }
+       }
+   ],
+   </text>
+           }
+   }
+   ajax: {
+   url: @{<text>@Html.Raw("ajaxUrlInfo" + Model.TableId)</text>
+   },
+   type: "POST"
+   },
+   searching: false,
+   autoWidth: false,
+       columnDefs : columnDefsInfo_@Model.TableId,
+   columns: columnsInfo_@Model.TableId,
+
+   });
+
+
+   $("#@{<text>@Html.Raw(Model.FilterClearButtonId)</text>}").click(function () {
+   @{<text>@Html.Raw("columnPropertyInfo" + Model.TableId)</text>
+   }.forEach(function (item, index, array) {
+   $("#" + item.data).val("");
+   });
+   @{<text>@Html.Raw(Model.TableId)</text>}.ajax.url("Lookup" + "/Search?entitas=FinanceTransaction");
+   @{<text>@Html.Raw(Model.TableId)</text>}.ajax.reload();
+   });
+    
+
+   $(function () {
+   $('#@Model.FilterButtonId').click(function () {
+       //Html.Treemas().Page.GetControllerUrl("LookUp")
+       var urlDefaultFilter@{<text>@Model.TableId</text>
+   } = '@Html.Raw(Model.Url)';
+   var columnsInfo__@Model.TableId = columnsInfo_@Model.TableId;
+   var urlFilterArrayFor@{<text>@Model.TableId</text>
+   } = [@{<text> '@Html.Raw(string.IsNullOrEmpty(Model.FilterString) ? "&$filter= true" : Model.FilterString)' </text>}];
+   var urlFilterFor@{<text>@Model.TableId</text>} = "";
+   columnsInfo__@{<text>@Model.TableId</text>}.forEach(function (item, index, array) {
+   var itemValue = $.trim($('#' + item.data + '@{<text>@Model.TableId</text>}').val());
+   if (itemValue !== "" && itemValue !== undefined) {
+       if (item.type === "@typeof(String).Name") {
+           if (item.name.toLowerCase() === "recordstatusstring" || item.name.toLowerCase() === "record_status" || item.name.toLowerCase() === "recordstatus") {
+               //urlFilterArrayFor@{<text>@Model.TableId</text>}.push(item.data.replace('String',"").replace("STRING","").replace("_STRING","") + " == \"" + itemValue + "\"");
+               urlFilterArrayFor@{<text>@Model.TableId</text>
+           }.push(item.name.replace('String', "").replace("STRING", "").replace("_STRING", "") + " == \"" + itemValue + "\"");
+       } else {
+           urlFilterArrayFor@{<text>@Model.TableId</text>
+       }.push(item.data + ".Contains(\"" + itemValue + "\")");
+   }
+   }
+               else if (item.type === "@typeof(Int16).Name" || item.type === "@typeof(Int32).Name" || item.type === "@typeof(Int64).Name" || item.type === "@typeof(Decimal).Name") {
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data + " == " + itemValue);
+               }
+               else if (item.type === "@typeof(DateTime).Name") {
+   var arrayRangeDate = itemValue.split(' ').join('').replace('-', '/').split('/');
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data + " >= " + "Convert.ToDateTime(\"" + arrayRangeDate[1] + "/" + arrayRangeDate[0] + "/" + arrayRangeDate[2] + "\")" + " and " + item.data + " <= " + "Convert.ToDateTime(\"" + arrayRangeDate[4] + "/" + arrayRangeDate[3] + "/" + arrayRangeDate[5] + "\")");
+               }
+   if (item.type === "RecordStatus") {
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data.replace('String', "").replace("STRING", "").replace("_STRING", "") + " == \"" + itemValue + "\"");
+               }
+           }
+       });
+   urlFilterArrayFor@{<text>@Model.TableId</text>}.forEach(function (item, index, array) {
+   if ((index + 1) !== urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.length) {
+   urlFilterFor@{<text>@Model.TableId</text>
+   } = urlFilterFor@{<text>@Model.TableId</text>} + item + " and ";
+           } else if ((index + 1) === urlFilterArrayFor@{<text>@Model.TableId</text>}.length) {
+   urlFilterFor@{<text>@Model.TableId</text>
+   } = urlFilterFor@{<text>@Model.TableId</text>} + item;
+           }
+       });
+   @{<text>@Model.TableId</text>}.ajax.url(urlDefaultFilter@{<text>@Model.TableId</text>}  +  urlFilterFor@{<text>@Model.TableId</text>});
+   @{<text>@Model.TableId</text>}.ajax.reload();
+   });
+
+   $("#@Model.FilterClearButtonId").click(function () {
+   //Html.Treemas().Page.GetControllerUrl("LookUp")
+   var ajaxUrlFilter__@Model.TableId = '@Html.Raw(Model.Url + Model.FilterString)';
+
+   var columnsInfo__@Model.TableId = columnsInfo_@Model.TableId;
+   @{
+       string setUrl_ = Model.TableId + ".ajax.url(ajaxUrlFilter__" + @Model.TableId + ");";
+       string setReload_ = Model.TableId + ".ajax.reload();";
+       string callClearFunction_ = "ClearSearchTable_" + Model.TableId + "( columnsInfo__" + Model.TableId + " );";
+
+   }
+
+   @callClearFunction_
+   @setUrl_
+   @setReload_
+   });
+
+    columnsInfo_@{<text>@Model.TableId</text>}.forEach(function (item, index, array) {
+   if (item.type === "@typeof(DateTime).Name") {
+       $('#' + item.name + '@{<text>@Model.TableId</text>}').daterangepicker({
+           showDropdowns: true,
+           singleDatePicker: false,
+           autoUpdateInput: false,
+           locale: {
+               cancelLabel: 'Clear',
+               format: 'DD/MM/YYYY'
+           }
+       }, function (chosen_date) {
+           $('#' + item.name + '@{<text>@Model.TableId</text>}').val(chosen_date.format('DD/MM/YYYY'));
+       });
+
+       $('#' + item.name + '@{<text>@Model.TableId</text>}').on('apply.daterangepicker', function (ev, picker) {
+           $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+       });
+
+       $('#' + item.name + '@{<text>@Model.TableId</text>}').on('cancel.daterangepicker', function (ev, picker) {
+           $(this).val('');
+       });
+
+   }
+   });
+   });
+   function ClearSearchTable_@{<text>@Model.TableId</text>}(columnsInfo_@{<text>@Model.TableId</text>}) {
+   columnsInfo_@{<text>@Model.TableId</text>
+   }.forEach(function (item, index, array) {
+   $('#' + item.data + '@{<text>@Model.TableId</text>}').val('');
+   if (item.name.toLowerCase() === "recordstatusstring" || item.name.toLowerCase() === "record_status" || item.name.toLowerCase() === "recordstatus") {
+       $('#' + item.data + '@{<text>@Model.TableId</text>}').val('').change();
+   }
+   if (item.type === "RecordStatus") {
+       $('#' + item.data + '@{<text>@Model.TableId</text>}').val('').change();
+   }
+   });
+   }
+
+    function Search_@{<text>@Model.TableId</text>}() {
+       //Html.Treemas().Page.GetControllerUrl("LookUp")
+       var urlDefaultFilter@{<text>@Model.TableId</text>
+   } = '@Html.Raw(Model.Url)';
+   var columnsInfo__@Model.TableId = columnsInfo_@Model.TableId;
+   var urlFilterArrayFor@{<text>@Model.TableId</text>
+   } = [@{<text> '@Html.Raw(string.IsNullOrEmpty(Model.FilterString) ? "&filter= true" : Model.FilterString)' </text>}];
+   var urlFilterFor@{<text>@Model.TableId</text>} = "";
+   columnsInfo__@{<text>@Model.TableId</text>}.forEach(function (item, index, array) {
+   var itemValue = $.trim($('#' + item.data + '@{<text>@Model.TableId</text>}').val());
+   if (itemValue !== "" && itemValue !== undefined) {
+       if (item.type === "@typeof(String).Name") {
+           if (item.name.toLowerCase() === "recordstatusstring" || item.name.toLowerCase() === "record_status" || item.name.toLowerCase() === "recordstatus") {
+               //urlFilterArrayFor@{<text>@Model.TableId</text>}.push(item.data.replace('String',"").replace("STRING","").replace("_STRING","") + " == \"" + itemValue + "\"");
+               urlFilterArrayFor@{<text>@Model.TableId</text>
+           }.push(item.name.replace('String', "").replace("STRING", "").replace("_STRING", "") + " == \"" + itemValue + "\"");
+       } else {
+           urlFilterArrayFor@{<text>@Model.TableId</text>
+       }.push(item.data + ".Contains(\"" + itemValue + "\")");
+   }
+   }
+               else if (item.type === "@typeof(Int16).Name" || item.type === "@typeof(Int32).Name" || item.type === "@typeof(Int64).Name" || item.type === "@typeof(Decimal).Name") {
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data + " == " + itemValue);
+               }
+               else if (item.type === "@typeof(DateTime).Name") {
+   var arrayRangeDate = itemValue.split(' ').join('').replace('-', '/').split('/');
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data + " >= " + "Convert.ToDateTime(\"" + arrayRangeDate[1] + "/" + arrayRangeDate[0] + "/" + arrayRangeDate[2] + "\")" + " and " + item.data + " <= " + "Convert.ToDateTime(\"" + arrayRangeDate[4] + "/" + arrayRangeDate[3] + "/" + arrayRangeDate[5] + "\")");
+               }
+   if (item.type === "RecordStatus") {
+   urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.push(item.data.replace('String', "").replace("STRING", "").replace("_STRING", "") + " == \"" + itemValue + "\"");
+               }
+           }
+       });
+   urlFilterArrayFor@{<text>@Model.TableId</text>}.forEach(function (item, index, array) {
+   if ((index + 1) !== urlFilterArrayFor@{<text>@Model.TableId</text>
+   }.length) {
+   urlFilterFor@{<text>@Model.TableId</text>
+   } = urlFilterFor@{<text>@Model.TableId</text>} + item + " and ";
+           } else if ((index + 1) === urlFilterArrayFor@{<text>@Model.TableId</text>}.length) {
+   urlFilterFor@{<text>@Model.TableId</text>
+   } = urlFilterFor@{<text>@Model.TableId</text>} + item;
+           }
+       });
+   @{<text>@Model.TableId</text>}.ajax.url(urlDefaultFilter@{<text>@Model.TableId</text>}  +  urlFilterFor@{<text>@Model.TableId</text>});
+   @{<text>@Model.TableId</text>}.ajax.reload();
+    }
+</script>
+
+<!-- end @Model.TableId ----------------------------------------------------------------------------------------------- -->

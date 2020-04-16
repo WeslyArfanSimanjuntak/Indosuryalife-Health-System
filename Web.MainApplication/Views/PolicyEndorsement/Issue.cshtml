@@ -1,0 +1,66 @@
+﻿@model Repository.Application.DataModel.Endorsement
+@{
+    Layout = null;
+}
+<div class="col-md-12">
+    <dl class="dl-horizontal">
+        <dt>
+            Policy Holder
+        </dt>
+
+        <dd>
+            @(Model?.Policy?.Client?.FullName)
+        </dd>
+
+        <dt>
+            Total Member
+        </dt>
+
+        <dd>
+            @Model.Member_Endorse.Count
+        </dd>
+
+        <dt>
+            Start Date
+        </dt>
+
+        <dd>
+            @(Model.Policy.StartDate.Value.ToString("dd/MM/yyyy"))
+        </dd>
+
+        <dt>
+            Mature Date
+        </dt>
+
+        <dd>
+            @(Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy"))
+        </dd>
+
+
+
+        <dt>
+            Payment Frequency
+        </dt>
+
+        <dd>
+            @(Model.Policy.PaymentFrequency)
+        </dd>
+
+        <dt>
+            Open or Close
+        </dt>
+
+        <dd>
+            @(Model.Policy?.OpenOrClose)
+        </dd>
+
+        <dt>
+            Agent Name
+        </dt>
+
+        <dd>
+            @(Model.Policy?.Agent)
+        </dd>
+    </dl>
+</div>
+

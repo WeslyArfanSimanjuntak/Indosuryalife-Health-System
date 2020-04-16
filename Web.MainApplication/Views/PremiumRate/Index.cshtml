@@ -1,0 +1,140 @@
+﻿@model IEnumerable<Repository.Application.DataModel.PremiumRate>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Premium Rate</b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="PremiumRateTable">
+            <thead>
+                <tr>
+                    <th>
+                        Insurer Id
+                    </th>
+                    <th>
+                        Schedule Id
+                    </th>
+                    <th>
+                        Actuary Id
+                    </th>
+                    <th>
+                        Rate Type
+                    </th>
+                    <th>
+                        Class Of Risk Id
+                    </th>
+                    <th>
+                        Payment Duration
+                    </th>
+                    <th>
+                        Coverage Duration
+                    </th>
+                    <th>
+                        Payment Frequency
+                    </th>
+                    <th>
+                        Factor
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Record Status
+                    </th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                       
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InsurerId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ScheduleId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActuaryId)
+                        </td>
+                        <td>
+                            @(item.RateType == "Y" ? "Year" : item.RateType == "M" ? "Month" : "Date")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ClassOfRiskId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaymentDuration)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CoverageDuration)
+                        </td>
+                        <td>
+                            @(item.PaymentFrequency == "Y" ? "Yearly" : item.PaymentFrequency == "M" ? "Monthly" : item.PaymentFrequency == "S" ? "Semesterly": item.PaymentFrequency == "Q" ? "Quarterly":"Onetime")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Factor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RecordStatus)
+                        </td>
+                        @*<td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsActive)
+                        </td>*@
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { RateId = item.RateId }) |
+                            @Html.ActionLink("Details", "Details", new { RateId = item.RateId }) 
+                            @*@Html.ActionLink("Delete", "Delete", new { RateId = item.RateId })*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+        
+
+                $('#PremiumRateTable').DataTable({
+                    'paging': true,
+                    'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    'pageLength': 10,
+                    'searching': true,
+                    'ordering': true,
+                    'info': true,
+                    'autoWidth': false,
+                    'scrollX': true
+                });
+
+
+</script>
+

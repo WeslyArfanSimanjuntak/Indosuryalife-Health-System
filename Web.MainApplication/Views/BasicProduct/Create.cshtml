@@ -1,0 +1,91 @@
+﻿@model Repository.Application.DataModel.BasicProduct
+
+@{
+
+
+    ViewBag.Title = "Create Basic Product";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="box box-body">
+        <div class="box-header with-border">
+            <b class="box-title"><b>@ViewBag.Title</b></b>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                @Html.Hidden("BPInsurerId", "ISL")
+                <div>
+                    @Html.Label("Basic Product Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BasicProductId, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.BasicProductId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("BP Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BasicProductName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.BasicProductName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("BP Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.BasicProductDesc, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.BasicProductDesc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Currency Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.CurrencyId, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.CurrencyId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("FCL", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FclId, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.FclId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Refund", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.RefundId, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                        @Html.ValidationMessageFor(model => model.RefundId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="box-footer">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <a href="/BasicProduct" class="btn btn-default">Back</a>
+                        <input type="submit" value="Create" id="btnSubmit" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}

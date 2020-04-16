@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Menu>
+@{
+    ViewBag.Title = "Menu";
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+        <div class="box-body">
+            <table class="table table-bordered table-striped" id="menusTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Menu Name
+                        </th>
+                        <th>
+                            Parent Menu
+                        </th>
+                        <th>
+                            Roles
+                        </th>
+                        <th>
+                            Sequence
+                        </th>
+                        <th>
+                            Icon Class
+                        </th>
+                        <th>
+                            Menu Level
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MenuName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Menu2.MenuName)
+                            </td>
+                            <td>
+                                @{
+                                    if (item.AspNetRoles1 != null)
+                                    {
+                                        if (item.AspNetRoles1.Type == "Controller")
+                                        {
+                                            @item.AspNetRoles1.Name
+                                        }
+                                        else
+                                        {
+                                            @("-- " + item.AspNetRoles1.Name)
+                                        }
+                                    }
+
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sequence)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MenuIClass)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MenuLevel)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.MenuId }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.MenuId }) |
+                                @*@Html.ActionLink("Delete", "Delete", new { id = item.MenuId })*@
+                                @Ajax.ActionLink("Delete", "Delete", new { id = item.MenuId, layoutIsNull = true }, new AjaxOptions() {
+                               OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                               OnSuccess = "HideSpinner();",
+                               LoadingElementDuration = 3000,
+                               OnComplete = "$('#myModalTemporary').modal('show');",
+                               UpdateTargetId = "myModalTemporaryContent",
+                               HttpMethod = "GET",
+                               InsertionMode = InsertionMode.Replace
+                           })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function ($) {
+            $('#menusTable').DataTable({
+                'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                'pageLength': 10,
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+                'scrollX': true
+            });
+        }(jQuery));
+
+    </script>

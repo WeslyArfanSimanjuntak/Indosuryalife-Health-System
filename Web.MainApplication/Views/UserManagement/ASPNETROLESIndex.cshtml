@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Insurance.Bancassurance.DataModel.ASPNETROLES>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">User</h3>
+        <p>
+            @Html.ActionLink("Create New", "ASPNETROLESCreate")
+        </p>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <table id="rolesTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        PARENT
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NAME)
+                    </th>
+                    
+                    <th>
+                        @Html.DisplayNameFor(model => model.TYPE)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreateId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifyId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreateDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifyDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ASPNETROLES2.NAME)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ASPNETROLES2.NAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NAME)
+                        </td>
+                     
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TYPE)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifyId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifyDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ASPNETROLES2.NAME)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "AspNetRolesEdit", new { id = item.ID }) |
+                            @Html.ActionLink("Details", "AspNetRolesDetails", new { id = item.ID }) |
+                            @Html.ActionLink("Delete", "AspNetRolesDelete", new { id = item.ID })
+                        </td>
+                    </tr>
+                                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>

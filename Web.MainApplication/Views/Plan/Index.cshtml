@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Plan>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Policy.PolicyNumber)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlanName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlanDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Policy.PolicyNumber)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PlanId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PlanId, policyId = item.PolicyId }) |
+                @Ajax.ActionLink("Delete", "Delete", new { id = item.PlanId, layoutIsNull = true }, new AjaxOptions() {
+                          OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                          OnSuccess = "HideSpinner();",
+                          LoadingElementDuration = 3000,
+                          OnComplete = "$('#myModalTemporary').modal('show');",
+                          UpdateTargetId = "myModalTemporaryContent",
+                          HttpMethod = "GET",
+                          InsertionMode = InsertionMode.Replace
+                      })
+            </td>
+        </tr>
+    }
+
+</table>

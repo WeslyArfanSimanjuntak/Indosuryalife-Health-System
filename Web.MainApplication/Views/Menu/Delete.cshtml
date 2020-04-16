@@ -1,0 +1,82 @@
+﻿@model Repository.Application.DataModel.Menu
+@{
+    ViewBag.Title = "Delete Menu";
+    if (Request.Params["layoutIsNull"] != null && Convert.ToBoolean(Request.Params["layoutIsNull"]) == true)
+    {
+        Layout = null;
+    }
+}
+
+<div class="box box-solid">
+    <div class="box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Menu Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MenuName)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Sequence", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Sequence)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Icon Class", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MenuIClass)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Menu Level", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MenuLevel)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Roles Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.AspNetRoles1.Name)
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Menu Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Menu2.MenuName)
+                    </div>
+                </div>
+            </div><br />
+
+        </div>
+        <div class="box-footer">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-actions no-color">
+                    @*@Html.ActionLink("Back", "Index", null, new { @Class = "btn btn-default" })*@
+                    <input type="submit" value="Delete" class="btn btn-primary" style="background-color:#008CBA; color:white;" data-toggle="modal" data-target="#deleted" />
+                </div>
+            }
+        </div>
+    </div>

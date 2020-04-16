@@ -1,0 +1,114 @@
+﻿@model Repository.Application.DataModel.ASPNETUSERS
+
+@{
+    ViewBag.Title = "Details";
+    List<SelectListItem> roles = ViewBag.Roles;
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">User</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <dl class="dl-horizontal">
+
+            <dt>
+                Username
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.USERNAME)
+            </dd>
+
+            <dt>
+                Fullname
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FULLNAME)
+            </dd>
+            <dt>Roles</dt>
+            <dd>
+                @{
+                    if (roles != null)
+                    {
+                        foreach (var item in roles)
+                        {
+                            @item.Text<br />
+                        }
+
+                    }
+
+                }
+            </dd>
+            <dt>
+                Password Hash
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.PASSWORDHASH)
+            </dd>
+            <dt>
+                Email
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EMAIL)
+            </dd>
+
+            <dt>
+                Phone Number
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.PHONENUMBER)
+            </dd>
+            <dt>
+                User Type
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.USERTYPEINTERNALEXTERNAL)
+            </dd>
+
+            <dt>
+                Last Password Change
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LASTPASSWORDCHANGE)
+            </dd>
+            <dt>
+                Created By
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreateId)
+            </dd>
+
+            <dt>
+                Updated By
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ModifyId)
+            </dd>
+
+            <dt>
+                Created Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreateDate)
+            </dd>
+            <dt>
+                Updated Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ModifyDate)
+            </dd>
+
+
+
+
+        </dl>
+    </div>
+    <div class="box-footer">
+        <p>
+            @Html.ActionLink("Edit", "ASPNETUSERSEdit", new { id = Model.USERNAME }) |
+            @Html.ActionLink("Back to List", "ASPNETUSERSIndex")
+        </p>
+    </div>
+</div>

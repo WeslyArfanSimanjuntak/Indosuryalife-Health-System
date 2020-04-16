@@ -1,0 +1,66 @@
+﻿@model Repository.Application.DataModel.Benefit
+
+@{
+    ViewBag.Title = "Edit Benefit";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div>
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <b class="box-title">@ViewBag.Title</b>
+            </div>
+            <div class="box-body">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model=>model.IsActive)
+                <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Id" name="Id" type="hidden" value="@Model.Id" />
+                @*@Html.Hidden("Id", Model.Id.ToString(), new { @value = Model.Id })*@
+                <div class="row">
+                    <div>
+                        @Html.Label("Benefit Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.BenefitCode, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                            @Html.ValidationMessageFor(model => model.BenefitCode, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div><br />
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Benefit Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.BenefitName, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            @Html.ValidationMessageFor(model => model.BenefitName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div><br />
+                <div class="row">
+                    <div>
+                        @Html.Label("Benefit Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.BenefitDesc, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            @Html.ValidationMessageFor(model => model.BenefitDesc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div><br />
+
+
+                <div class="box-footer">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="/benefit" class="btn btn-default">Back</a>
+                            <input type="submit" value="Save" id="btnSubmit" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

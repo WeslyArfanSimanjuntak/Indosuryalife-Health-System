@@ -1,0 +1,173 @@
+﻿@model Repository.Application.DataModel.Endorsement
+@{
+    Layout = null;
+    var PolicyEndorse = Model.Policy;
+}
+@*<div class="modal-body" style="overflow:auto !important;">*@
+<div class="box box-solid">
+    <div class="box-header with-border">
+
+        @Html.Partial("_MessageToView")
+
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-body">
+        <div class="col-md-6">
+
+            <div>
+                <dl class="dl-horizontal">
+
+
+                    <dt>
+                        Total Member
+                    </dt>
+
+                    <dd>
+                        @(Model.Member_Endorse.Count)
+                    </dd>
+                    <dt style="font-size:large">
+                        Demanded Premi
+                    </dt>
+
+                    <dd id="ddSumOfPremiDemanded" class="money-format" style="font-size:large;color:orangered">
+                        @{
+                            string sumOfPremiDemanded = Convert.ToString(ViewBag.SumOfDemandedPremi);
+                            sumOfPremiDemanded = sumOfPremiDemanded.Replace(',', '.');
+                        }
+                        @sumOfPremiDemanded
+                    </dd>
+                    <dt style="font-size:large">
+                        Total Premi
+                    </dt>
+
+                    <dd id="ddSumOfPremi" class="money-format" style="font-size:large;color:orangered">
+                        @{
+                            string sumOfPremi = Convert.ToString(ViewBag.SumOfPremi);
+                            sumOfPremi = sumOfPremi.Replace(',', '.');
+                        }
+                        @sumOfPremi
+                    </dd>
+
+
+
+                </dl>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <dl class="dl-horizontal">
+
+
+                    <dt>
+                        Policy Holder
+                    </dt>
+
+                    <dd>
+                        @(Model.Policy?.Client?.FullName)
+                    </dd>
+
+                    <dt>
+                        Policy Number
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.PolicyNumber)
+                    </dd>
+
+                    <dt>
+                        Entry Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.EntryDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Start Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.StartDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Mature Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.MatureDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Last EndorseDate
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.LastEndorseDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Endorse Number
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.EndorseNumber)
+                    </dd>
+
+                    <dt>
+                        Exit Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.ExitDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Terminate Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.TerminateDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Issue Date
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.IssueDate?.ToString("dd/MM/yyyy"))
+                    </dd>
+
+                    <dt>
+                        Payment Frequency
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.PaymentFrequency)
+                    </dd>
+
+                   
+
+                    <dt>
+                        Agent Name
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.Agent)
+                    </dd>
+
+                    <dt>
+                        PolicyStatus
+                    </dt>
+
+                    <dd>
+                        @(PolicyEndorse.PolicyStatus)
+                    </dd>
+
+
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@

@@ -1,0 +1,188 @@
+﻿@model Repository.Application.DataModel.PremiumRate
+
+@{
+    ViewBag.Title = "Edit Premium Rate";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="box box-body">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div>
+                    @Html.Label("Insurer Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.InsurerId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.InsurerId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Schedule Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ScheduleId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.ScheduleId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Actuary Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ActuaryId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.ActuaryId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                @Html.HiddenFor(model => model.RateId)
+                <div>
+                    @Html.Label("Rate Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("RateType", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @Html.ValidationMessageFor(model => model.RateType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Class Of Risk Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.ClassOfRiskId, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.ClassOfRiskId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PaymentDuration, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.PaymentDuration, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Coverage Duration", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.CoverageDuration, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.CoverageDuration, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Payment Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("PaymentFrequency", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @Html.ValidationMessageFor(model => model.PaymentFrequency, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Factor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Factor, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.Factor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Record Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.RecordStatus, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.RecordStatus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-footer">
+                <div class="form-actions color">
+                    <div class="col-md-offset-2 col-md-10">
+                        <h3 class="box-title">
+                            @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })
+                            <input type="submit" value="Submit" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
+
+<script>
+    $("#ScheduleId").autocomplete({
+        source: function (request, response) {
+
+            var filterEntitas = 'BPLimitId.Contains("' + $("#ScheduleId").val() + '")';
+            $.ajax({
+                url: '@Url.Action("GetData", "EntityApi")',
+                dataType: "json",
+                data: {
+                filter: filterEntitas,
+                entitas : "BasicProductLimitHdr"
+                },
+                success: function (data) {
+                response($.map(data["data"], function (item) {
+                //console.log(item.ShortName);
+                return {
+                    label: item.BasicProductId + "-" + item.BPLimitId,
+                    value: item.BasicProductId + "-" + item.BPLimitId,
+                    id: item.BPLimitId
+                };
+                }));
+                },
+                error: function (xhr, status, error) {
+                alert("Error");
+                }
+                });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                $("#ScheduleId").val(ui.item.id);
+                console.log(ui.item);
+                console.log(ui.item ?
+                "Selected: " + ui.item.label :
+                "Nothing selected, input was " + this.value);
+                },
+                open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                }
+                });
+
+</script>

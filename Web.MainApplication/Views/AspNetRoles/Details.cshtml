@@ -1,0 +1,38 @@
+﻿@model Repository.Application.DataModel.AspNetRoles
+@{
+    ViewBag.Title = "Detail Role Users";
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+
+    <div class="box-body">
+        <div class="row">
+            <div>
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Type)
+                </div>
+            </div>
+        </div><br />
+
+    </div>
+
+    <div class="box-footer">
+        <div class="form-group">
+                @Html.ActionLink("Back", "Index", null, new { @Class = "btn btn-default" })
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+        </div>
+    </div>
+</div>
+

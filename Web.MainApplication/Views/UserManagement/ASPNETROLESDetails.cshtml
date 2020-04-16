@@ -1,0 +1,95 @@
+﻿@model Insurance.Bancassurance.DataModel.ASPNETROLES
+
+@{
+    ViewBag.Title = "Details";
+}
+@{
+    ViewBag.Title = "Create";
+    List<string> errorList = ViewBag.ErrorMessage;
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+
+        <h4>ASPNETROLES - Detail</h4>
+        @{
+            if (errorList != null)
+            {
+                <br />
+                foreach (var item in errorList)
+                {
+                    @item <br />
+                }
+            }
+        }
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.NAME)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.NAME)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TYPE)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TYPE)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateId)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateId)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifyId)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifyId)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifyDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifyDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ASPNETROLES2.NAME)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ASPNETROLES2.NAME)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="box-footer">
+        <p>
+        @Html.ActionLink("Edit", "ASPNETROLESEdit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "ASPNETROLESIndex")
+        </p>
+    </div>
+
+</div>

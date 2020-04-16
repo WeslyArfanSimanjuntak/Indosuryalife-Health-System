@@ -1,0 +1,117 @@
+﻿@model Insurance.Bancassurance.DataModel.ASPNETUSERS
+
+@{
+    ViewBag.Title = "Details";
+    List<SelectListItem> roles = ViewBag.Roles;
+}
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">Are You Sure Want To Delete?</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.LabelFor(model => model.USERNAME)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.USERNAME)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.FULLNAME)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FULLNAME)
+            </dd>
+            <dt>ROLES</dt>
+            <dd>
+                @{
+                    if (roles != null)
+                    {
+                        foreach (var item in roles)
+                        {
+                            @item.Text<br />
+                        }
+
+                    }
+
+                }
+            </dd>
+            <dt>
+                @Html.LabelFor(model => model.PASSWORDHASH)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.PASSWORDHASH)
+            </dd>
+            <dt>
+                @Html.LabelFor(model => model.EMAIL)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EMAIL)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.PHONENUMBER)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.PHONENUMBER)
+            </dd>
+            <dt>
+                @Html.LabelFor(model => model.USERTYPEINTERNALEXTERNAL)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.USERTYPEINTERNALEXTERNAL)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.LASTPASSWORDCHANGE)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LASTPASSWORDCHANGE)
+            </dd>
+            <dt>
+                @Html.LabelFor(model => model.UPDATEDBYUSER)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UPDATEDBYUSER)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.CREATEDDATEUSER)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CREATEDDATEUSER)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.UPDATEDDATEUSER)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UPDATEDDATEUSER)
+            </dd>
+
+
+
+
+        </dl>
+    </div>
+    <div class="box-footer">
+        <p>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Delete" class="btn btn-default" />
+
+                </div>
+            }
+            @Html.ActionLink("Edit", "ASPNETUSERSEdit", new { id = Model.USERNAME }) |
+            @Html.ActionLink("Back to List", "ASPNETUSERSIndex")
+        </p>
+    </div>
+</div>

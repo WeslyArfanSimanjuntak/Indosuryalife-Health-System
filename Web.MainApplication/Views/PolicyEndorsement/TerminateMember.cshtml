@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Repository.Application.DataModel.Endorsement>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="box box-solid">
+    <section class="content-header">
+
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </section>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b> Policy </b>
+        </h3>
+    </div>
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            @Html.ActionLink("Create New", "Create", "PolicyEndorsement", new { endorseType = EndorseType.TerminateMember }, new { @class = "btn btn-primary", style = "background-color:#008CBA; color:white;" })
+        </h3>
+    </div>
+
+    <div class="box-body">
+        <table class="table table-bordered table-striped" id="EndorsementTerminateMember">
+            <thead>
+                <tr>
+                    <th>Endorsement No</th>
+                    <th>
+                        Policy No
+                    </th>
+                    <th>
+                        Company Name
+                    </th>
+                    <th>
+                        Endorse Date
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        Mature Date
+                    </th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Total Member</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.EndorseNumber</td>
+                    <td>@item.Policy.PolicyNumber</td>
+                    <td>
+                        @Ajax.ActionLink(item.Policy.ClientId+" - "+item.Policy.Client.FullName, "Details","Client", new {id  = item.Policy.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                                           OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
+                                           OnSuccess = "HideSpinner();",
+                                           LoadingElementDuration = 3000,
+                                           OnComplete = "$('#myModalTemporary').modal('show');",
+                                           UpdateTargetId = "myModalTemporaryContent",
+                                           HttpMethod = "GET",
+                                           InsertionMode = InsertionMode.Replace
+                                      })
+                    </td>
+                    <td>
+                        @(item.EndorseDate?.ToString("dd/MM/yyyy"))
+                    </td>
+                    <td>
+                        @(item.Policy.StartDate.HasValue ? item.Policy.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </td>
+                    <td>
+                        @(item.Policy.MatureDate.HasValue ? item.Policy.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </td>
+                    <td>
+                        @item.EndorseType
+                    </td>
+                    <td>
+                        @item.EndorseStatus
+                    </td>
+                    <td>@(item.EndorseStatus != EndorseStatus.Done ? item.Member_Endorse.Count : item.Member_Movement.Count)</td>
+                    @{
+                        if (item.EndorseStatus == EndorseStatus.Done)
+                        {
+                            <td> @Html.ActionLink("Details", "Details", new { id = item.EndorseNumber, endorseType = item.EndorseType })</td>
+
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.EndorseNumber, endorseType = item.EndorseType }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.EndorseNumber, endorseType = item.EndorseType }) |
+                                @Ajax.ActionLink("Delete", "Delete", new { id = item.EndorseNumber, endorseType = item.EndorseType }, Html.AjaxOptionsDefault(), null)|                                    |
+                                @Ajax.ActionLink("Issue", "Issue", new { endorseId = item.EndorseNumber, endorseType = item.EndorseType }, Html.AjaxOptionsDefault())
+                            </td>
+                        }
+                    }
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+
+        $('#EndorsementTerminateMember').DataTable({
+            'paging': true,
+            'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            'pageLength': 10,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+            'scrollX': true,
+            'order': []
+        });
+
+    }(jQuery));
+
+</script>

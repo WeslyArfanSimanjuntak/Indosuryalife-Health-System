@@ -1,0 +1,80 @@
+﻿
+.pagi {
+    /* The image used */
+    background-image: url('../image/pagi.jpg');
+    /* Control the height of the image */
+    min-height: 380px;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+.siang {
+    /* The image used */
+    background-image: url('../image/siang.jpg');
+    /*background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ), url('../image/siang.jpg');*/
+  
+    /* Control the height of the image */
+    min-height: 380px;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+.sore {
+    /* The image used */
+    background-image: url('../image/sore2.jpg');
+    /*background-image: url('../../Content/image/img1.jpg');*/
+    /* Control the height of the image */
+    min-height: 380px;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+.malam {
+    /* The image used */
+    background-image: url('../image/malam.jpg');
+    /* Control the height of the image */
+    min-height: 380px;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+.login-box {
+    opacity: 0.95;
+    background-color: rgba(55, 55, 55, 0.19);
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-image: none;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    /*background-color: #008CBA;*/
+    /*background: rgba(0, 0, 0, 0.2);*/
+}
+
+.register-box {
+    opacity: 0.9;
+}
+h1 {
+    font-size: 25px;
+    color: black;
+}
+

@@ -1,0 +1,276 @@
+﻿@model Repository.Application.DataModel.Policy
+
+@{
+    /**/
+
+    ViewBag.Title = "Edit Policy";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div>
+                    @Html.Hidden("PolicyId", Model.PolicyId)
+                    @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PolicyNumber, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                        @Html.ValidationMessageFor(model => model.PolicyNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("PolicyStatus", null, htmlAttributes: new { @class = "form-control", @Required = "required" })
+                        @*@Html.EditorFor(model => model.PolicyStatus, new { htmlAttributes = new { @class = "form-control" } })*@
+                        @Html.ValidationMessageFor(model => model.PolicyStatus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="col-md-3" style="padding-left: 0 !important;padding-right: 0 !important;border-right:0">
+                                @*@Html.EditorFor(model => model.RelateTo, new { htmlAttributes = new { @readonly = "true", @class = "form-control" } })*@
+                                @Html.EditorFor(model => model.ClientId, new { htmlAttributes = new { @class = "form-control", @readonly = "true", @required = "required" } })
+                                @Html.ValidationMessageFor(model => model.ClientId, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-9 no-pad-right" style="padding-left: 0 !important;border-left:0">
+                                <div class="input-group col-md-12">
+                                    @Html.TextBox("ClientIdDesc", null, htmlAttributes: new { @Value = (Model.ClientId != null ? Model.Client.ShortName + " - " + Model.Client.FullName : ""), @class = "form-control", @Required = "required" })
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("OpenOrClose", null, htmlAttributes: new { @class = "form-control", @onchange = "setValue(this.value)", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.OpenOrClose, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.TerminateDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TerminateDate, "", new { @class = "text-danger" })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.MatureDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MatureDate, "", new { @class = "text-danger" })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Last Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group col-md-12">
+                            @Html.EditorFor(model => model.LastEndorseDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.LastEndorseDate, "", new { @class = "text-danger" })
+                            <span class="fa fa-calendar form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+
+            <div class="row">
+                <div>
+                    @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("PaymentFrequency", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.PaymentFrequency, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Agent", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("Agent", null, htmlAttributes: new { @class = "form-control", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.Agent, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div><br />
+        </div>
+
+
+        <div class="box-footer">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <a href="/policy" class="btn btn-default">Back</a>
+                    <input type="submit" value="Save" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                    @*<button type="button" onclick="console.log(OpenOrClose.value, LastEndorseDate.value, TerminateDate.value);">Try it</button>*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+$(function () {
+    $(document).ready(function () {
+        var str = $("#OpenOrClose").val();
+        if (str == 1) {
+            $("#MatureDate").val("31/12/2999");
+            document.getElementById("MatureDate").readOnly = true;
+
+        }
+        else {
+            if ($("#MatureDate").val() == "31/12/2999") {
+                $("#MatureDate").val("");
+                //document.getElementById("MatureDate").readOnly = false;
+            }
+
+            document.getElementById("MatureDate").readOnly = false;
+        }
+
+
+    });
+    $("#MatureDate").change(function () {
+        var StartDate = document.getElementById("StartDate").value;
+        var MatureDate = document.getElementById("MatureDate").value;
+
+        if ((Date.parse(startDate) < Date.parse(endDate))) {
+            alert("Mature Date should be greater than Start date");
+            document.getElementById("MatureDate").value = "";
+        }
+    });
+
+    $('#StartDate').datetimepicker({
+        format: "DD/MM/YYYY",
+    });
+    $('#MatureDate').datetimepicker({
+        format: "DD/MM/YYYY"
+    });
+    //$('#TerminateDate').datetimepicker();
+    $('#TerminateDate').datetimepicker({
+        format: "DD/MM/YYYY"
+    });
+    $('#LastEndorseDate').datetimepicker({
+        format: "DD/MM/YYYY"
+    });
+    //$('#TerminateDate').datetimepicker();
+});
+
+function setValue(str) {
+    if (str == 1) {
+        $("#MatureDate").val("31/12/2999");
+        document.getElementById("MatureDate").readOnly = true;
+
+    }
+    else {
+        if ($("#MatureDate").val() == "31/12/2999") {
+            $("#MatureDate").val("");
+            //document.getElementById("MatureDate").readOnly = false;
+        }
+
+        document.getElementById("MatureDate").readOnly = false;
+    }
+}
+
+
+$("#ClientIdDesc").autocomplete({
+    source: function (request, response) {
+
+        var filterEntitas = 'Type == "Company" and FullName.Contains("' + $("#ClientIdDesc").val() + '")';
+        $.ajax({
+            /**/
+            url: '@Url.Action("GetData", "EntityApi")',
+            /**/
+            dataType: "json",
+            data: {
+                filter: filterEntitas,
+                entitas: "Client"
+            },
+            success: function (data) {
+                response($.map(data["data"], function (item) {
+                    //console.log(item.ShortName);
+                    return {
+                        label: item.ShortName + " - " + item.FullName,
+                        value: item.ShortName + " - " + item.FullName,
+                        id: item.ClientId
+                    };
+                }));
+            },
+            error: function (xhr, status, error) {
+                alert("Error");
+            }
+        });
+    },
+    minLength: 3,
+    select: function (event, ui) {
+        $("#ClientId").val(ui.item.id);
+        console.log(ui.item);
+        console.log(ui.item ?
+            "Selected: " + ui.item.label :
+            "Nothing selected, input was " + this.value);
+    },
+    open: function () {
+        $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+    },
+    close: function () {
+        $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+    }
+});
+</script>
+<style type="text/css">
+    .table th, table td {
+        text-align: center;
+    }
+</style>
+
+
+@*<script>
+        $(function () {
+            $('#StartDate').datetimepicker({
+                format: 'DD/MM/YYYY',
+            });
+            $('#MatureDate').datetimepicker({
+                format: 'DD/MM/YYYY',
+            });
+            $('#LastEndorseDate').datetimepicker({
+                format: 'DD/MM/YYYY',
+            });
+
+            $('#ExitDate').datetimepicker();
+            $('#TerminateDate').datetimepicker();
+        });
+    </script>*@

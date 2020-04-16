@@ -1,0 +1,205 @@
+﻿@model Repository.Application.DataModel.MemberClientEndorse
+@{
+    Layout = null;
+    var member = (Repository.Application.DataModel.Member)ViewBag.Member;
+}
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.Hidden("MemberId", Model.MemberId)
+    @Html.Hidden("MemberNumber", Model.MemberNumber)
+
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_MemberTransitionData" data-toggle="tab" aria-expanded="false">Member Data Transition</a></li>
+            <li class=""><a href="#tab_CardMemberTransitionData" data-toggle="tab" aria-expanded="true">Card</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_MemberTransitionData">
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.Hidden("MemberClientEndorse1", Model.MemberClientEndorse1)
+                            @Html.Hidden("ClientId", Model.ClientId)
+                            @Html.Hidden("ContactPerson", Model.ContactPerson)
+                            @Html.Label("Name", "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@Model.Member_Endorse.Client.FullName</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = Model.Member_Endorse.Client.FullName == Model.FullName ? "" : "background-color: #00a65a;color: white;" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Start Date", "Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@member.StartDate.Value.ToString("dd/MM/yyyy")</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Member_Endorse.StartDate, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = member.StartDate == Model.Member_Endorse.StartDate ? "" : "background-color: #00a65a;color: white;" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("End Date", "End Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@member.EndDate.Value.ToString("dd/MM/yyyy")</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.Member_Endorse.EndDate, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = member.EndDate == Model.Member_Endorse.EndDate ? "" : "background-color: #00a65a;color: white;", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Sex", "Sex", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @{
+                                    string sex;
+                                    var sliClient_Sex = (SelectList)ViewBag.Sex;
+                                    sex = sliClient_Sex.Where(x => x.Value == member.Client.Sex).FirstOrDefault()?.Text;
+
+                                }
+                                <p class="form-control" readonly>@sex</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownList("Sex", null, htmlAttributes: new { @class = "form-control", @required = "required", @Style = member.Client.Sex == Model.Sex ? "" : "background-color: #00a65a;color: white;" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Relationship", "Relationship", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @{
+                                    string relationship;
+                                    var sliClient_ClientRelation = (SelectList)ViewBag.ClientRelation;
+                                    relationship = sliClient_ClientRelation.Where(x => x.Value == member.Client.ClientRelation).FirstOrDefault()?.Text;
+
+                                }
+                                <p class="form-control" readonly>@relationship</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownList("ClientRelation", null, htmlAttributes: new { @class = "form-control", @Style = member.Client.ClientRelation == Model.ClientRelation ? "" : "background-color: #00a65a;color: white;" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Date Of Birth", "Date Of Birth", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@member.Client.BirthDate.Value.ToString("dd/MM/yyyy")</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.BirthDate, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = member.Client.BirthDate == Model.BirthDate ? "" : "background-color: #00a65a;color: white;" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Bank Account Name", "Bank Account Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@member.Client.BankAccountName</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.BankAccountName, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = member.Client.BankAccountName == Model.BankAccountName ? "" : "background-color: #00a65a;color: white;" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Bank Account Number", "Bank Account Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                <p class="form-control" readonly>@member.Client.BankAccountNumber</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.BankAccountNumber, new { htmlAttributes = new { @class = "form-control", @required = "required", @Style = member.Client.BankAccountNumber == Model.BankAccountNumber ? "" : "background-color: #00a65a;color: white;" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Bank Name", "Bank Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @{
+                                    string bankAccountCode;
+                                    var sliClient_BankAccountCode = (SelectList)ViewBag.BankAccountCode;
+                                    bankAccountCode = sliClient_BankAccountCode.Where(x => x.Value == member.Client.BankAccountCode).FirstOrDefault()?.Text;
+
+                                }
+                                <p class="form-control" readonly>@bankAccountCode</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownList("BankAccountCode", null, htmlAttributes: new { @class = "form-control", @required = "required", @Style = member.Client.BankAccountCode == Model.BankAccountCode ? "" : "background-color: #00a65a;color: white;" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Marital Status", "Marital Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-5">
+                                @{
+                                    string maritalStatus;
+                                    var sliClient_MaritalStatus = (SelectList)ViewBag.MaritalStatus;
+                                    maritalStatus = sliClient_MaritalStatus.Where(x => x.Value == member.Client.MaritalStatus).FirstOrDefault()?.Text;
+
+                                }
+                                <p class="form-control" readonly>@maritalStatus</p>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.DropDownList("MaritalStatus", null, htmlAttributes: new { @class = "form-control", @required = "required", @Style = member.Client.MaritalStatus == Model.MaritalStatus ? "" : "background-color: #00a65a;color: white;" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_CardMemberTransitionData">
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input id="EndorseNumber" name="EndorseNumber" type="hidden" value="0000000037">
+                            <div class="col-md-1">
+                                @Html.CheckBox("LostCard", Model?.LostCard == 1 ? true : false)
+                            </div>
+                            <div class="col-md-5">
+                                <p class="form-control" readonly="">Print Lost Card</p>
+                            </div>
+                            <div class="col-md-5">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.tab-pane -->
+
+        </div>
+        <!-- /.tab-content -->
+    </div>
+
+
+</div>
+<script>
+    $(document).ready(function () {
+        $("#PolicyTarget").on("change", function () {
+            var policyTargetId = $("#PolicyTarget").val();
+            $("#PlanId").html("");
+
+            if (policyTargetId !== null && policyTargetId !== '') {
+                var option = "";
+                AjaxCall(function (output) {
+
+                    console.log(output);
+                    $.each(output, function (key, value) {
+                        option = option + ' <option value="' + value["Value"] + '">' + value["Text"] + '</option>';
+                    });
+                    $("#PlanId").append(option);
+            }, baseUrl + '/PolicyEndorsement/MemberMutate/@Model.MemberId?policyTargetId=' + policyTargetId +'&onChangedPolicyTargetIsHit=true',"GET", 200);
+
+            }
+
+
+        });
+
+    });
+
+    $(function () {
+        $('#BirthDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#Member_Endorse_StartDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+        $('#Member_Endorse_EndDate').datetimepicker({
+            format: 'DD/MM/YYYY'
+        });
+    });
+</script>

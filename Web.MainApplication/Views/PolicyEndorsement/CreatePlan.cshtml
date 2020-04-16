@@ -1,0 +1,388 @@
+﻿@model Repository.Application.DataModel.Plan_Endorse
+
+@{
+    ViewBag.Title = "Create Plan Endorse";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div>
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <b>Create Plan</b>
+                </h3>
+            </div>
+
+            <div class="box-body">
+                <div class="row">
+
+                    <div>
+                        @Html.Label("Endorsement Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.EndorseNumber)
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Model.Endorsement.EndorseType
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div>
+                        @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Policy Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @(Model.Policy.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Policy.Client.FullName)
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4" id="openOrClose">
+                            @(Model.Policy.OpenOrClose == "1" ? "Open" : "Close")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @(Model.Policy.StartDate.HasValue ? Model.Policy.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @(Model.Policy.TerminateDate.HasValue ? Model.Policy.TerminateDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div id="matureDate" class="col-md-4">
+                            @(Model.Policy.MatureDate.HasValue ? Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Last Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @(Model.Policy.LastEndorseDate.HasValue ? Model.Policy.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Policy.PaymentFrequency)
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Label("Agent", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Policy.Agent)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Plan INFORMATION*@
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <b>Plan Information</b>
+                </h3>
+            </div>
+            <div class="box-body">
+                @Html.Hidden("PolicyId", Model.PolicyId)
+                @Html.Hidden("EndorseNumber", Model.EndorseNumber)
+                <div class="row">
+                    <div>
+                        @Html.Label("Plan Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.PlanId, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            @Html.ValidationMessageFor(model => model.PlanId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control", @readOnly = "true" } })
+                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Plan Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.PlanName, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            @Html.ValidationMessageFor(model => model.PlanName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div>
+                        @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            <div class="input-group col-md-12">
+                                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                                <span class="fa fa-calendar form-control-feedback"></span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div><br />
+
+                <div class="row">
+                    <div>
+                        @Html.Label("Plan Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.PlanDesc, new { htmlAttributes = new { @class = "form-control", @Required = "required" } })
+                            @Html.ValidationMessageFor(model => model.PlanDesc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div><br />
+
+            </div>
+        </div>
+
+
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <b>Plan Detail</b>
+                </h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div>
+                        @Html.Label("Basic Product", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DropDownList("BasicProduct", null, htmlAttributes: new { @class = "form-control"@*, @Required = "required"*@})
+                        </div>
+                    </div>
+
+                    <div>
+                        @Html.Label("Limit Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.DropDownList("BasicProductLimit", null, htmlAttributes: new { @class = "form-control"@*, @Required = "required"*@})
+                        </div>
+                        <div class="col-md-2">
+                            <input type="button" value="Add" class="btn btn-primary" id="addRow" style="background-color:#008CBA; color:white;" />
+                        </div>
+                    </div>
+
+
+
+                </div><br />
+            </div>
+            @Html.Hidden("PlanDetailData")
+            <div class="box-body">
+                <table class="table table-bordered table-striped" id="PlanDetailTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Basic Product
+                            </th>
+                            <th>
+                                Basic Product Name
+                            </th>
+                            <th>
+                                Limit Code
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="box-footer">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Back", "Details", "Policy", new { id = Model.Policy.PolicyId }, htmlAttributes: new { @class = "btn btn-default" })
+                        <input type="submit" value="Create" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
+
+<script>
+
+    $(document).ready(function () {
+        $('#StartDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+        $('#MatureDate').datetimepicker({
+            format: "DD/MM/YYYY"
+        });
+
+        var t = $('#PlanDetailTable').DataTable();
+        var counter = 1;
+        var selectedBasicProduct1 = $("#BasicProduct").val();
+
+        $("#BasicProductLimit option").not(':first-child').each(function (index) {
+            $(this).remove();
+        });
+        if (selectedBasicProduct1 != "") {
+            AjaxCall(function (output) {
+                var usedNames = [];
+                console.log(output);
+                $.each(output.data, function (key, value) {
+                    if (usedNames.indexOf(value["BasicProductLimitCode"]) == -1) {
+                        $("#BasicProductLimit").append('<option value="' + value["BasicProductLimitCode"] + '">' + value["BasicProductLimitCode"] + '</option>');
+                        usedNames.push(value["BasicProductLimitCode"]);
+                    }
+                });
+
+            }, entityApiUrl + '?entitas=BasicProductLimit&filter=BasicProductId=="' + selectedBasicProduct1 + '"');
+        }
+
+        //$('#checkValue').on('click', function () {
+        //    var BP = $('#BasicProduct').val();
+        //    var BPL = $('#BasicProductLimit').val();
+        //    console.log(BP, BPL);
+        //});
+
+        $('#addRow').on('click', function () {
+            var BP = $('#BasicProduct option:selected').text();
+            var BPL = $('#BasicProductLimit option:selected').text();
+
+
+            if (BP == "---" || BPL == "---") {
+                alert("Basic Product or Limit Code can not be blank ");
+            }
+
+            else {
+                t.row.add([
+                    $('#BasicProduct').val(),
+                    $('#BasicProduct option:selected').text(),
+                    $('#BasicProductLimit').val(),
+                    '<a  style="cursor: pointer;">Delete</a>'
+                ]).draw(false);
+
+                $("#BasicProductLimit option").each(function () {
+                    if ($(this).val() == $('#BasicProductLimit').val()) {
+                        $(this).remove();
+                    }
+                });
+                $("#BasicProduct option").each(function () {
+                    if ($(this).val() == $('#BasicProduct').val()) {
+                        $(this).remove();
+                    }
+                });
+            }
+            $("#BasicProductLimit").prop('selectedIndex', 0);
+            $("#BasicProduct").prop('selectedIndex', 0);
+
+            counter++;
+        });
+
+
+        $('#PlanDetailTable tbody').on('click', 'a', function () {
+            var textBasicProduct = t.row($(this).parents('tr')).data()[0];
+            var valueBasicProduct = t.row($(this).parents('tr')).data()[1];
+            var valueBasicProductLimit = t.row($(this).parents('tr')).data()[2];
+
+            var optionBasicProduct = new Option(valueBasicProduct, textBasicProduct);
+            var optionBasicProductLimit = new Option(valueBasicProductLimit, valueBasicProductLimit);
+
+            $("#BasicProduct").append(optionBasicProduct);
+            $("#BasicProductLimit").append(optionBasicProductLimit);
+            $("#BasicProductLimit").prop('selectedIndex', 0);
+            $("#BasicProduct").prop('selectedIndex', 0);
+
+            t.row($(this).parents('tr'))
+                .remove()
+                .draw();
+
+            var selectedBasicProduct = $("#BasicProduct").val();
+
+            $("#BasicProductLimit option").not(':first-child').each(function (index) {
+                $(this).remove();
+            });
+            if (selectedBasicProduct != "") {
+                AjaxCall(function (output) {
+                    console.log(output);
+                    $.each(output.data, function (key, value) {
+
+                        $("#BasicProductLimit").append('<option value="' + value["BasicProductLimitCode"] + '">' + value["BasicProductLimitCode"] + '</option>');
+                    });
+
+                }, entityApiUrl + '?entitas=BasicProductLimit&filter=BasicProductId=="' + selectedBasicProduct + '"');
+            }
+        });
+
+
+
+        $("#BasicProduct").on("change", function () {
+            var selectedBasicProduct = $("#BasicProduct").val();
+            var usedNames = [];
+
+            $("#BasicProductLimit option").not(':first-child').each(function (index) {
+                $(this).remove();
+            });
+            if (selectedBasicProduct != "") {
+                AjaxCall(function (output) {
+                    console.log(output);
+                    $.each(output.data, function (key, value) {
+                        if (usedNames.indexOf(value["BasicProductLimitCode"]) == -1) {
+                            $("#BasicProductLimit").append('<option value="' + value["BasicProductLimitCode"] + '">' + value["BasicProductLimitCode"] + '</option>');
+                            usedNames.push(value["BasicProductLimitCode"]);
+                        }
+                    });
+
+                }, entityApiUrl + '?entitas=BasicProductLimit&filter=BasicProductId=="' + selectedBasicProduct + '"');
+            }
+        });
+
+    });
+
+
+
+    $("form").submit(function (event) {
+        var planDetailTable = $('#PlanDetailTable').DataTable();
+
+        var arrayPlanDetail = [];
+        $.each(planDetailTable.rows()
+            .data(), function (key, value) {
+                arrayPlanDetail.push(value[0] + ';' + value[2]);
+            });
+        $("#PlanDetailData").val(arrayPlanDetail.toString());
+        console.log($("#PlanDetailData").val());
+    });
+</script>

@@ -1,0 +1,211 @@
+﻿@model Repository.Application.DataModel.Member
+
+
+
+@{
+    ViewBag.Title = "MemberBenefits";
+    var benefitList = (List<Repository.Application.DataModel.Benefit>)ViewBag.ListOfBenefit;
+    }
+
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-header with-border">
+            <h1 class="box-title">Policy Information</h1>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Policy.PolicyNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Policy.PolicyStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PolicyStatus)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Client.FullName)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Policy.OpenOrClose, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4" id="openOrClose">
+                        @*@Html.DisplayFor(model => model.OpenOrClose)*@
+                        @(Model.Policy.OpenOrClose == "1" ? "Open" : "Close")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Policy.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.StartDate)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Policy.TerminateDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.TerminateDate)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Policy.MatureDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div id="matureDate" class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.MatureDate)
+                        @if (Model.Policy.OpenOrClose == "1")
+                        {
+                            <script>
+                                document.getElementById("matureDate").innerHTML = "-";
+                            </script>
+                        }
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Policy.LastEndorseDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.LastEndorseDate)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.Policy.PaymentFrequency, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PaymentFrequency)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Policy.Agent, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Agent)
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="box-header with-border">
+            <h1 class="box-title">Member Information</h1>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.MemberNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MemberNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.MemberStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.MemberStatus)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Member Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Client.FullName)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.LastEndorseDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.LastEndorseDate)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.PlanId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.PlanId)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.EndorseNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EndorseNumber)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div id="matureDate" class="col-md-4">
+                        @Html.DisplayFor(model => model.StartDate)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.LastClaimDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.LastClaimDate)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.EndDate)
+                    </div>
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.ClaimNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClaimNumber)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-bordered table-striped" id="BenefitTable">
+                <thead>
+                    <tr>
+                        <th>Benefit Id</th>
+                        <th>Benefit Name</th>
+                        <th>Batasan</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in benefitList)
+                    {
+                        <tr>
+                            <td>@item.BenefitCode</td>
+                            <td>@item.BenefitName</td>
+                            <td>@item.BasicProductLimit.FirstOrDefault().LimitNumber</td>
+                            <td>@item.BasicProductLimit.FirstOrDefault().LimitAmount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--for(int i = 0; Enumerable.Count(ViewBag.InnerJoin) <0; i++)-->

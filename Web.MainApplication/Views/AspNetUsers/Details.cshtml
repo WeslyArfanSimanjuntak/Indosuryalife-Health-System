@@ -1,0 +1,82 @@
+﻿@model Repository.Application.DataModel.AspNetUsers
+
+
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">
+            <b>Details User</b>
+        </h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div>
+                @Html.Label("Full Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.FullName)
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Password)
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Email)
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Roles", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @{ var roles = new List<Repository.Application.DataModel.AspNetRoles>();
+                        foreach (var item in Model.AspNetGroupUser)
+                        {
+                            foreach (var itemRoles in item.AspNetGroups.AspNetRoleGroup)
+                            {
+                                roles.Add(itemRoles.AspNetRoles);
+                            }
+                        }
+                        roles.Distinct().OrderBy(x => x.Name);
+                        foreach (var item in roles)
+                        {
+                            if (item.ParentId != null)
+                            {
+                                @(item.AspNetRoles2.Name + " - " + item.Name)
+                            }
+                            else
+                            {
+                                @item.Name
+                            }
+                            <br />
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        <div class="box-footer">
+            <div class="form-actions color">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Username }, new { @class = "btn btn-primary", @style = "background-color:#008CBA; color:white;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>

@@ -1,0 +1,107 @@
+﻿@model Insurance.Bancassurance.DataModel.ASPNETUSERS
+
+@{
+    ViewBag.Title = "Edit";
+    List<string> errorList = new List<string>();
+    errorList = (List<string>)ViewBag.ErrorMessage;
+}
+<div class="box box-solid">
+    <div class="box-header with-border">
+        <h3 class="box-title">@ViewBag.Title</h3>
+        @{if (errorList != null)
+            {
+                <br />
+                foreach (var item in errorList)
+                {
+                    @item<br />
+                }
+            }
+        }
+    </div>
+
+    @using (Html.BeginForm())
+    {    <div class="box-body">
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.USERNAME)
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="USERNAME">Email</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.USERNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                    @Html.ValidationMessageFor(model => model.USERNAME, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="EMAIL">Email</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EMAIL, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="FULLNAME">Fullname</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FULLNAME, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.FULLNAME, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="PASSWORDHASH">Password Hash</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PASSWORDHASH, new { htmlAttributes = new { @class = "form-control", @readonly = "true" } })
+                    @Html.ValidationMessageFor(model => model.PASSWORDHASH, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="PHONENUMBER">Phone Number</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PHONENUMBER, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                    @Html.ValidationMessageFor(model => model.PHONENUMBER, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="USERTYPEINTERNALEXTERNAL">User Type</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("USERTYPEINTERNALEXTERNAL", null, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.USERTYPEINTERNALEXTERNAL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="SubsidiaryId">Company</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("SubsidiaryId", null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.USERTYPEINTERNALEXTERNAL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="PolicyId">PolicyId</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("PolicyId", null, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PolicyId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="box-footer">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+        <div>
+            @Html.ActionLink("Back to List", "ASPNETUSERSIndex")
+        </div>
+    </div>
+    }
+
+
+</div>

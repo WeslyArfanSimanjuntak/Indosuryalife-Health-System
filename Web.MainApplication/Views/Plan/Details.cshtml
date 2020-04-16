@@ -1,0 +1,218 @@
+﻿@model Repository.Application.DataModel.Plan
+
+@{
+    ViewBag.Title = "Plan Details";
+}
+
+<div>
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">@ViewBag.Title</b>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Policy Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.PolicyStatus == PolicyStatus.Active ? "Active" : "Inactive")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Policy Holder", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Client.FullName)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Open/Close", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4" id="openOrClose">
+                        @(Model.Policy.OpenOrClose == "1" ? "Open" : "Close")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Terminate Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.TerminateDate.HasValue ? Model.Policy.TerminateDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Mature Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div id="matureDate" class="col-md-4">
+                        @(Model.Policy.MatureDate.HasValue ? Model.Policy.MatureDate.Value.ToString("dd/MM/yyyy") : "-")
+                        @*@if (Model.Policy.OpenOrClose == "1")
+                        {
+                            <script>
+                                document.getElementById("matureDate").innerHTML = "-";
+                            </script>
+                        }*@
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Last Endorse Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @(Model.Policy.LastEndorseDate.HasValue ? Model.Policy.LastEndorseDate.Value.ToString("dd/MM/yyyy") : "-")
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    @Html.Label("Frequency", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.PaymentFrequency)
+                    </div>
+                </div>
+                <div>
+                    @Html.Label("Agent", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.Policy.Agent)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box-header with-border">
+            <b class="box-title">Plan Information</b>
+        </div>
+
+        <div class="box-body">
+            <div class="row">
+                <div>
+                    <div>
+                        @Html.Label("Policy Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.Policy.PolicyNumber)
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        @Html.Label("Plan Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.PlanName)
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div>
+                    <div>
+                        @Html.Label("Plan Desc", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.DisplayFor(model => model.PlanDesc)
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy") : "-")
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-solid">
+        <div class="box-header with-border">
+            <b class="box-title">Plan Basic Product</b>
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-striped" id="PlanTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Plan ID
+                        </th>
+                        <th>
+                            Basic Product Name
+                        </th>
+                        <th>
+                            Limit Code
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Policy.PlanDetail.Where(x => x.PlanId == Model.PlanId))
+                    {
+                        <tr>
+                            <td>
+                                @item.PlanId
+                            </td>
+                            <td>
+                                @item.BasicProduct.BasicProductName
+                            </td>
+                            <td>
+                                @item.BasicProductLimitCode
+                            </td>
+                            <td>
+                                @Ajax.ActionLink("Details", "PolicyMemberBenefit","Policy", new { id = item.BasicProductId, bpLimitId = item.BasicProductLimitCode , layout = "null" }, Html.AjaxOptionsDefault())
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="box-footer">
+            <div class="form-group">
+                <div class="col-md-2">
+                    @Html.ActionLink("Back", "Details", "Policy", new { id = Model.PolicyId }, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $('#PlanTable').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': 10,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+    });
+</script>
+@*<style type="text/css">
+    .table th, table td {
+        text-align: center;
+    }
+</style>*@

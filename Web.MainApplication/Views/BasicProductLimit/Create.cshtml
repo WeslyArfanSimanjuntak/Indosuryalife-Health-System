@@ -1,0 +1,181 @@
+﻿@model Repository.Application.DataModel.BasicProductLimit
+@{
+    ViewBag.Title = "Create Basic Product Limit";
+    var benefitList = (List<Repository.Application.DataModel.Benefit>)ViewBag.ListOfBenefit;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="box box-body">
+    <div class="box-header with-border">
+        <b class="box-title">@ViewBag.Title</b>
+    </div>
+    <div class="box-body">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div>
+                @Html.Label("Basic Product Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("BasicProductId", (SelectList)ViewBag.BasicProductId, "---", htmlAttributes: new { @required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BasicProductId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div>
+                @Html.Label("Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @required = "required", @class = "form-control", @readOnly = "true" } })
+                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Limit Id", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.BasicProductLimitCode, new { htmlAttributes = new { @required = "required", @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BasicProductLimitCode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div><br />
+
+        <div class="row">
+            <div>
+                @Html.Label("Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.Benefit.BenefitDesc, htmlAttributes: new { @required = "required", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Benefit.BenefitDesc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div><br />
+
+              <div class="box-body text-center">
+                  <table class="table table-bordered table-striped dataTable no-footer" id="benefitTable">
+                      <thead>
+                          <tr>
+                              <th>Benefit Id</th>
+                              <th>Benefit Name</th>
+                              <th>Limit Type</th>
+                              <th>Number</th>
+                              <th>Amount</th>
+                              <th>Pre</th>
+                              <th>Post</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach (var item in benefitList)
+                          {
+                              <tr>
+                                  <td>@Html.CheckBox(item.BenefitCode, item.IsActive == 1 ? false : true) @item.BenefitCode</td>
+                                  <td>@item.BenefitName</td>
+                                  <td>@Html.TextBox(item.BenefitCode + "_LimitType", item.BasicProductLimit = null, htmlAttributes: new { @placeholder = "Limit Type", @class = "form-control" })</td>
+                                  <td>@Html.TextBox(item.BenefitCode + "_LimitNumber", item.BasicProductLimit = null, htmlAttributes: new { @size = "5", @placeholder = "Number", @class = "form-control" })</td>
+                                  <td>@Html.TextBox(item.BenefitCode + "_LimitAmount", item.BasicProductLimit = null, htmlAttributes: new { @class = "form-control", @placeholder = "Amount" })</td>
+                                  <td>@Html.TextBox(item.BenefitCode + "_Pre", item.BasicProductLimit = null, htmlAttributes: new { @size = "5", @class = "form-control", @placeholder = "Pre" })</td>
+                                  <td>@Html.TextBox(item.BenefitCode + "_Post", item.BasicProductLimit = null, htmlAttributes: new { @size = "5", @class = "form-control", @placeholder = "Post" })</td>
+                              </tr>
+                          }
+                      </tbody>
+                  </table>
+              </div>
+
+    </div>
+
+    <div class="box-footer">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back", "Index", null, new { @class = "btn btn-default" })
+                <input type="submit" value="Create" class="btn btn-primary" style="background-color:#008CBA; color:white;" />
+                @*<input type="button" id="testbutton" />*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+}
+
+<script>
+    $(function () {
+
+        $("#testbutton").on("click", function () {
+            alert("wesly");
+            //var nik = document.getElementById('MainContentPlaceHolder_txtNoKTPSearch').value;
+            //console.log(nik);
+            //Get the authenticate api url
+            var encodedUri = "http://172.16.160.128:8000/dukcapil/get_json/indosurya_sukses/call_nik";
+            var object = new {
+
+            };
+            //console.log(encodedUri);
+            var credentials = {};
+            credentials["nik"] = "1212231402940001";
+            credentials["user_id"] = "devindosukses";
+            credentials["password"] = "SuDVjg0Z";
+            credentials["IP_USER"] = "10.162.122.111";
+
+            var baluhap = JSON.stringify(credentials);
+            //console.log(credentialsJson);
+
+            $.ajax({
+                url: encodedUri + "?" + baluhap,
+                type: 'POST',
+                // data: baluhap,
+                contentType: 'application/json',
+                success: function (responseJson) {
+                    //console.log(responseJson);
+                    var DataEKTP = responseJson.content[0];
+                    //console.log(DataEKTP.content);
+                    console.log(DataEKTP);
+                    console.log(DataEKTP.RESPON);
+                    if (DataEKTP.RESPON != "Data Tidak Ditemukan") {
+                        //document.getElementById('MainContentPlaceHolder_lblErorr').innerHTML = '';
+                        //document.getElementById('MainContentPlaceHolder_txtNoKK').innerHTML = DataEKTP.NO_KK;
+                        //document.getElementById('MainContentPlaceHolder_txtNoKTP').innerHTML = DataEKTP.NIK;
+                        //document.getElementById('MainContentPlaceHolder_txtNama').innerHTML = DataEKTP.NAMA_LGKP;
+                        //var testdate = new Date(DataEKTP.TGL_LHR);
+                        //document.getElementById('MainContentPlaceHolder_txtTmpLahir').innerHTML = DataEKTP.TMPT_LHR + ', ' + testdate.format('dd-MM-yyyy');
+                        ////document.getElementById('MainContentPlaceHolder_txtTglLahir').innerHTML = DataEKTP.TGL_LHR;
+                        //document.getElementById('MainContentPlaceHolder_txtJenisKelamin').innerHTML = DataEKTP.JENIS_KLMIN;
+                        //document.getElementById('MainContentPlaceHolder_txtAlamat').innerHTML = DataEKTP.ALAMAT;
+                        //document.getElementById('MainContentPlaceHolder_txtNoRT').innerHTML = DataEKTP.NO_RT;
+                        //document.getElementById('MainContentPlaceHolder_txtNoRW').innerHTML = DataEKTP.NO_RW;
+                        //document.getElementById('MainContentPlaceHolder_txtNoKec').innerHTML = DataEKTP.NO_KEC + ' - ' + DataEKTP.KEC_NAME;
+                        ////document.getElementById('MainContentPlaceHolder_txtKec').innerHTML = DataEKTP.KEC_NAME;
+                        //document.getElementById('MainContentPlaceHolder_txtNoKel').innerHTML = DataEKTP.NO_KEL + ' - ' + DataEKTP.KEL_NAME;
+                        ////document.getElementById('MainContentPlaceHolder_txtKel').innerHTML = DataEKTP.KEL_NAME;
+                        //document.getElementById('MainContentPlaceHolder_txtNoKab').innerHTML = DataEKTP.NO_KAB + ' - ' + DataEKTP.KAB_NAME;
+                        ////document.getElementById('MainContentPlaceHolder_txtKab').innerHTML = DataEKTP.KAB_NAME;
+                        //document.getElementById('MainContentPlaceHolder_txtNoProp').innerHTML = DataEKTP.NO_PROP + ' - ' + DataEKTP.PROP_NAME;
+                        ////document.getElementById('MainContentPlaceHolder_txtNamaProp').innerHTML = DataEKTP.PROP_NAME;
+                        //document.getElementById('MainContentPlaceHolder_txtNamaIbu').innerHTML = DataEKTP.NAMA_LGKP_IBU;
+                        //document.getElementById('MainContentPlaceHolder_txtPekerjaan').innerHTML = DataEKTP.JENIS_PKRJN;
+                        //document.getElementById('MainContentPlaceHolder_txtKawin').innerHTML = DataEKTP.STATUS_KAWIN;
+                    } else {
+                        //document.getElementById('MainContentPlaceHolder_lblErorr').innerHTML = DataEKTP.RESPON;
+                        //reset();
+                    }
+                },
+                error: function () {
+                    //Failed to log in, show error message
+                    //$("#lblErorr").css("visibility", "visible");
+                },
+                complete: function () {
+                }
+            });
+
+        });
+
+        //$("#BasicProductId").change();
+        $("#benefitTable").DataTable({
+            scrollX: true,
+
+        });
+    });
+
+
+
+</script>
