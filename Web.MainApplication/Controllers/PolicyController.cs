@@ -1131,9 +1131,9 @@ namespace Web.MainApplication.Controllers
                             //db.Entry(sequencialMemberNumber).State = System.Data.Entity.EntityState.Modified;
                             db.SaveChanges();
                         }
-
-                        var allPolicyPCF = db.PCF.Where(x => x.PolicyId == policyId && x.InvoiceDate < DateTime.Now);
-
+                        // Update 17 April 2020
+                        //var allPolicyPCF = db.PCF.Where(x => x.PolicyId == policyId && x.InvoiceDate < DateTime.Now);
+                        var allPolicyPCF = policy.PCF.Where(x => x.TransactionNumber == null).ToList();
                         var financeTransaction = new FinanceTransaction();
                         var transactionNumberSeq = db.AspSequential.Where(x => x.Name == AspSequentialName.TransactionNumber).FirstOrDefault();
                         financeTransaction.RecordMode = 1;

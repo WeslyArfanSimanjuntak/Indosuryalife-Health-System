@@ -71,6 +71,7 @@ namespace Web.MainApplication.Controllers
             sliTerminateType.AddBlank();
             sliTerminateType.AddItemValText(TerminateType.Cancel, TerminateType.Cancel);
             sliTerminateType.AddItemValText(TerminateType.Refund, TerminateType.Refund);
+            sliTerminateType.AddItemValText(TerminateType.Death, TerminateType.Death);
 
             ViewBag.TerminateType = sliTerminateType.ToSelectList(memberEndorsement.MemberStatus.Replace(" Calculated", ""));
             var newModalView = new ModalView()
@@ -1895,11 +1896,12 @@ namespace Web.MainApplication.Controllers
                                 newClientToInsert.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
                                 newClientToInsert.Type = "Personal";
                                 newClientToInsert.ClientId = (lastClientIdSequence + 1).ToString().PadLeft(10, '0');
-                                var clientRelateTo = listClientToInsert.Where(x => x.FullName == item.G_EmployeeName).FirstOrDefault();
+                                //var clientRelateTo = listClientToInsert.Where(x => x.FullName == item.F_ParticipantName).FirstOrDefault();
                                 var clientRelateToMember = db.Client.Where(x => x.FullName == item.G_EmployeeName && x.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
-                                if (clientRelateTo != null || clientRelateToMember != null)
+                                var clientRelateTo = listClientToInsertWithAnotherProperty.Where(x => x.uploadMember.G_EmployeeName == item.G_EmployeeName && x.uploadMember.H_StatusRelation == "E" && x.client.BankAccountName == item.Q_BankAccountName && x.client.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
+                                if (clientRelateTo.client != null || clientRelateToMember != null)
                                 {
-                                    newClientToInsert.RelateTo = clientRelateToMember != null ? clientRelateToMember?.ClientId : clientRelateTo?.ClientId.PadLeft(10, '0');
+                                    newClientToInsert.RelateTo = clientRelateToMember != null ? clientRelateToMember?.ClientId : clientRelateTo.client?.ClientId.PadLeft(10, '0');
                                 }
                                 else
                                 {
@@ -2550,6 +2552,110 @@ namespace Web.MainApplication.Controllers
                             iteration++;
                         }
                         var refundPercentageString = db.CommonListValue.Where(x => x.Text == "Refund Percentage").FirstOrDefault()?.Value;
+                        var memberEndorsePCF = member.PCF_Endorse.Where(x => x.EndorseNumber == member.EndorseNumber);
+                        var listNewEndorsePCF = new List<PCF_Endorse>();
+                        var selectedPcf = memberEndorsePCF.Where(x => x.InvoiceDate < member.TerminateDate && x.TransactionNumber != null).OrderByDescending(x => x.InvoiceDate).FirstOrDefault();
+                        var listPcfToRefund = new List<PCF_Endorse>();
+                        listPcfToRefund.AddRange(memberEndorsePCF.Where(x => x.InvoiceDate == selectedPcf.InvoiceDate && x.TransactionNumber != null));
+                        foreach (var item in memberEndorsePCF.Where(x => x.InvoiceDate > selectedPcf.InvoiceDate && x.TransactionNumber != null).OrderBy(x => x.InvoiceDate))
+                        {
+                            listPcfToRefund.Add(item);
+                        }
+
+                        db.PCF_Endorse.RemoveRange(memberEndorsePCF.Where(x => x.TransactionNumber == null));
+                        foreach (var item in listPcfToRefund)
+                        {
+                            if (item.InvoiceDate <= member.TerminateDate)
+                            {
+                                var newPCFEndorse = new PCF_Endorse();
+                                newPCFEndorse.EndorseNumber = item.EndorseNumber;
+                                newPCFEndorse.PolicyId = item.PolicyId;
+                                newPCFEndorse.MemberId = item.MemberId;
+                                newPCFEndorse.BasicProductId = item.BasicProductId;
+                                newPCFEndorse.TransType = TransactionType.Refund;
+                                newPCFEndorse.InvoiceDate = item.InvoiceDate;
+                                newPCFEndorse.DueDate = item.DueDate;
+
+                                var refundPercentage = Convert.ToDecimal(refundPercentageString);
+                                var amount = (item.InvoiceDate.AddMonths(frequecyToNumber) - member.TerminateDate).Value.Days * item.Amount * refundPercentage / (item.InvoiceDate.AddMonths(frequecyToNumber) - item.InvoiceDate).Days;
+                                newPCFEndorse.Amount = amount * -1;
+                                newPCFEndorse.SetPropertyCreate();
+                                listNewEndorsePCF.Add(newPCFEndorse);
+
+                            }
+                            else
+                            {
+                                var newPCFEndorse = new PCF_Endorse();
+                                newPCFEndorse.EndorseNumber = item.EndorseNumber;
+                                newPCFEndorse.PolicyId = item.PolicyId;
+                                newPCFEndorse.MemberId = item.MemberId;
+                                newPCFEndorse.BasicProductId = item.BasicProductId;
+                                newPCFEndorse.TransType = TransactionType.Refund;
+                                newPCFEndorse.InvoiceDate = item.InvoiceDate;
+                                newPCFEndorse.DueDate = item.DueDate;
+                                newPCFEndorse.Amount = item.Amount * -1;
+                                newPCFEndorse.SetPropertyCreate();
+                                listNewEndorsePCF.Add(newPCFEndorse);
+                            }
+
+                        }
+
+                        db.PCF_Endorse.AddRange(listNewEndorsePCF);
+                        member.MemberStatus = TerminateType.Refund + " " + MemberStatus.Calculated;
+                        db.Entry(member).State = EntityState.Modified;
+                        db.SaveChanges();
+                        dbTransaction.Commit();
+                        memberEndorsePCF = db.PCF_Endorse.Where(x => x.EndorseNumber == member.EndorseNumber && x.PolicyId == member.PolicyId && x.MemberId == member.MemberId && x.TransactionNumber == null).ToList();
+                        foreach (var item in memberEndorsePCF)
+                        {
+                            listOfDecimal.Add(item.Amount.Value);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        WarningMessagesAdd(e.MessageToList());
+                        dbTransaction.Rollback();
+                    }
+
+                }
+                return listOfDecimal.Sum(x => x);
+            }
+            else if (member.MemberStatus == TerminateType.Death || member.MemberStatus == TerminateType.Death + " " + MemberStatus.Calculated)
+            {
+                var listOfDecimal = new List<decimal>();
+                using (var dbTransaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var frequecyToNumber = 0;
+                        decimal multiplierFactorPercentage = new decimal(0);
+                        if (member.Policy.PaymentFrequency == "M")
+                        {
+                            frequecyToNumber = 1;
+                            multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
+                        }
+                        else if (member.Policy.PaymentFrequency == "Q")
+                        {
+                            frequecyToNumber = 4;
+                            multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
+                        }
+                        else if (member.Policy.PaymentFrequency == "S")
+                        {
+                            frequecyToNumber = 6;
+                            multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
+                        }
+                        else if (member.Policy.PaymentFrequency == "Y")
+                        {
+                            frequecyToNumber = 12;
+                            multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
+                        }
+
+                        var iteration = 0;
+                        for (DateTime? i = member.StartDate; i < member.EndDate; i = i.Value.AddMonths(frequecyToNumber))
+                        {
+                            iteration++;
+                        }
+                        var refundPercentageString = 0;
                         var memberEndorsePCF = member.PCF_Endorse.Where(x => x.EndorseNumber == member.EndorseNumber);
                         var listNewEndorsePCF = new List<PCF_Endorse>();
                         var selectedPcf = memberEndorsePCF.Where(x => x.InvoiceDate < member.TerminateDate && x.TransactionNumber != null).OrderByDescending(x => x.InvoiceDate).FirstOrDefault();
@@ -4711,20 +4817,27 @@ namespace Web.MainApplication.Controllers
                             // 4 Feb 2020, update member to terminate
                             foreach (var item in memberMemberEndorsePair)
                             {
-                                if (item.memberEndorse.StartDate < item.memberEndorse.TerminateDate && item.memberEndorse.EndDate > item.memberEndorse.TerminateDate)
-                                {
-                                    item.member.MemberStatus = MemberStatus.TerminateRefund;
-                                    item.member.TerminateDate = item.member.TerminateDate;
-                                }
-                                else if (item.memberEndorse.StartDate == item.memberEndorse.TerminateDate)
-                                {
-                                    item.member.MemberStatus = MemberStatus.TerminateCancel;
-                                    item.member.TerminateDate = item.member.TerminateDate;
+                                if (item.memberEndorse.MemberStatus == "Death" || item.memberEndorse.MemberStatus == "Death " + MemberStatus.Calculated) {
+                                    item.member.MemberStatus = MemberStatus.TerminateDeath;
                                 }
                                 else
                                 {
-                                    WarningMessagesAdd(Message.ProcessFail);
+                                    if (item.memberEndorse.StartDate < item.memberEndorse.TerminateDate && item.memberEndorse.EndDate > item.memberEndorse.TerminateDate)
+                                    {
+                                        item.member.MemberStatus = MemberStatus.TerminateRefund;
+                                        item.member.TerminateDate = item.member.TerminateDate;
+                                    }
+                                    else if (item.memberEndorse.StartDate == item.memberEndorse.TerminateDate)
+                                    {
+                                        item.member.MemberStatus = MemberStatus.TerminateCancel;
+                                        item.member.TerminateDate = item.member.TerminateDate;
+                                    }
+                                    else
+                                    {
+                                        WarningMessagesAdd(Message.ProcessFail);
+                                    }
                                 }
+                                
 
                                 db.Entry(item.member).State = EntityState.Modified;
                             }
@@ -5492,6 +5605,13 @@ namespace Web.MainApplication.Controllers
                                 db.SaveChanges();
                             }
 
+                            // Set Member Status To Active
+                            foreach (var item in memberMemberEndorsePairTerminate)
+                            {
+                                item.member.MemberStatus = MemberStatus.Active;
+                                db.Entry(item.member).State = EntityState.Modified;
+                            }
+                            db.SaveChanges();
                             //4.[Execution] Salin PlanEndorse ke Plan
                             foreach (var item in endorsement.Plan_Endorse)
                             {
@@ -5599,293 +5719,182 @@ namespace Web.MainApplication.Controllers
                             //db.Endorsement.Remove(endorsement);
                             endorsement.EndorseStatus = EndorseStatus.Done;
                             db.Entry(endorsement).State = EntityState.Modified;
-                            SuccessMessagesAdd(Message.ProcessSuccess);
 
                             db.SaveChanges();
                         }
                         else if (endorsement.EndorseType == EndorseType.Renewal)
                         {
-                            try
+                            // Update Polis End Date
+                            policy.MatureDate = endorsement.Policy_Endorse.MatureDate;
+                            db.Entry(policy).State = EntityState.Modified;
+                            db.SaveChanges();
+
+                            var memberMemberEndorsePair = new List<(Member member, Member_Endorse memberEndorse)>();
+                            foreach (var item in endorsement.Member_Endorse)
                             {
-                                //1. Pindahkan MemberPlan ke MemberPlan History
-                                //1a. Pindahkan MemberPlanEndorse ke MemberPlan
-                                //2. Buat transaction baru
-                                //3. Salin PCF_Endorse ke PCF, yang disalin adalah pcf yang tidak mempunyai transaction number
-                                //4. Salin PlanEndorse ke Plan
-                                //5. Salin PlanDetailEndorse ke Plan Detail
-                                //5a. Delete MemberPlanEndorseDetail
-                                //5b. Delete MemberPlanEndorse
-                                //6. Delete MemberEndorse
-                                //7. Update Endorsement status menjadi 
-                                //8. Update Member,set Plan to current Plan and set EndorseNumber and LastEndorseDate
-
-
-
-                                //2. [Execution]Buat transaction baru
-                                var allPolicyPCFEndorse = db.PCF_Endorse.Where(x => x.EndorseNumber == endorsement.EndorseNumber && x.PolicyId == policyId && x.InvoiceDate < DateTime.Now);
-                                var financeTransaction = new FinanceTransaction();
-                                var transactionNumberSeq = db.AspSequential.Where(x => x.Name == AspSequentialName.TransactionNumber).FirstOrDefault();
-                                financeTransaction.RecordMode = 1;
-                                financeTransaction.TransactionNumber = "TXTR-" + DateTime.Now.Year + "-" + (transactionNumberSeq.LastSequential + 1).ToString().PadLeft(6, '0');
-                                transactionNumberSeq.LastSequential = transactionNumberSeq.LastSequential + 1;
-                                transactionNumberSeq.SetPropertyUpdate();
-                                db.SaveChanges();
-                                db.Entry(transactionNumberSeq).State = EntityState.Modified;
-                                financeTransaction.EffectiveDate = DateTime.Today;
-                                financeTransaction.TransactionDate = endorsement.EndorseDate;
-                                financeTransaction.DueDate = financeTransaction.TransactionDate.Value.AddDays(30);
-                                financeTransaction.OutstandingAmount = allPolicyPCFEndorse.Sum(x => x.Amount);
-                                financeTransaction.TransCodeId = financeTransaction.OutstandingAmount > 0 ? "Invoice" : "Refund";
-                                financeTransaction.PolicyId = endorsement.PolicyId;
-                                financeTransaction.PolicyNumber = endorsement.Policy.PolicyNumber;
-                                financeTransaction.ReconStatus = "No";
-                                financeTransaction.ClientId = endorsement.Policy.ClientId;
-                                financeTransaction.ClientTransactionAmount = financeTransaction.OutstandingAmount;
-                                financeTransaction.ClosingAgen = endorsement.Policy.Agent;
-                                financeTransaction.TransDescription = financeTransaction.TransCodeId + " Policy " + policy.PolicyNumber;
-                                financeTransaction.ReferenceNumber = endorsement.EndorseNumber;
-                                db.FinanceTransaction.Add(financeTransaction);
-
-                                db.SaveChanges();
-
-                                foreach (var memberEndorseItem in endorsement.Member_Endorse)
-                                {
-                                    var member = db.Member.Where(x => x.MemberNumber == memberEndorseItem.MemberNumber).FirstOrDefault();
-                                    var memberPlanWillMoveToHistory = member.MemberPlan;
-                                    //8. [Execution]Update Member,set Plan to current Plan and set EndorseNumber and LastEndorseDate
-                                    member.PlanId = memberEndorseItem.PlanId;
-                                    member.LastEndorseDate = memberEndorseItem.Endorsement.EndorseDate;
-                                    member.EndorseNumber = memberEndorseItem.EndorseNumber;
-                                    member.MemberStatus = MemberStatus.Active;
-                                    db.Entry(member).State = EntityState.Modified;
-                                    db.SaveChanges();
-                                    //1.[Execution] Pindahkan MemberPlan ke MemberPlan History
-                                    foreach (var item in memberPlanWillMoveToHistory)
-                                    {
-                                        var endorseNumber = memberEndorseItem.EndorseNumber;
-                                        var memberPlanHistory = new MemberPlan_H();
-                                        memberPlanHistory.EndorseNumber = endorseNumber;
-                                        memberPlanHistory.BasicProductId = item.BasicProductId;
-                                        memberPlanHistory.BasicProductLimitCode = item.BasicProductLimitCode;
-                                        memberPlanHistory.MemberId = item.MemberId;
-                                        memberPlanHistory.PlanId = member.PlanId;
-                                        memberPlanHistory.PolicyId = member.PolicyId;
-                                        memberPlanHistory.StartDate = item.StartDate;
-                                        memberPlanHistory.SetPropertyCreate();
-                                        db.MemberPlan_H.Add(memberPlanHistory);
-
-                                        db.SaveChanges();
-                                    }
-                                    db.MemberPlan.RemoveRange(memberPlanWillMoveToHistory);
-
-                                    //1a.[Execution] Pindahkan MemberPlanEndorse ke MemberPlan
-                                    foreach (var item in memberEndorseItem.MemberPlan_Endorse)
-                                    {
-                                        var memberPlan = new MemberPlan();
-                                        memberPlan.EndorseNumber = memberEndorseItem.EndorseNumber;
-                                        memberPlan.BasicProductId = item.BasicProductId;
-                                        memberPlan.BasicProductLimitCode = item.BasicProductLimitCode;
-                                        memberPlan.PlanId = item.PlanId;
-                                        memberPlan.MemberId = member.MemberId;
-                                        memberPlan.PolicyId = member.PolicyId;
-                                        memberPlan.StartDate = item.StartDate;
-                                        memberPlan.SetPropertyCreate();
-                                        db.MemberPlan.Add(memberPlan);
-                                    }
-
-
-
-                                    //3. Salin PCF_Endorse ke PCF, yang disalin adalah pcf yang tidak mempunyai transaction number
-                                    foreach (var item in memberEndorseItem.PCF_Endorse.Where(x => x.TransactionNumber == null))
-                                    {
-                                        var newPCF = new PCF();
-                                        newPCF.PolicyId = item.PolicyId;
-                                        newPCF.MemberId = member.MemberId;
-                                        newPCF.BasicProductId = item.BasicProductId;
-                                        newPCF.TransType = item.TransType;
-                                        newPCF.InvoiceDate = item.InvoiceDate;
-                                        newPCF.DueDate = item.DueDate;
-                                        newPCF.Amount = item.Amount;
-                                        newPCF.TransactionNumber = financeTransaction.TransactionNumber;
-                                        newPCF.SetPropertyCreate();
-                                        db.PCF.Add(newPCF);
-                                    }
-                                    db.PCF_Endorse.RemoveRange(memberEndorseItem.PCF_Endorse);
-                                }
-
-
-                                // Generate Member Movement
-                                foreach (var item in endorsement.Member_Endorse)
-                                {
-                                    var itemMember = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
-
-                                    var newMemberMovement = new Member_Movement();
-                                    newMemberMovement.AdmedikaCode = itemMember.AdmedikaCode;
-                                    newMemberMovement.Age = itemMember.Age;
-                                    newMemberMovement.CardNumber = itemMember.CardNumber;
-                                    newMemberMovement.ClaimNumber = itemMember.ClaimNumber;
-                                    newMemberMovement.ClientId = itemMember.ClientId;
-                                    newMemberMovement.EffectiveDate = DateTime.Now.Date;
-                                    newMemberMovement.EndDate = itemMember.EndDate;
-                                    newMemberMovement.EndorseNumber = item.EndorseNumber;
-                                    newMemberMovement.EntryDate = itemMember.EntryDate;
-                                    newMemberMovement.ExitDate = itemMember.ExitDate;
-                                    newMemberMovement.IssueDate = itemMember.IssueDate;
-                                    newMemberMovement.LastClaimDate = itemMember.LastClaimDate;
-                                    newMemberMovement.LastEndorseDate = itemMember.LastEndorseDate;
-                                    newMemberMovement.MemberId = itemMember.MemberId;
-                                    newMemberMovement.MemberNumber = itemMember.MemberNumber;
-                                    newMemberMovement.MemberStatus = itemMember.MemberStatus;
-                                    newMemberMovement.PlanId = itemMember.PlanId;
-                                    newMemberMovement.PolicyId = itemMember.PolicyId;
-                                    //newMemberMovement.ProcessDate = itemMember.ProcessDate;
-
-                                    newMemberMovement.RecordMode = RecordModeMemberMovement.MovePlan;
-
-                                    newMemberMovement.SequencialNo = itemMember.SequencialNo;
-                                    newMemberMovement.StartDate = itemMember.StartDate;
-                                    newMemberMovement.TerminateDate = itemMember.TerminateDate;
-
-                                    newMemberMovement.SetPropertyCreate();
-                                    db.Member_Movement.Add(newMemberMovement);
-                                    db.SaveChanges();
-
-                                    var newMemberMovementClient = new Member_Movement_Client();
-                                    newMemberMovementClient.MovementId = newMemberMovement.Id;
-                                    newMemberMovementClient.ClientId = itemMember.Client.ClientId;
-                                    newMemberMovementClient.Type = itemMember.Client.Type;
-                                    newMemberMovementClient.BranchCode = itemMember.Client.BranchCode;
-                                    newMemberMovementClient.ContactPerson = itemMember.Client.ContactPerson;
-                                    newMemberMovementClient.ShortName = itemMember.Client.ShortName;
-                                    newMemberMovementClient.FullName = itemMember.Client.FullName;
-                                    newMemberMovementClient.PrefixClientTitle = itemMember.Client.PrefixClientTitle;
-                                    newMemberMovementClient.EndfixClientTitle = itemMember.Client.EndfixClientTitle;
-                                    newMemberMovementClient.BirthDate = itemMember.Client.BirthDate;
-                                    newMemberMovementClient.BirthPlace = itemMember.Client.BirthPlace;
-                                    newMemberMovementClient.IdNumber = itemMember.Client.IdNumber;
-                                    newMemberMovementClient.MaritalStatus = itemMember.Client.MaritalStatus;
-                                    newMemberMovementClient.Sex = itemMember.Client.Sex;
-                                    newMemberMovementClient.Email = itemMember.Client.Email;
-                                    newMemberMovementClient.EmailAddress1 = itemMember.Client.EmailAddress1;
-                                    newMemberMovementClient.EmailAddress2 = itemMember.Client.EmailAddress2;
-                                    newMemberMovementClient.MobilePhone1 = itemMember.Client.MobilePhone1;
-                                    newMemberMovementClient.MObilePhone2 = itemMember.Client.MObilePhone2;
-                                    newMemberMovementClient.MobilePhone3 = itemMember.Client.MobilePhone3;
-                                    newMemberMovementClient.ClientRelation = itemMember.Client.ClientRelation;
-                                    newMemberMovementClient.RelateTo = itemMember.Client.RelateTo;
-                                    newMemberMovementClient.BankAccountNumber = itemMember.Client.BankAccountNumber;
-                                    newMemberMovementClient.BankAccountCode = itemMember.Client.BankAccountCode;
-                                    newMemberMovementClient.BankAccountName = itemMember.Client.BankAccountName;
-                                    newMemberMovementClient.Status = itemMember.Client.Status;
-                                    newMemberMovementClient.Address = itemMember.Client.Address;
-                                    newMemberMovementClient.SetPropertyCreate();
-
-                                    db.Member_Movement_Client.Add(newMemberMovementClient);
-                                    db.SaveChanges();
-                                }
-
-
-
-                                //1b.[Execution] Pindahkan MemberPlanDetailEndorse ke MemberPlanDetail
-                                //foreach (var item in endorsement.PlanDetail_Endorse)
-                                //{
-                                //    var planDetail = new PlanDetail();
-                                //    planDetail.PolicyId = item.PolicyId;
-                                //    planDetail.PlanId = item.PlanId;
-                                //    planDetail.BasicProductId = item.BasicProductId;
-                                //    planDetail.BasicProductLimitCode = item.BasicProductLimitCode;
-                                //    planDetail.SetPropertyCreate();
-                                //    db.PlanDetail.Add(planDetail);
-                                //}
-                                db.SaveChanges();
-
-                                //4.[Execution] Salin PlanEndorse ke Plan
-                                foreach (var item in endorsement.Plan_Endorse)
-                                {
-
-                                    var newPlanToInsert = endorsement.Policy.Plan.Where(x => x.PlanId == item.PlanId).FirstOrDefault();
-                                    if (newPlanToInsert == null)
-                                    {
-                                        var newPlan = new Plan();
-                                        newPlan.PolicyId = item.PolicyId;
-                                        newPlan.PlanId = item.PlanId;
-                                        newPlan.PlanName = item.PlanName;
-                                        newPlan.PlanDesc = item.PlanDesc;
-                                        newPlan.StartDate = item.StartDate;
-                                        newPlan.SetPropertyCreate();
-                                        db.Plan.Add(newPlan);
-
-                                        //5. Salin PlanDetailEndorse ke Plan Detail
-                                        foreach (var itemPlanDetail in endorsement.PlanDetail_Endorse.Where(x => x.PlanId == item.PlanId))
-                                        {
-                                            var newPlanDetail = new PlanDetail();
-                                            newPlanDetail.PolicyId = itemPlanDetail.PolicyId;
-                                            newPlanDetail.PlanId = item.PlanId;
-                                            newPlanDetail.BasicProductId = itemPlanDetail.BasicProductId;
-                                            newPlanDetail.BasicProductLimitCode = itemPlanDetail.BasicProductLimitCode;
-                                            newPlanDetail.SetPropertyCreate();
-                                            db.PlanDetail.Add(newPlanDetail);
-                                        }
-                                    }
-
-                                }
-                                db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
-                                db.SaveChanges();
-
-                                // Generate Finance Transaction Detail
-                                foreach (var item in allPolicyPCFEndorse.GroupBy(x => x.BasicProductId))
-                                {
-
-                                    var newFinanceTransactionDetail = new FinanceTransactionDetail();
-                                    newFinanceTransactionDetail.TransactionNumber = financeTransaction.TransactionNumber;
-                                    newFinanceTransactionDetail.OutstandingAmount = item.Sum(x => x.Amount);
-                                    newFinanceTransactionDetail.BasicProductId = item.FirstOrDefault().BasicProductId;
-                                    newFinanceTransactionDetail.TransactionAmount = newFinanceTransactionDetail.OutstandingAmount;
-                                    db.FinanceTransactionDetail.Add(newFinanceTransactionDetail);
-                                    db.SaveChanges();
-                                }
-
-
-                                //7. [Execution] Update Endorsetype to Done
-
-
-                                //Delete All Data From Table Relate To Endorse
-                                // 1. Delete Policy_Endorse
-                                db.Policy_Endorse.Remove(endorsement.Policy_Endorse);
-                                // 2. Delete PCF_Endorse
-                                db.PCF_Endorse.RemoveRange(endorsement.PCF_Endorse);
-                                // 3. Delete PlanDetail_Endorse
-                                db.PlanDetail_Endorse.RemoveRange(endorsement.PlanDetail_Endorse);
-                                // 7. Delete MemberPlan_Endorse
-                                db.MemberPlan_Endorse.RemoveRange(endorsement.MemberPlan_Endorse);
-                                // 4. Delete PlanDetail
-                                db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
-                                // 5. Delete Member_Endorse
-                                db.Member_Endorse.RemoveRange(endorsement.Member_Endorse);
-                                // 6. Delete Endorse
-                                //db.Endorsement.Remove(endorsement);
-                                endorsement.EndorseStatus = EndorseStatus.Done;
-                                db.Entry(endorsement).State = EntityState.Modified;
-                                SuccessMessagesAdd(Message.ProcessSuccess);
-
-                                db.SaveChanges();
-                                dbTransaction.Commit();
-
-                                return RedirectToAction(EndorseType.Renewal);
+                                var itemMember = endorsement.Policy.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                memberMemberEndorsePair.Add((itemMember, item));
                             }
-                            catch (Exception ex)
+                            // Generate MemberMovement and Generates MemberMovementClient
+                            foreach (var item in memberMemberEndorsePair)
                             {
+                                var newMemberMovement = new Member_Movement();
+                                newMemberMovement.AdmedikaCode = item.member.AdmedikaCode;
+                                newMemberMovement.Age = item.member.Age;
+                                newMemberMovement.CardNumber = item.member.CardNumber;
+                                newMemberMovement.ClaimNumber = item.member.ClaimNumber;
+                                newMemberMovement.ClientId = item.member.ClientId;
+                                newMemberMovement.EffectiveDate = DateTime.Now.Date;
+                                newMemberMovement.EndDate = item.member.EndDate;
+                                newMemberMovement.EndorseNumber = item.memberEndorse.EndorseNumber;
+                                newMemberMovement.EntryDate = item.member.EntryDate;
+                                newMemberMovement.ExitDate = item.member.ExitDate;
+                                newMemberMovement.IssueDate = item.member.IssueDate;
+                                newMemberMovement.LastClaimDate = item.member.LastClaimDate;
+                                newMemberMovement.LastEndorseDate = item.member.LastEndorseDate;
+                                newMemberMovement.MemberId = item.member.MemberId;
+                                newMemberMovement.MemberNumber = item.member.MemberNumber;
+                                newMemberMovement.MemberStatus = item.member.MemberStatus;
+                                newMemberMovement.PlanId = item.member.PlanId;
+                                newMemberMovement.PolicyId = item.member.PolicyId;
+                                //newMemberMovement.ProcessDate = item.member.ProcessDate;
+                                newMemberMovement.RecordMode = RecordModeMemberMovement.MovePlan;
+                                newMemberMovement.SequencialNo = item.member.SequencialNo;
+                                newMemberMovement.StartDate = item.member.StartDate;
+                                newMemberMovement.TerminateDate = item.member.TerminateDate;
+                                newMemberMovement.SetPropertyCreate();
+                                db.Member_Movement.Add(newMemberMovement);
+                                db.SaveChanges();
 
+                                var newMemberMovementClient = new Member_Movement_Client();
+                                newMemberMovementClient.MovementId = newMemberMovement.Id;
+                                newMemberMovementClient.ClientId = item.member.Client.ClientId;
+                                newMemberMovementClient.Type = item.member.Client.Type;
+                                newMemberMovementClient.BranchCode = item.member.Client.BranchCode;
+                                newMemberMovementClient.ContactPerson = item.member.Client.ContactPerson;
+                                newMemberMovementClient.ShortName = item.member.Client.ShortName;
+                                newMemberMovementClient.FullName = item.member.Client.FullName;
+                                newMemberMovementClient.PrefixClientTitle = item.member.Client.PrefixClientTitle;
+                                newMemberMovementClient.EndfixClientTitle = item.member.Client.EndfixClientTitle;
+                                newMemberMovementClient.BirthDate = item.member.Client.BirthDate;
+                                newMemberMovementClient.BirthPlace = item.member.Client.BirthPlace;
+                                newMemberMovementClient.IdNumber = item.member.Client.IdNumber;
+                                newMemberMovementClient.MaritalStatus = item.member.Client.MaritalStatus;
+                                newMemberMovementClient.Sex = item.member.Client.Sex;
+                                newMemberMovementClient.Email = item.member.Client.Email;
+                                newMemberMovementClient.EmailAddress1 = item.member.Client.EmailAddress1;
+                                newMemberMovementClient.EmailAddress2 = item.member.Client.EmailAddress2;
+                                newMemberMovementClient.MobilePhone1 = item.member.Client.MobilePhone1;
+                                newMemberMovementClient.MObilePhone2 = item.member.Client.MObilePhone2;
+                                newMemberMovementClient.MobilePhone3 = item.member.Client.MobilePhone3;
+                                newMemberMovementClient.ClientRelation = item.member.Client.ClientRelation;
+                                newMemberMovementClient.RelateTo = item.member.Client.RelateTo;
+                                newMemberMovementClient.BankAccountNumber = item.member.Client.BankAccountNumber;
+                                newMemberMovementClient.BankAccountCode = item.member.Client.BankAccountCode;
+                                newMemberMovementClient.BankAccountName = item.member.Client.BankAccountName;
+                                newMemberMovementClient.Status = item.member.Client.Status;
+                                newMemberMovementClient.Address = item.member.Client.Address;
+                                newMemberMovementClient.SetPropertyCreate();
+
+                                db.Member_Movement_Client.Add(newMemberMovementClient);
+                                db.SaveChanges();
+                                var memberMovement = new Member_Movement();
                             }
-                            if (!Warn())
+                            db.SaveChanges();
+
+                            // Update Member StartDate and Member EndDate
+                            foreach (var item in memberMemberEndorsePair)
                             {
-                                dbTransaction.Commit();
+                                item.member.StartDate = item.memberEndorse.StartDate;
+                                item.member.EndDate = item.memberEndorse.EndDate;
+                                db.Entry(item.member).State = EntityState.Modified;
                             }
-                            else
+                            db.SaveChanges();
+
+                            // Generate FinanceTransaction
+                            var allPolicyPCFEndorse = db.PCF_Endorse.Where(x => x.EndorseNumber == endorsement.EndorseNumber && x.PolicyId == policyId && x.InvoiceDate < DateTime.Now);
+                            var financeTransaction = new FinanceTransaction();
+                            var transactionNumberSeq = db.AspSequential.Where(x => x.Name == AspSequentialName.TransactionNumber).FirstOrDefault();
+                            financeTransaction.RecordMode = RecordMode.RenewalWithoutCard;
+                            financeTransaction.TransactionNumber = "TXTR-" + DateTime.Now.Year + "-" + (transactionNumberSeq.LastSequential + 1).ToString().PadLeft(6, '0');
+                            transactionNumberSeq.LastSequential = transactionNumberSeq.LastSequential + 1;
+                            transactionNumberSeq.SetPropertyUpdate();
+                            db.SaveChanges();
+                            db.Entry(transactionNumberSeq).State = EntityState.Modified;
+                            financeTransaction.EffectiveDate = DateTime.Today;
+                            financeTransaction.TransactionDate = endorsement.EndorseDate;
+                            financeTransaction.DueDate = financeTransaction.TransactionDate.Value.AddDays(30);
+                            financeTransaction.OutstandingAmount = allPolicyPCFEndorse.Sum(x => x.Amount);
+                            financeTransaction.TransCodeId = financeTransaction.OutstandingAmount > 0 ? "Invoice" : "Refund";
+                            financeTransaction.PolicyId = endorsement.PolicyId;
+                            financeTransaction.PolicyNumber = endorsement.Policy.PolicyNumber;
+                            financeTransaction.ReconStatus = "No";
+                            financeTransaction.ClientId = endorsement.Policy.ClientId;
+                            financeTransaction.ClientTransactionAmount = financeTransaction.OutstandingAmount;
+                            financeTransaction.ClosingAgen = endorsement.Policy.Agent;
+                            financeTransaction.TransDescription = financeTransaction.TransCodeId + " Policy " + policy.PolicyNumber;
+                            financeTransaction.ReferenceNumber = endorsement.EndorseNumber;
+                            db.FinanceTransaction.Add(financeTransaction);
+
+                            db.SaveChanges();
+
+                            // Generate Finance Transaction Detail
+                            foreach (var item in allPolicyPCFEndorse.GroupBy(x => x.BasicProductId))
                             {
-                                dbTransaction.Rollback();
+                                var newFinanceTransactionDetail = new FinanceTransactionDetail();
+                                newFinanceTransactionDetail.TransactionNumber = financeTransaction.TransactionNumber;
+                                newFinanceTransactionDetail.OutstandingAmount = item.Sum(x => x.Amount);
+                                newFinanceTransactionDetail.BasicProductId = item.FirstOrDefault().BasicProductId;
+                                newFinanceTransactionDetail.TransactionAmount = newFinanceTransactionDetail.OutstandingAmount;
+                                db.FinanceTransactionDetail.Add(newFinanceTransactionDetail);
                             }
+                            db.SaveChanges();
+                            // Add PCF from PCFEndorse
+                            foreach (var item in memberMemberEndorsePair)
+                            {
+                                foreach (var pcfEndorse in item.memberEndorse.PCF_Endorse.Where(x => x.TransactionNumber == null))
+                                {
+                                    var newPCF = new PCF();
+                                    newPCF.PolicyId = pcfEndorse.PolicyId;
+                                    newPCF.MemberId = item.member.MemberId;
+                                    newPCF.BasicProductId = pcfEndorse.BasicProductId;
+                                    newPCF.TransType = pcfEndorse.TransType;
+                                    newPCF.InvoiceDate = pcfEndorse.InvoiceDate;
+                                    newPCF.DueDate = pcfEndorse.DueDate;
+                                    newPCF.Amount = pcfEndorse.Amount;
+                                    newPCF.TransactionNumber = financeTransaction.TransactionNumber;
+                                    newPCF.SetPropertyCreate();
+                                    db.PCF.Add(newPCF);
+                                }
+                            }
+                            
+                            //Delete All Data From Table Relate To Endorse
+                            // 1. Delete Policy_Endorse
+                            db.Policy_Endorse.Remove(endorsement.Policy_Endorse);
+                            // 2. Delete PCF_Endorse
+                            db.PCF_Endorse.RemoveRange(endorsement.PCF_Endorse);
+                            // 3. Delete PlanDetail_Endorse
+                            db.PlanDetail_Endorse.RemoveRange(endorsement.PlanDetail_Endorse);
+                            // 7. Delete MemberPlan_Endorse
+                            db.MemberPlan_Endorse.RemoveRange(endorsement.MemberPlan_Endorse);
+                            // 4. Delete PlanDetail
+                            db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
+                            // 5. Delete Member_Endorse
+                            db.Member_Endorse.RemoveRange(endorsement.Member_Endorse);
+                            // 6. Delete Endorse
+                            //db.Endorsement.Remove(endorsement);
+                            endorsement.EndorseStatus = EndorseStatus.Done;
+                            db.Entry(endorsement).State = EntityState.Modified;
                         }
+                        if (!Warn())
+                        {
+                            dbTransaction.Commit();
+                        }
+                        else
+                        {
+                            dbTransaction.Rollback();
+                        }
+
                     }
                     catch (Exception e)
                     {
@@ -5910,7 +5919,7 @@ namespace Web.MainApplication.Controllers
 
             if (WarningMessages().Count == 0)
             {
-                SuccessMessagesAdd("Issue Process Is Success.");
+                SuccessMessagesAdd("Issued Process Is Success.");
             }
             return RedirectToAction(endorsement.EndorseType);
         }
@@ -6035,7 +6044,11 @@ namespace Web.MainApplication.Controllers
             var model = policy.Member.Where(x => !endorsement.Member_Endorse.ToList().Any(x2 => x.ClientId == x2.ClientId) && x.MemberStatus == MemberStatus.Active);
             if (endorsement.EndorseType == EndorseType.TerminateMember)
             {
-                model = model.Where(x => x.EndorseNumber == null);
+                model = model.Where(x => x.EndorseNumber == null || db.Endorsement.Any(x2=>x.EndorseNumber == x.EndorseNumber && x2.EndorseNumber == x.EndorseNumber && x2.EndorseType == EndorseType.Additional));
+            }
+            if(endorsement.EndorseType == EndorseType.Reactivate)
+            {
+                model = model.ToList().Where(x => x.MemberStatus.ToString().Contains("Terminate"));
             }
             ViewBag.Endorsement = endorsement;
             if (Request.IsAjaxRequest())

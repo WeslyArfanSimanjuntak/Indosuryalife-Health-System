@@ -1,7 +1,9 @@
 ﻿-- Delete all data referenced to policy
+
+delete from Endorsement
 DECLARE @policyId VARCHAR(50);
 
-SET @policyId = '0000000010'
+SET @policyId = '0000000009'
 
 DELETE
 FROM MemberPlan_H;
@@ -14,9 +16,9 @@ DELETE
 FROM PCF_Endorse
 WHERE PolicyId = @policyId;
 
-DELETE
-FROM PlanDetail
-WHERE PolicyId = @policyId;
+--DELETE
+--FROM PlanDetail
+--WHERE PolicyId = @policyId;
 
 DELETE
 FROM PlanDetail_Endorse
@@ -30,9 +32,9 @@ DELETE
 FROM MemberPlan_Endorse
 WHERE PolicyId = @policyId;
 
-DELETE
-FROM [Plan]
-WHERE PolicyId = @policyId;
+--DELETE
+--FROM [Plan]
+--WHERE PolicyId = @policyId;
 
 DELETE
 FROM Member_Movement_Client
@@ -82,9 +84,9 @@ DELETE
 FROM Endorsement
 WHERE PolicyId = @policyId;
 
-DELETE
-FROM [Policy]
-WHERE PolicyId = @policyId;
+--DELETE
+--FROM [Policy]
+--WHERE PolicyId = @policyId;
 
 
 
@@ -121,27 +123,27 @@ WHERE PolicyId = @policyId;
 --INNER JOIN sys.tables t ON c.object_id = t.object_id
 --WHERE c.name LIKE '%EndorseNumber%';
 
-SELECT member.MemberNumber
-	,pcf.*
-FROM pcf
-LEFT JOIN member ON member.MemberId = pcf.MemberId
-WHERE member.MemberNumber = '0000138'
+--SELECT member.MemberNumber
+--	,pcf.*
+--FROM pcf
+--LEFT JOIN member ON member.MemberId = pcf.MemberId
+--WHERE member.MemberNumber = '0000138'
 
-SELECT Member_Endorse.MemberNumber
-	,PCF_Endorse.*
-FROM PCF_Endorse
-LEFT JOIN Member_Endorse ON PCF_Endorse.MemberId = PCF_Endorse.MemberId
-WHERE Member_Endorse.MemberNumber = '0000138' and PCF_Endorse.EndorseNumber = '0000000035'
-order by Amount
+--SELECT Member_Endorse.MemberNumber
+--	,PCF_Endorse.*
+--FROM PCF_Endorse
+--LEFT JOIN Member_Endorse ON PCF_Endorse.MemberId = PCF_Endorse.MemberId
+--WHERE Member_Endorse.MemberNumber = '0000138' and PCF_Endorse.EndorseNumber = '0000000035'
+--order by Amount
 
 
-select * from PCF_Endorse WHERE MemberId = 39 and PCF_Endorse.EndorseNumber = '0000000035'
+--select * from PCF_Endorse WHERE MemberId = 39 and PCF_Endorse.EndorseNumber = '0000000035'
 
-select * from Member where MemberNumber = '0000147'
+--select * from Member where MemberNumber = '0000147'
 
-select * from Member_Movement order by CreatedDate desc
+--select * from Member_Movement order by CreatedDate desc
 
-select * from FinanceTransaction where EffectiveDate >= '2020-03-01' and  EffectiveDate <= '2020-03-31'
-select * from PCF where TransactionNumber = 'TXTR-2020-000027'
+--select * from FinanceTransaction where EffectiveDate >= '2020-03-01' and  EffectiveDate <= '2020-03-31'
+--select * from PCF where TransactionNumber = 'TXTR-2020-000027'
 
-sel
+--sel

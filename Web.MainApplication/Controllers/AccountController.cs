@@ -381,6 +381,13 @@ namespace Web.MainApplication.Controllers
             {
                 claims.Add(new Claim(WebClaimIdentity.Menu, item));
             }
+
+            //Add Claim For LastVersionApplication Data
+            var lastVersion = db.CommonListValue.Where(x => x.CommonListValue2.Value == VersionApplication.ApplicationVersionsSequence).OrderByDescending(x=>x.Id).FirstOrDefault();
+            if(lastVersion != null)
+            {
+                claims.Add(new Claim(WebClaimIdentity.ApplicationVersion, lastVersion.Text));
+            }
             return claims;
         }
         private string GenerateUL(Menu menu, List<int> userRolesId)

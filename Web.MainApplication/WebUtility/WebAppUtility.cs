@@ -103,6 +103,12 @@ namespace System.Web.Mvc
             var claim = ((ClaimsIdentity)identity).FindFirst(ClaimTypes.Email);
             return claim != null ? claim.Value : "";
         }
+
+        public static string ApplicationVersion(this IIdentity identity)
+        {
+            var claim = ((ClaimsIdentity)identity).FindFirst(WebClaimIdentity.ApplicationVersion);
+            return claim != null ? claim.Value : "";
+        }
         public static List<string> Roles(this IIdentity identity)
         {
 
@@ -987,6 +993,7 @@ namespace System.Web.Mvc
     {
         public const string Cancel = "Cancel";
         public const string Refund = "Refund";
+        public const string Death = "Death";
     }
     public static class EndorseStatus
     {
@@ -1010,6 +1017,7 @@ namespace System.Web.Mvc
         public const string Refund = "Refund";
         public const string TerminateCancel = "Terminate Cancel";
         public const string TerminateRefund = "Terminate Refund";
+        public const string TerminateDeath = "Terminate Death";
 
     }
 
@@ -1060,7 +1068,20 @@ namespace System.Web.Mvc
     {
         public const string PrintCardFee = "Print Card Fee";
     }
+    public static class RecordMode
+    {
+        public const int RenewalWithoutCard = 5;
+        public const int RenewalWithNewCard = 6;
+        public const int DeathMember = 3;
+        public const int DeleteMember = 3;
+        public const int UpdateSex = 2;
+    }
+    public class VersionApplication
+    {
+        public const string LastVersionApplication = "LastVersionApplication";
+        public const string ApplicationVersionsSequence = "Application Versions Sequence";
 
+    }
     public class FakeView : IView
     {
         public void Render(ViewContext viewContext, TextWriter writer)

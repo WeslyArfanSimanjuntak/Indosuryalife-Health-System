@@ -17,6 +17,7 @@ namespace Web.MainApplication.WebUtility
         public const string Username = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.Username";
         public const string MenuString = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.MenuString";
         public const string Menu = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.Menu";
+        public const string ApplicationVersion = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.ApplicationVersion";
 
         public WebClaimIdentity(IEnumerable<Claim> claims, string authenticationType)
                 : base(claims, authenticationType: authenticationType)

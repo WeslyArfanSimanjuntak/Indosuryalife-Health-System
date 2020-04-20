@@ -1,6 +1,8 @@
 ﻿@{
     /**/
 
+    /**/
+
     string baseUrl = Html.ViewContext.RequestContext.HttpContext.Request.Url.Scheme + "://" + Html.ViewContext.RequestContext.HttpContext.Request.Url.Authority;
     string entityApiUrl = baseUrl + "/EntityApi/GetData";
 
@@ -281,7 +283,7 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
+                <div id="applicationwebversion"><b>Version</b> @User.Identity.ApplicationVersion()</div>
             </div>
             <strong> <a href="@Web.MainApplication.Resources.SystemResources.CompanyWebSite">@Web.MainApplication.Resources.SystemResources.CompanyName</a>.</strong> All rights
             reserved.
@@ -311,8 +313,14 @@
                 }
 
             }
-
-
+            $("#applicationwebversion").hover(
+                function () {
+                    alert("I am hovered");
+                }
+            );
+            //$("#applicationwebversion").on("hover", function () {
+            //    alert("I am hovered");
+            //});
         });
         function SetClassParentToMenuOpen(id) {
             var parentLi = $("#" + id).parent().parent(".treeview");

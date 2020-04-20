@@ -631,6 +631,7 @@ namespace Web.MainApplication.Controllers
                 {
                     try
                     {
+                        //var allMemberWithEStatusRelationWithEmployeeName = new List<(Client client, string employeeName)>();
                         var allMemberWithEStatusRelation = listMemberUpload.Where(x => x.H_StatusRelation == "E");
                         var allMemberWithNotEStatusRelation = listMemberUpload.Where(x => x.H_StatusRelation != "E");
 
@@ -751,10 +752,11 @@ namespace Web.MainApplication.Controllers
                                 newClientToInsert.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
                                 newClientToInsert.Type = "Personal";
                                 newClientToInsert.ClientId = (lastClientIdSequence + 1).ToString().PadLeft(10, '0');
-                                var clientRelateTo = listClientToInsert.Where(x => x.FullName == item.G_EmployeeName && x.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
-                                if (clientRelateTo != null)
+                                var clientRelateTo = listClientToInsertWithAnotherProperty.Where(x => x.uploadMember.G_EmployeeName == item.G_EmployeeName && x.uploadMember.H_StatusRelation == "E" && x.client.BankAccountName == item.Q_BankAccountName && x.client.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
+                                //var clientRelateTo = listClientToInsert.Where(x => x.BankAccountName == item.Q_BankAccountName && x.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
+                                if (clientRelateTo.client != null)
                                 {
-                                    newClientToInsert.RelateTo = clientRelateTo?.ClientId.PadLeft(10, '0');
+                                    newClientToInsert.RelateTo = clientRelateTo.client?.ClientId.PadLeft(10, '0');
                                 }
                                 else
                                 {
