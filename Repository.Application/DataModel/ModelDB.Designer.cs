@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Wesly A. Simanjuntak\Indosuryalife\Group Health System Local\UnVersioned\Indosuryalife Health System\Repository.Application\DataModel\ModelDB.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\WeslyAS\source\repos\Indosuryalife Health System\Repository.Application\DataModel\ModelDB.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

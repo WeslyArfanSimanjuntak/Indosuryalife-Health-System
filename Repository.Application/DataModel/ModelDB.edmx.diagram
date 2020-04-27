@@ -11,32 +11,32 @@
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetRoles" Width="1.5" PointX="0.75" PointY="5.375" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetUsers" Width="1.5" PointX="0.75" PointY="14.25" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspSequential" Width="1.5" PointX="7.75" PointY="2.75" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProduct" Width="1.5" PointX="3" PointY="20.875" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimit" Width="1.5" PointX="5.25" PointY="21.5" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimitHdr" Width="1.5" PointX="5.25" PointY="27" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Benefit" Width="1.5" PointX="3" PointY="17.125" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Client" Width="1.5" PointX="1.5" PointY="27.25" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProduct" Width="1.5" PointX="3" PointY="48.875" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimit" Width="1.5" PointX="11.25" PointY="55.625" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.BasicProductLimitHdr" Width="1.5" PointX="5.25" PointY="62.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Benefit" Width="1.5" PointX="9" PointY="61.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Client" Width="1.5" PointX="1.5" PointY="23.25" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.CommonListValue" Width="1.5" PointX="5.75" PointY="2.75" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Endorsement" Width="1.5" PointX="3" PointY="59.5" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransaction" Width="1.5" PointX="3" PointY="49.875" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransactionDetail" Width="1.5" PointX="5.25" PointY="52.5" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Member" Width="1.5" PointX="3" PointY="37.375" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Endorse" Width="1.5" PointX="11.25" PointY="55.25" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement" Width="1.5" PointX="11.25" PointY="46.625" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Endorsement" Width="1.5" PointX="3" PointY="55.625" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransaction" Width="1.5" PointX="3" PointY="34.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransactionDetail" Width="1.5" PointX="5.25" PointY="36.875" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member" Width="1.5" PointX="6" PointY="41.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Endorse" Width="1.5" PointX="11.25" PointY="47.25" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement" Width="1.5" PointX="8.25" PointY="47.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement_Client" Width="1.5" PointX="10.75" PointY="2.75" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberClientEndorse" Width="1.5" PointX="13.5" PointY="56" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan" Width="1.5" PointX="5.25" PointY="37.625" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_Endorse" Width="1.5" PointX="13.5" PointY="50.75" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_H" Width="1.5" PointX="8.25" PointY="49.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberClientEndorse" Width="1.5" PointX="13.5" PointY="46" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan" Width="1.5" PointX="11.25" PointY="42.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_Endorse" Width="1.5" PointX="16.5" PointY="54.75" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.MemberPlan_H" Width="1.5" PointX="8.25" PointY="55.5" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Menu" Width="1.5" PointX="3" PointY="8.75" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF" Width="1.5" PointX="8.25" PointY="40.5" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF_Endorse" Width="1.5" PointX="16.5" PointY="51.5" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan" Width="1.5" PointX="3" PointY="46" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan_Endorse" Width="1.5" PointX="5.25" PointY="48" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail" Width="1.5" PointX="6" PointY="42.375" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail_Endorse" Width="1.5" PointX="8.25" PointY="55" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF" Width="1.5" PointX="11.25" PointY="37.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PCF_Endorse" Width="1.5" PointX="16.5" PointY="48.5" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan" Width="1.5" PointX="3" PointY="62.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Plan_Endorse" Width="1.5" PointX="5.25" PointY="50.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail" Width="1.5" PointX="3" PointY="44.375" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.PlanDetail_Endorse" Width="1.5" PointX="8.25" PointY="42.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Policy" Width="1.5" PointX="0.75" PointY="40.125" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Policy_Endorse" Width="1.5" PointX="5.25" PointY="57.125" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Policy_Endorse" Width="1.5" PointX="5.25" PointY="55.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.PremiumRate" Width="1.5" PointX="5.75" PointY="8.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.PremiumRateDetails" Width="1.5" PointX="8" PointY="8.125" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_AspNetGroupUser_ToGroup" />

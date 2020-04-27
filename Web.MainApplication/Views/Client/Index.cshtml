@@ -147,10 +147,13 @@
                             @Html.DisplayFor(modelItem => item.FullName)
                         </td>
                         <td>
-                            @(item.BirthDate.HasValue ? item.BirthDate.Value.ToString("dd/MM/yyyy") : "-")
+                            @(item.BirthDate.HasValue ? item.BirthDate.Value.ToString("dd/MM/yyyy") : "")
                         </td>
                         <td>
-                            @Ajax.ActionLink(item.Client2?.FullName, "Details","Client", new {id  = item.Client2?.ClientId, layoutIsNull = true }, new AjaxOptions() {
+                            @{
+                                if (item.Client2 != null)
+                                {
+                                    @Ajax.ActionLink(item?.Client2?.FullName??"", "Details","Client", new {id  = item?.Client2?.ClientId??"", layoutIsNull = true }, new AjaxOptions() {
                                             OnBegin = "ShowSpinner();$('#myModalTemporaryContent').html('');",
                                             OnSuccess = "HideSpinner();",
                                             LoadingElementDuration = 3000,
@@ -159,6 +162,9 @@
                                             HttpMethod = "GET",
                                             InsertionMode = InsertionMode.Replace
                                        })
+                                }
+                            }
+
 
                         </td>
                         <td>

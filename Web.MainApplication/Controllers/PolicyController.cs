@@ -708,6 +708,18 @@ namespace Web.MainApplication.Controllers
                     //{
                     var memberMovementClient = db.Member_Movement_Client.Find(item.Key);
                     var planId = "";
+                    var planSequence = db.CommonListValue.Where(x => x.Text == AplicationConfig.PlanBasicProductSequence).FirstOrDefault();
+                    var memberPlans = memberMovement.Member.MemberPlan.ToList();
+
+                    foreach (var bpItem in planSequence.Value.Split(';'))
+                    {
+                        var memberPlan = memberPlans.Where(x => x.BasicProductId == bpItem).FirstOrDefault();
+                        if (memberPlan != null)
+                        {
+                            planId = planId + memberPlan.BasicProductLimitCode + " ";
+                        }
+                    }
+
                     foreach (var memberPlan in memberMovement.Member.MemberPlan.OrderBy(x => x.BasicProductLimitCode))
                     {
                         planId = planId + memberPlan.BasicProductLimitCode + " ";
@@ -723,7 +735,7 @@ namespace Web.MainApplication.Controllers
                     var commonListValue = db.CommonListValue.Where(x => x.CommonListValue2.Value == "RecordModeParent").ToList();
 
                     var keterangan = commonListValue.Where(x => x.Value == recordMode.ToString()).FirstOrDefault().Desc;
-                    
+
                     var premiIPPlusRefundIP = itemMemberPCF.Where(x => x.BasicProductId == "IP" && x.TransType == "P").Sum(x => x.Amount);
                     var PremiIP = premiIPPlusRefundIP == 0 ? "-" : string.Format("{0:N}", premiIPPlusRefundIP);
 
@@ -742,8 +754,8 @@ namespace Web.MainApplication.Controllers
                     var koreksiPremiDec = itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount);
                     var koreksiPremi = koreksiPremiDec == 0 ? "-" : string.Format("{0:N}", itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount)); ;
 
-                    var RefundPremi = "-"; 
-                    
+                    var RefundPremi = "-";
+
                     if (recordMode == RecordModeMemberMovement.TerminateMember)
                     {
                         RefundPremi = itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount) == 0 ? "-" : string.Format("{0:N}", itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount)); ;
@@ -767,7 +779,7 @@ namespace Web.MainApplication.Controllers
                     sumPremiCorrection = sumPremiCorrection + koreksiPremiDec;
                     sumPremiRefund = sumPremiRefund + 0;
 
-                    
+
                     var newMRM = new MemberReportModel()
                     {
 
@@ -841,7 +853,7 @@ namespace Web.MainApplication.Controllers
             var ds = new List<object>();
             var ds2 = new List<object>();
 
-            foreach (var item in listOfReportModel)
+            foreach (var item in listOfReportModel.OrderBy(x => x.MemberNumber))
             {
                 ds.Add(new
                 {

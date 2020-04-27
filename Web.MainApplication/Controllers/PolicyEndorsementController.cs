@@ -2173,7 +2173,15 @@ namespace Web.MainApplication.Controllers
                     }
                     var sumofDemandedPremi = sumOfPremiPCF + sumOfPrintCardFee;
 
+                    if (WarningMessages().Count == 0)
+                    {
+                        SuccessMessagesAdd("Calculation Success");
+                    }
+                    else
+                    {
+                        WarningMessages().Insert(0, "Calculation Failed");
 
+                    }
                     ViewBag.Title = "Details Policy Calculation";
                     ViewBag.SumOfPremi = WarningMessages().Count == 0 ? sumOfPremi : 0;
                     ViewBag.SumOfDemandedPremi = WarningMessages().Count == 0 ? sumofDemandedPremi.Value : 0;
@@ -3601,7 +3609,7 @@ namespace Web.MainApplication.Controllers
                                 }
                                 if (WarningMessages().Count == 0)
                                 {
-                                    member.MemberStatus = "Calculated";
+                                    member.MemberStatus = MemberStatus.Calculated;
                                     db.Entry(member).State = System.Data.Entity.EntityState.Modified;
                                 }
                                 db.SaveChanges();
@@ -3632,6 +3640,11 @@ namespace Web.MainApplication.Controllers
                                 db.PCF_Endorse.Add(pcfEndorse);
                             }
                             //>
+                            if (WarningMessages().Count == 0)
+                            {
+                                member.MemberStatus = MemberStatus.Calculated;
+                                db.Entry(member).State = System.Data.Entity.EntityState.Modified;
+                            }
                             db.SaveChanges();
                         }
                         if (memberClientEndorse.IsFinancialChange == 1 && memberClientEndorse.PrintNewCard == 1)
@@ -3641,7 +3654,7 @@ namespace Web.MainApplication.Controllers
                             memberClientEndorse.PrintCardAmount = printCardAmount;
                             if (WarningMessages().Count == 0)
                             {
-                                member.MemberStatus = "Calculated";
+                                member.MemberStatus = MemberStatus.Calculated;
                                 db.Entry(member).State = System.Data.Entity.EntityState.Modified;
                             }
                             db.SaveChanges();
@@ -4817,7 +4830,8 @@ namespace Web.MainApplication.Controllers
                             // 4 Feb 2020, update member to terminate
                             foreach (var item in memberMemberEndorsePair)
                             {
-                                if (item.memberEndorse.MemberStatus == "Death" || item.memberEndorse.MemberStatus == "Death " + MemberStatus.Calculated) {
+                                if (item.memberEndorse.MemberStatus == "Death" || item.memberEndorse.MemberStatus == "Death " + MemberStatus.Calculated)
+                                {
                                     item.member.MemberStatus = MemberStatus.TerminateDeath;
                                 }
                                 else
@@ -4837,7 +4851,7 @@ namespace Web.MainApplication.Controllers
                                         WarningMessagesAdd(Message.ProcessFail);
                                     }
                                 }
-                                
+
 
                                 db.Entry(item.member).State = EntityState.Modified;
                             }
@@ -5460,80 +5474,103 @@ namespace Web.MainApplication.Controllers
                             }
 
                             // Generate FinanceTransaction
-
-                            var financeTransaction = new FinanceTransaction();
-                            var transactionNumberSeq = db.AspSequential.Where(x => x.Name == AspSequentialName.TransactionNumber).FirstOrDefault();
-                            financeTransaction.RecordMode = 1;
-                            financeTransaction.TransactionNumber = "TXRF-" + DateTime.Now.Year + "-" + (transactionNumberSeq.LastSequential + 1).ToString().PadLeft(6, '0');
-                            transactionNumberSeq.LastSequential = transactionNumberSeq.LastSequential + 1;
-                            transactionNumberSeq.SetPropertyUpdate();
-                            db.SaveChanges();
-                            db.Entry(transactionNumberSeq).State = EntityState.Modified;
-                            financeTransaction.EffectiveDate = policy.IssueDate;
-                            financeTransaction.TransactionDate = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Min(x => x.InvoiceDate);
-                            financeTransaction.DueDate = financeTransaction.EffectiveDate.Value.AddDays(30);
-                            financeTransaction.TransCodeId = "Invoice";
-                            financeTransaction.PolicyId = policy.PolicyId;
-                            financeTransaction.PolicyNumber = policy.PolicyNumber;
-                            financeTransaction.ReconStatus = "No";
-                            financeTransaction.OutstandingAmount = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Sum(x => x.Amount);
-                            financeTransaction.ClientId = policy.ClientId;
-                            financeTransaction.ClientTransactionAmount = financeTransaction.OutstandingAmount;
-                            financeTransaction.ClosingAgen = policy.Agent;
-                            financeTransaction.TransDescription = "Invoice Policy " + policy.PolicyNumber + " Periode " + financeTransaction.TransactionDate.Value.ToShortDateString();
-                            db.FinanceTransaction.Add(financeTransaction);
-                            db.SaveChanges();
-
-                            foreach (var memberMemberEndorsePair in memberMemberEndorsePairTerminate)
+                            bool isFinanceTransaction = false;
+                            if (endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Count() > 0)
                             {
-                                foreach (var item in memberMemberEndorsePair.member.MemberPlan)
+                                isFinanceTransaction = true;
+                            }
+
+                            if (isFinanceTransaction)
+                            {
+
+                                var financeTransaction = new FinanceTransaction();
+                                var transactionNumberSeq = db.AspSequential.Where(x => x.Name == AspSequentialName.TransactionNumber).FirstOrDefault();
+                                financeTransaction.RecordMode = 1;
+                                financeTransaction.TransactionNumber = "TXRF-" + DateTime.Now.Year + "-" + (transactionNumberSeq.LastSequential + 1).ToString().PadLeft(6, '0');
+                                transactionNumberSeq.LastSequential = transactionNumberSeq.LastSequential + 1;
+                                transactionNumberSeq.SetPropertyUpdate();
+                                db.SaveChanges();
+                                db.Entry(transactionNumberSeq).State = EntityState.Modified;
+                                financeTransaction.EffectiveDate = policy.IssueDate;
+                                financeTransaction.TransactionDate = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Min(x => x.InvoiceDate);
+                                financeTransaction.DueDate = financeTransaction.EffectiveDate.Value.AddDays(30);
+                                financeTransaction.TransCodeId = "Invoice";
+                                financeTransaction.PolicyId = policy.PolicyId;
+                                financeTransaction.PolicyNumber = policy.PolicyNumber;
+                                financeTransaction.ReconStatus = "No";
+                                financeTransaction.OutstandingAmount = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Sum(x => x.Amount);
+                                financeTransaction.ClientId = policy.ClientId;
+                                financeTransaction.ClientTransactionAmount = financeTransaction.OutstandingAmount;
+                                financeTransaction.ClosingAgen = policy.Agent;
+                                financeTransaction.TransDescription = "Invoice Policy " + policy.PolicyNumber + " Periode " + financeTransaction.TransactionDate.Value.ToShortDateString();
+                                db.FinanceTransaction.Add(financeTransaction);
+                                db.SaveChanges();
+
+                                foreach (var memberMemberEndorsePair in memberMemberEndorsePairTerminate)
                                 {
-                                    var memberPlanHistory = new MemberPlan_H();
-                                    memberPlanHistory.EndorseNumber = endorsement.EndorseNumber;
-                                    memberPlanHistory.BasicProductId = item.BasicProductId;
-                                    memberPlanHistory.BasicProductLimitCode = item.BasicProductLimitCode;
-                                    memberPlanHistory.MemberId = item.MemberId;
-                                    memberPlanHistory.PlanId = memberMemberEndorsePair.member.PlanId;
-                                    memberPlanHistory.PolicyId = endorsement.PolicyId;
-                                    memberPlanHistory.StartDate = item.StartDate;
-                                    memberPlanHistory.SetPropertyCreate();
-                                    db.MemberPlan_H.Add(memberPlanHistory);
+                                    foreach (var item in memberMemberEndorsePair.member.MemberPlan)
+                                    {
+                                        var memberPlanHistory = new MemberPlan_H();
+                                        memberPlanHistory.EndorseNumber = endorsement.EndorseNumber;
+                                        memberPlanHistory.BasicProductId = item.BasicProductId;
+                                        memberPlanHistory.BasicProductLimitCode = item.BasicProductLimitCode;
+                                        memberPlanHistory.MemberId = item.MemberId;
+                                        memberPlanHistory.PlanId = memberMemberEndorsePair.member.PlanId;
+                                        memberPlanHistory.PolicyId = endorsement.PolicyId;
+                                        memberPlanHistory.StartDate = item.StartDate;
+                                        memberPlanHistory.SetPropertyCreate();
+                                        db.MemberPlan_H.Add(memberPlanHistory);
+                                        db.SaveChanges();
+                                    }
+                                    db.MemberPlan.RemoveRange(memberMemberEndorsePair.member.MemberPlan);
+                                    db.SaveChanges();
+                                    //1a.[Execution] Pindahkan MemberPlanEndorse ke MemberPlan
+                                    foreach (var item in memberMemberEndorsePair.memberEndorse.MemberPlan_Endorse)
+                                    {
+                                        var memberPlan = new MemberPlan();
+                                        memberPlan.EndorseNumber = endorsement.EndorseNumber;
+                                        memberPlan.BasicProductId = item.BasicProductId;
+                                        memberPlan.BasicProductLimitCode = item.BasicProductLimitCode;
+                                        memberPlan.PlanId = item.PlanId;
+                                        memberPlan.MemberId = memberMemberEndorsePair.member.MemberId;
+                                        memberPlan.PolicyId = endorsement.PolicyId;
+                                        memberPlan.StartDate = item.StartDate;
+                                        memberPlan.SetPropertyCreate();
+                                        db.MemberPlan.Add(memberPlan);
+                                    }
+                                    db.SaveChanges();
+                                    //3. Salin PCF_Endorse ke PCF, yang disalin adalah pcf yang tidak mempunyai transaction number
+                                    foreach (var item in memberMemberEndorsePair.memberEndorse.PCF_Endorse.Where(x => x.TransactionNumber == null))
+                                    {
+                                        var newPCF = new PCF();
+                                        newPCF.PolicyId = item.PolicyId;
+                                        newPCF.MemberId = memberMemberEndorsePair.member.MemberId;
+                                        newPCF.BasicProductId = item.BasicProductId;
+                                        newPCF.TransType = item.TransType;
+                                        newPCF.InvoiceDate = item.InvoiceDate;
+                                        newPCF.DueDate = item.DueDate;
+                                        newPCF.Amount = item.Amount;
+                                        newPCF.TransactionNumber = financeTransaction.TransactionNumber;
+                                        newPCF.SetPropertyCreate();
+                                        db.PCF.Add(newPCF);
+                                    }
+                                    db.PCF_Endorse.RemoveRange(memberMemberEndorsePair.memberEndorse.PCF_Endorse);
                                     db.SaveChanges();
                                 }
-                                db.MemberPlan.RemoveRange(memberMemberEndorsePair.member.MemberPlan);
-                                db.SaveChanges();
-                                //1a.[Execution] Pindahkan MemberPlanEndorse ke MemberPlan
-                                foreach (var item in memberMemberEndorsePair.memberEndorse.MemberPlan_Endorse)
+
+                                // Generate Finance Transaction Detail
+                                foreach (var item in endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).GroupBy(x => x.BasicProductId))
                                 {
-                                    var memberPlan = new MemberPlan();
-                                    memberPlan.EndorseNumber = endorsement.EndorseNumber;
-                                    memberPlan.BasicProductId = item.BasicProductId;
-                                    memberPlan.BasicProductLimitCode = item.BasicProductLimitCode;
-                                    memberPlan.PlanId = item.PlanId;
-                                    memberPlan.MemberId = memberMemberEndorsePair.member.MemberId;
-                                    memberPlan.PolicyId = endorsement.PolicyId;
-                                    memberPlan.StartDate = item.StartDate;
-                                    memberPlan.SetPropertyCreate();
-                                    db.MemberPlan.Add(memberPlan);
+
+                                    var newFinanceTransactionDetail = new FinanceTransactionDetail();
+                                    newFinanceTransactionDetail.TransactionNumber = financeTransaction.TransactionNumber;
+                                    newFinanceTransactionDetail.OutstandingAmount = item.Sum(x => x.Amount);
+                                    newFinanceTransactionDetail.BasicProductId = item.FirstOrDefault().BasicProductId;
+                                    newFinanceTransactionDetail.TransactionAmount = newFinanceTransactionDetail.OutstandingAmount;
+                                    db.FinanceTransactionDetail.Add(newFinanceTransactionDetail);
+                                    db.SaveChanges();
                                 }
-                                db.SaveChanges();
-                                //3. Salin PCF_Endorse ke PCF, yang disalin adalah pcf yang tidak mempunyai transaction number
-                                foreach (var item in memberMemberEndorsePair.memberEndorse.PCF_Endorse.Where(x => x.TransactionNumber == null))
-                                {
-                                    var newPCF = new PCF();
-                                    newPCF.PolicyId = item.PolicyId;
-                                    newPCF.MemberId = memberMemberEndorsePair.member.MemberId;
-                                    newPCF.BasicProductId = item.BasicProductId;
-                                    newPCF.TransType = item.TransType;
-                                    newPCF.InvoiceDate = item.InvoiceDate;
-                                    newPCF.DueDate = item.DueDate;
-                                    newPCF.Amount = item.Amount;
-                                    newPCF.TransactionNumber = financeTransaction.TransactionNumber;
-                                    newPCF.SetPropertyCreate();
-                                    db.PCF.Add(newPCF);
-                                }
-                                db.PCF_Endorse.RemoveRange(memberMemberEndorsePair.memberEndorse.PCF_Endorse);
-                                db.SaveChanges();
+
                             }
 
                             // Generate Member Movement
@@ -5644,18 +5681,6 @@ namespace Web.MainApplication.Controllers
                             db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
                             db.SaveChanges();
 
-                            // Generate Finance Transaction Detail
-                            foreach (var item in endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).GroupBy(x => x.BasicProductId))
-                            {
-
-                                var newFinanceTransactionDetail = new FinanceTransactionDetail();
-                                newFinanceTransactionDetail.TransactionNumber = financeTransaction.TransactionNumber;
-                                newFinanceTransactionDetail.OutstandingAmount = item.Sum(x => x.Amount);
-                                newFinanceTransactionDetail.BasicProductId = item.FirstOrDefault().BasicProductId;
-                                newFinanceTransactionDetail.TransactionAmount = newFinanceTransactionDetail.OutstandingAmount;
-                                db.FinanceTransactionDetail.Add(newFinanceTransactionDetail);
-                                db.SaveChanges();
-                            }
 
                             // Move Data From MemberClientEndorse To Client
                             foreach (var memberMemberEndorsePair in memberMemberEndorsePairTerminate)
@@ -5672,7 +5697,7 @@ namespace Web.MainApplication.Controllers
                                 client.ContactPerson = memberClientEndorse.ContactPerson;
                                 client.ShortName = memberClientEndorse.ShortName;
                                 client.FullName = memberClientEndorse.FullName;
-                                client.PrefixClientTitle = memberClientEndorse.FullName;
+                                client.PrefixClientTitle = memberClientEndorse.PrefixClientTitle;
                                 client.EndfixClientTitle = memberClientEndorse.EndfixClientTitle;
                                 client.BirthDate = memberClientEndorse.BirthDate;
                                 client.BirthPlace = memberClientEndorse.BirthPlace;
@@ -5867,7 +5892,7 @@ namespace Web.MainApplication.Controllers
                                     db.PCF.Add(newPCF);
                                 }
                             }
-                            
+
                             //Delete All Data From Table Relate To Endorse
                             // 1. Delete Policy_Endorse
                             db.Policy_Endorse.Remove(endorsement.Policy_Endorse);
@@ -6044,9 +6069,9 @@ namespace Web.MainApplication.Controllers
             var model = policy.Member.Where(x => !endorsement.Member_Endorse.ToList().Any(x2 => x.ClientId == x2.ClientId) && x.MemberStatus == MemberStatus.Active);
             if (endorsement.EndorseType == EndorseType.TerminateMember)
             {
-                model = model.Where(x => x.EndorseNumber == null || db.Endorsement.Any(x2=>x.EndorseNumber == x.EndorseNumber && x2.EndorseNumber == x.EndorseNumber && x2.EndorseType == EndorseType.Additional));
+                model = model.Where(x => x.EndorseNumber == null || db.Endorsement.Any(x2 => x.EndorseNumber == x.EndorseNumber && x2.EndorseNumber == x.EndorseNumber && x2.EndorseType == EndorseType.Additional));
             }
-            if(endorsement.EndorseType == EndorseType.Reactivate)
+            if (endorsement.EndorseType == EndorseType.Reactivate)
             {
                 model = model.ToList().Where(x => x.MemberStatus.ToString().Contains("Terminate"));
             }
@@ -6738,7 +6763,7 @@ namespace Web.MainApplication.Controllers
                 newMemberClientEndorse.ContactPerson = member.Client.ContactPerson;
                 newMemberClientEndorse.ShortName = member.Client.ShortName;
                 newMemberClientEndorse.FullName = member.Client.FullName;
-                newMemberClientEndorse.PrefixClientTitle = member.Client.FullName;
+                newMemberClientEndorse.PrefixClientTitle = member.Client.PrefixClientTitle;
                 newMemberClientEndorse.EndfixClientTitle = member.Client.EndfixClientTitle;
                 newMemberClientEndorse.BirthDate = member.Client.BirthDate;
                 newMemberClientEndorse.BirthPlace = member.Client.BirthPlace;
@@ -6902,10 +6927,10 @@ namespace Web.MainApplication.Controllers
             {
                 model.PrintNewCard = 1;
             }
-            if (model.PrintNewCard == 1 && string.IsNullOrWhiteSpace(memberEndorse.CardNumber))
-            {
-                WarningMessagesAdd("CardNumber Is Not Exist");
-            }
+            //if (model.PrintNewCard == 1 && string.IsNullOrWhiteSpace(memberEndorse.CardNumber))
+            //{
+            //    WarningMessagesAdd("CardNumber Is Not Exist");
+            //}
             //Financial Or Non-Financial Validation
             model.IsFinancialChange = 0;
             if (model.FullName.ToLower() != memberEndorse.Client.FullName.ToLower())

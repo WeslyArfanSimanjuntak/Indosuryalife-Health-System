@@ -383,11 +383,23 @@ namespace Web.MainApplication.Controllers
             }
 
             //Add Claim For LastVersionApplication Data
-            var lastVersion = db.CommonListValue.Where(x => x.CommonListValue2.Value == VersionApplication.ApplicationVersionsSequence).OrderByDescending(x=>x.Id).FirstOrDefault();
-            if(lastVersion != null)
+            var lastVersion = db.CommonListValue.Where(x => x.CommonListValue2.Value == VersionApplication.ApplicationVersionsSequence).OrderByDescending(x => x.Id).FirstOrDefault();
+            if (lastVersion != null)
             {
                 claims.Add(new Claim(WebClaimIdentity.ApplicationVersion, lastVersion.Text));
             }
+
+            //Add Claim For DatabaseName
+            var showDatabaseName = db.CommonListValue.Where(x => x.Text == AplicationConfig.ShowDatabaseName).FirstOrDefault();
+            if (showDatabaseName != null)
+            {
+                if (showDatabaseName.Value.ToLower() == "true")
+                {
+                    claims.Add(new Claim(WebClaimIdentity.DatabaseName, db.Database.Connection.DataSource + " - " + db.Database.Connection.Database));
+
+                }
+            }
+
             return claims;
         }
         private string GenerateUL(Menu menu, List<int> userRolesId)

@@ -109,6 +109,11 @@ namespace System.Web.Mvc
             var claim = ((ClaimsIdentity)identity).FindFirst(WebClaimIdentity.ApplicationVersion);
             return claim != null ? claim.Value : "";
         }
+        public static string DatabaseInformation(this IIdentity identity)
+        {
+            var claim = ((ClaimsIdentity)identity).FindFirst(WebClaimIdentity.DatabaseName);
+            return claim != null ? claim.Value : "";
+        }
         public static List<string> Roles(this IIdentity identity)
         {
 
@@ -1082,6 +1087,12 @@ namespace System.Web.Mvc
         public const string ApplicationVersionsSequence = "Application Versions Sequence";
 
     }
+    public class AplicationConfig
+    {
+        public const string ShowDatabaseName = "Show Database Name";
+        public const string PlanBasicProductSequence = "Plan BasicProduct Sequence";
+    }
+
     public class FakeView : IView
     {
         public void Render(ViewContext viewContext, TextWriter writer)

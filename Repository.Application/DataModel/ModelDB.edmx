@@ -210,7 +210,7 @@
           <Property Name="ParentId" Type="int" />
           <Property Name="Value" Type="varchar" MaxLength="50" />
           <Property Name="Text" Type="varchar" MaxLength="100" />
-          <Property Name="Desc" Type="varchar" MaxLength="200" />
+          <Property Name="Desc" Type="varchar" MaxLength="1024" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
           <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -2295,7 +2295,7 @@
           <Property Name="ParentId" Type="Int32" />
           <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Text" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Desc" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Desc" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />

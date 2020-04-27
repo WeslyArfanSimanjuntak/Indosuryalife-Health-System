@@ -283,7 +283,7 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <div id="applicationwebversion"><b>Version</b> @User.Identity.ApplicationVersion()</div>
+                <div id="applicationwebversion"><b>Version</b> @User.Identity.ApplicationVersion() @User.Identity.DatabaseInformation()</div>
             </div>
             <strong> <a href="@Web.MainApplication.Resources.SystemResources.CompanyWebSite">@Web.MainApplication.Resources.SystemResources.CompanyName</a>.</strong> All rights
             reserved.

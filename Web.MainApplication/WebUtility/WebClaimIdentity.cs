@@ -18,6 +18,7 @@ namespace Web.MainApplication.WebUtility
         public const string MenuString = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.MenuString";
         public const string Menu = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.Menu";
         public const string ApplicationVersion = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.ApplicationVersion";
+        public const string DatabaseName = "http://www.weslyarfansimanjuntak.com/CuttingEdge.Security.DatabaseNameAndServerName";
 
         public WebClaimIdentity(IEnumerable<Claim> claims, string authenticationType)
                 : base(claims, authenticationType: authenticationType)
