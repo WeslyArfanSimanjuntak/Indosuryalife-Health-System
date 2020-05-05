@@ -5,6 +5,44 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ISL_HEALTHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AdministrationFee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionNumber" Type="varchar" MaxLength="50" />
+          <Property Name="MemberId" Type="bigint" Nullable="false" />
+          <Property Name="MemberNumber" Type="varchar" MaxLength="50" />
+          <Property Name="PolicyId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EndorseNumber" Type="varchar" MaxLength="50" />
+          <Property Name="InvoiceDate" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="smallint" />
+        </EntityType>
+        <EntityType Name="AdministrationFeeEndorsement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionNumber" Type="varchar" MaxLength="50" />
+          <Property Name="MemberId" Type="bigint" Nullable="false" />
+          <Property Name="MemberNumber" Type="varchar" MaxLength="50" />
+          <Property Name="PolicyId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EndorseNumber" Type="varchar" MaxLength="50" />
+          <Property Name="InvoiceDate" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="smallint" />
+        </EntityType>
         <EntityType Name="AspNetGroups">
           <Key>
             <PropertyRef Name="GroupName" />
@@ -336,6 +374,7 @@
           <Property Name="EndorseNumber" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="PolicyId" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="MemberId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MemberOriginId" Type="bigint" Nullable="false" />
           <Property Name="MemberNumber" Type="varchar" MaxLength="50" />
           <Property Name="ClientId" Type="varchar" MaxLength="50" />
           <Property Name="CardNumber" Type="varchar" MaxLength="50" />
@@ -778,6 +817,102 @@
           <Property Name="UpdatedDate" Type="datetime" />
           <Property Name="IsActive" Type="smallint" />
         </EntityType>
+        <Association Name="FK_AdministrationFee_ToEndorsement">
+          <End Role="Endorsement" Type="Self.Endorsement" Multiplicity="0..1" />
+          <End Role="AdministrationFee" Type="Self.AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToFinanceTransaction">
+          <End Role="FinanceTransaction" Type="Self.FinanceTransaction" Multiplicity="0..1" />
+          <End Role="AdministrationFee" Type="Self.AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinanceTransaction">
+              <PropertyRef Name="TransactionNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="TransactionNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="AdministrationFee" Type="Self.AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToPolicy">
+          <End Role="Policy" Type="Self.Policy" Multiplicity="1" />
+          <End Role="AdministrationFee" Type="Self.AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="PolicyId" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="PolicyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToEndorsement">
+          <End Role="Endorsement" Type="Self.Endorsement" Multiplicity="0..1" />
+          <End Role="AdministrationFeeEndorsement" Type="Self.AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToFinanceTransaction">
+          <End Role="FinanceTransaction" Type="Self.FinanceTransaction" Multiplicity="0..1" />
+          <End Role="AdministrationFeeEndorsement" Type="Self.AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinanceTransaction">
+              <PropertyRef Name="TransactionNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="TransactionNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToMemberEnd">
+          <End Role="Member_Endorse" Type="Self.Member_Endorse" Multiplicity="1" />
+          <End Role="AdministrationFeeEndorsement" Type="Self.AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToPolicy">
+          <End Role="Policy" Type="Self.Policy" Multiplicity="1" />
+          <End Role="AdministrationFeeEndorsement" Type="Self.AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="PolicyId" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="PolicyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AspNetGroupUser_ToGroup">
           <End Role="AspNetGroups" Type="Self.AspNetGroups" Multiplicity="1" />
           <End Role="AspNetGroupUser" Type="Self.AspNetGroupUser" Multiplicity="*" />
@@ -991,6 +1126,18 @@
             </Principal>
             <Dependent Role="Member_Endorse">
               <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Member_Endorse_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Member_Endorse" Type="Self.Member_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Member_Endorse">
+              <PropertyRef Name="MemberOriginId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1499,6 +1646,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ISL_HEALTHModelStoreContainer">
+          <EntitySet Name="AdministrationFee" EntityType="Self.AdministrationFee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AdministrationFeeEndorsement" EntityType="Self.AdministrationFeeEndorsement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetGroups" EntityType="Self.AspNetGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetGroupUser" EntityType="Self.AspNetGroupUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoleGroup" EntityType="Self.AspNetRoleGroup" Schema="dbo" store:Type="Tables" />
@@ -1533,6 +1682,38 @@
           <EntitySet Name="Policy_Endorse" EntityType="Self.Policy_Endorse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PremiumRate" EntityType="Self.PremiumRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PremiumRateDetails" EntityType="Self.PremiumRateDetails" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AdministrationFee_ToEndorsement" Association="Self.FK_AdministrationFee_ToEndorsement">
+            <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToFinanceTransaction" Association="Self.FK_AdministrationFee_ToFinanceTransaction">
+            <End Role="FinanceTransaction" EntitySet="FinanceTransaction" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToMember" Association="Self.FK_AdministrationFee_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToPolicy" Association="Self.FK_AdministrationFee_ToPolicy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToEndorsement" Association="Self.FK_AdministrationFeeEnd_ToEndorsement">
+            <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToFinanceTransaction" Association="Self.FK_AdministrationFeeEnd_ToFinanceTransaction">
+            <End Role="FinanceTransaction" EntitySet="FinanceTransaction" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToMemberEnd" Association="Self.FK_AdministrationFeeEnd_ToMemberEnd">
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToPolicy" Association="Self.FK_AdministrationFeeEnd_ToPolicy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
           <AssociationSet Name="FK_AspNetGroupUser_ToGroup" Association="Self.FK_AspNetGroupUser_ToGroup">
             <End Role="AspNetGroups" EntitySet="AspNetGroups" />
             <End Role="AspNetGroupUser" EntitySet="AspNetGroupUser" />
@@ -1603,6 +1784,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Member_Endorse_ToEndorse" Association="Self.FK_Member_Endorse_ToEndorse">
             <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Member_Endorse_ToMember" Association="Self.FK_Member_Endorse_ToMember">
+            <End Role="Member" EntitySet="Member" />
             <End Role="Member_Endorse" EntitySet="Member_Endorse" />
           </AssociationSet>
           <AssociationSet Name="FK_Member_Endorse_ToPolicy" Association="Self.FK_Member_Endorse_ToPolicy">
@@ -1795,7 +1980,6 @@
           <EntitySet Name="FinanceTransaction" EntityType="ISL_HEALTHModel.FinanceTransaction" />
           <EntitySet Name="FinanceTransactionDetail" EntityType="ISL_HEALTHModel.FinanceTransactionDetail" />
           <EntitySet Name="Member" EntityType="ISL_HEALTHModel.Member" />
-          <EntitySet Name="Member_Endorse" EntityType="ISL_HEALTHModel.Member_Endorse" />
           <EntitySet Name="Member_Movement" EntityType="ISL_HEALTHModel.Member_Movement" />
           <EntitySet Name="Member_Movement_Client" EntityType="ISL_HEALTHModel.Member_Movement_Client" />
           <EntitySet Name="MemberClientEndorse" EntityType="ISL_HEALTHModel.MemberClientEndorse" />
@@ -1885,10 +2069,6 @@
             <End Role="Client" EntitySet="Client" />
             <End Role="Client1" EntitySet="Client" />
           </AssociationSet>
-          <AssociationSet Name="FK_Member_Endorse_ToClient" Association="ISL_HEALTHModel.FK_Member_Endorse_ToClient">
-            <End Role="Client" EntitySet="Client" />
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
-          </AssociationSet>
           <AssociationSet Name="FK_Member_Movement_Client_ToClient" Association="ISL_HEALTHModel.FK_Member_Movement_Client_ToClient">
             <End Role="Client" EntitySet="Client" />
             <End Role="Member_Movement_Client" EntitySet="Member_Movement_Client" />
@@ -1928,10 +2108,6 @@
           <AssociationSet Name="FK_Endorsement_ToPolicy" Association="ISL_HEALTHModel.FK_Endorsement_ToPolicy">
             <End Role="Policy" EntitySet="Policy" />
             <End Role="Endorsement" EntitySet="Endorsement" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Member_Endorse_ToEndorse" Association="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse">
-            <End Role="Endorsement" EntitySet="Endorsement" />
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
           </AssociationSet>
           <AssociationSet Name="FK_Member_Movement_ToEndorsement" Association="ISL_HEALTHModel.FK_Member_Movement_ToEndorsement">
             <End Role="Endorsement" EntitySet="Endorsement" />
@@ -1989,22 +2165,6 @@
             <End Role="Member" EntitySet="Member" />
             <End Role="PCF" EntitySet="PCF" />
           </AssociationSet>
-          <AssociationSet Name="FK_Member_Endorse_ToPolicy" Association="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy">
-            <End Role="Policy" EntitySet="Policy" />
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MemberClientEndorse_ToMemberEndorse" Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse">
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
-            <End Role="MemberClientEndorse" EntitySet="MemberClientEndorse" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MemberPlan_Endorse_ToMemberEndorsement" Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement">
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
-            <End Role="MemberPlan_Endorse" EntitySet="MemberPlan_Endorse" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PCFEndorse_ToMember" Association="ISL_HEALTHModel.FK_PCFEndorse_ToMember">
-            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
-            <End Role="PCF_Endorse" EntitySet="PCF_Endorse" />
-          </AssociationSet>
           <AssociationSet Name="FK_Member_Movement_ToPolicy" Association="ISL_HEALTHModel.FK_Member_Movement_ToPolicy">
             <End Role="Policy" EntitySet="Policy" />
             <End Role="Member_Movement" EntitySet="Member_Movement" />
@@ -2053,7 +2213,70 @@
             <End Role="PremiumRate" EntitySet="PremiumRate" />
             <End Role="PremiumRateDetails" EntitySet="PremiumRateDetails" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="AdministrationFee" EntityType="ISL_HEALTHModel.AdministrationFee" />
+          <EntitySet Name="AdministrationFeeEndorsement" EntityType="ISL_HEALTHModel.AdministrationFeeEndorsement" />
+          <AssociationSet Name="FK_AdministrationFee_ToEndorsement" Association="ISL_HEALTHModel.FK_AdministrationFee_ToEndorsement">
+            <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToFinanceTransaction" Association="ISL_HEALTHModel.FK_AdministrationFee_ToFinanceTransaction">
+            <End Role="FinanceTransaction" EntitySet="FinanceTransaction" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToMember" Association="ISL_HEALTHModel.FK_AdministrationFee_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFee_ToPolicy" Association="ISL_HEALTHModel.FK_AdministrationFee_ToPolicy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="AdministrationFee" EntitySet="AdministrationFee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToEndorsement" Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToEndorsement">
+            <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToFinanceTransaction" Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToFinanceTransaction">
+            <End Role="FinanceTransaction" EntitySet="FinanceTransaction" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToPolicy" Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToPolicy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <EntitySet Name="Member_Endorse" EntityType="ISL_HEALTHModel.Member_Endorse" />
+          <AssociationSet Name="FK_AdministrationFeeEnd_ToMemberEnd" Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToMemberEnd">
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+            <End Role="AdministrationFeeEndorsement" EntitySet="AdministrationFeeEndorsement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Member_Endorse_ToClient" Association="ISL_HEALTHModel.FK_Member_Endorse_ToClient">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Member_Endorse_ToEndorse" Association="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse">
+            <End Role="Endorsement" EntitySet="Endorsement" />
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Member_Endorse_ToMember" Association="ISL_HEALTHModel.FK_Member_Endorse_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Member_Endorse_ToPolicy" Association="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberClientEndorse_ToMemberEndorse" Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse">
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+            <End Role="MemberClientEndorse" EntitySet="MemberClientEndorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MemberPlan_Endorse_ToMemberEndorsement" Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement">
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+            <End Role="MemberPlan_Endorse" EntitySet="MemberPlan_Endorse" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PCFEndorse_ToMember" Association="ISL_HEALTHModel.FK_PCFEndorse_ToMember">
+            <End Role="Member_Endorse" EntitySet="Member_Endorse" />
+            <End Role="PCF_Endorse" EntitySet="PCF_Endorse" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="AspNetGroups">
           <Key>
             <PropertyRef Name="GroupName" />
@@ -2278,7 +2501,6 @@
           <NavigationProperty Name="Client2" Relationship="ISL_HEALTHModel.FK_Client_ToClient" FromRole="Client1" ToRole="Client" />
           <NavigationProperty Name="Client11" Relationship="ISL_HEALTHModel.FK_Client_ToClientRelateTo" FromRole="Client" ToRole="Client1" />
           <NavigationProperty Name="Client3" Relationship="ISL_HEALTHModel.FK_Client_ToClientRelateTo" FromRole="Client1" ToRole="Client" />
-          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToClient" FromRole="Client" ToRole="Member_Endorse" />
           <NavigationProperty Name="Member_Movement_Client" Relationship="ISL_HEALTHModel.FK_Member_Movement_Client_ToClient" FromRole="Client" ToRole="Member_Movement_Client" />
           <NavigationProperty Name="Member" Relationship="ISL_HEALTHModel.FK_Member_ToClient" FromRole="Client" ToRole="Member" />
           <NavigationProperty Name="MemberClientEndorse" Relationship="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientClientId" FromRole="Client" ToRole="MemberClientEndorse" />
@@ -2286,6 +2508,7 @@
           <NavigationProperty Name="MemberClientEndorse2" Relationship="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientRelateTo" FromRole="Client" ToRole="MemberClientEndorse" />
           <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_Policy_ToClient" FromRole="Client" ToRole="Policy" />
           <NavigationProperty Name="Policy_Endorse" Relationship="ISL_HEALTHModel.FK_PolicyEndorseToClient" FromRole="Client" ToRole="Policy_Endorse" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToClient" FromRole="Client" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="CommonListValue">
           <Key>
@@ -2326,7 +2549,6 @@
           <NavigationProperty Name="Endorsement1" Relationship="ISL_HEALTHModel.FK_Endorsement_ToEndorsement" FromRole="Endorsement" ToRole="Endorsement1" />
           <NavigationProperty Name="Endorsement2" Relationship="ISL_HEALTHModel.FK_Endorsement_ToEndorsement" FromRole="Endorsement1" ToRole="Endorsement" />
           <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_Endorsement_ToPolicy" FromRole="Endorsement" ToRole="Policy" />
-          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" FromRole="Endorsement" ToRole="Member_Endorse" />
           <NavigationProperty Name="Member_Movement" Relationship="ISL_HEALTHModel.FK_Member_Movement_ToEndorsement" FromRole="Endorsement" ToRole="Member_Movement" />
           <NavigationProperty Name="MemberPlan_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToEndorse" FromRole="Endorsement" ToRole="MemberPlan_Endorse" />
           <NavigationProperty Name="MemberPlan_H" Relationship="ISL_HEALTHModel.FK_MemberPlan_H_ToEndorsement" FromRole="Endorsement" ToRole="MemberPlan_H" />
@@ -2334,6 +2556,9 @@
           <NavigationProperty Name="PlanDetail_Endorse" Relationship="ISL_HEALTHModel.FK_PlanDetail_EndorseToEndorsement" FromRole="Endorsement" ToRole="PlanDetail_Endorse" />
           <NavigationProperty Name="Plan_Endorse" Relationship="ISL_HEALTHModel.FK_PlanEndorse_ToEndorsement" FromRole="Endorsement" ToRole="Plan_Endorse" />
           <NavigationProperty Name="Policy_Endorse" Relationship="ISL_HEALTHModel.FK_PolicyEndorseToEndorsement" FromRole="Endorsement" ToRole="Policy_Endorse" />
+          <NavigationProperty Name="AdministrationFee" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToEndorsement" FromRole="Endorsement" ToRole="AdministrationFee" />
+          <NavigationProperty Name="AdministrationFeeEndorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToEndorsement" FromRole="Endorsement" ToRole="AdministrationFeeEndorsement" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" FromRole="Endorsement" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="FinanceTransaction">
           <Key>
@@ -2380,6 +2605,8 @@
           <Property Name="IsActive" Type="Int16" />
           <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_FinanceTransaction_ToPolicy" FromRole="FinanceTransaction" ToRole="Policy" />
           <NavigationProperty Name="FinanceTransactionDetail" Relationship="ISL_HEALTHModel.FK_FinanceTransactionDetail_ToFinanceTransaction" FromRole="FinanceTransaction" ToRole="FinanceTransactionDetail" />
+          <NavigationProperty Name="AdministrationFee" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToFinanceTransaction" FromRole="FinanceTransaction" ToRole="AdministrationFee" />
+          <NavigationProperty Name="AdministrationFeeEndorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToFinanceTransaction" FromRole="FinanceTransaction" ToRole="AdministrationFeeEndorsement" />
         </EntityType>
         <EntityType Name="FinanceTransactionDetail">
           <Key>
@@ -2436,43 +2663,8 @@
           <NavigationProperty Name="MemberPlan_H" Relationship="ISL_HEALTHModel.FK_MemberPlan_H_ToMember" FromRole="Member" ToRole="MemberPlan_H" />
           <NavigationProperty Name="MemberPlan" Relationship="ISL_HEALTHModel.FK_MemberPlan_ToMember" FromRole="Member" ToRole="MemberPlan" />
           <NavigationProperty Name="PCF" Relationship="ISL_HEALTHModel.FK_PCF_ToMember" FromRole="Member" ToRole="PCF" />
-        </EntityType>
-        <EntityType Name="Member_Endorse">
-          <Key>
-            <PropertyRef Name="MemberId" />
-          </Key>
-          <Property Name="EndorseNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PolicyId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="MemberId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MemberNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ClientId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CardNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PlanId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SequencialNo" Type="Int32" />
-          <Property Name="Age" Type="Int16" />
-          <Property Name="EntryDate" Type="DateTime" Precision="3" />
-          <Property Name="StartDate" Type="DateTime" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Precision="3" />
-          <Property Name="LastEndorseDate" Type="DateTime" Precision="3" />
-          <Property Name="LastClaimDate" Type="DateTime" Precision="3" />
-          <Property Name="ClaimNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ExitDate" Type="DateTime" Precision="3" />
-          <Property Name="TerminateDate" Type="DateTime" Precision="3" />
-          <Property Name="IssueDate" Type="DateTime" Precision="3" />
-          <Property Name="ProcessDate" Type="DateTime" Precision="3" />
-          <Property Name="MemberStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="AdmedikaCode" Type="Int16" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsActive" Type="Int16" />
-          <NavigationProperty Name="Client" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToClient" FromRole="Member_Endorse" ToRole="Client" />
-          <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" FromRole="Member_Endorse" ToRole="Endorsement" />
-          <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" FromRole="Member_Endorse" ToRole="Policy" />
-          <NavigationProperty Name="MemberClientEndorse" Relationship="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse" FromRole="Member_Endorse" ToRole="MemberClientEndorse" />
-          <NavigationProperty Name="MemberPlan_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" FromRole="Member_Endorse" ToRole="MemberPlan_Endorse" />
-          <NavigationProperty Name="PCF_Endorse" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToMember" FromRole="Member_Endorse" ToRole="PCF_Endorse" />
+          <NavigationProperty Name="AdministrationFee" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToMember" FromRole="Member" ToRole="AdministrationFee" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToMember" FromRole="Member" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="Member_Movement">
           <Key>
@@ -2650,8 +2842,8 @@
           <Property Name="IsActive" Type="Int16" />
           <NavigationProperty Name="BasicProduct" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToBasicProduct" FromRole="MemberPlan_Endorse" ToRole="BasicProduct" />
           <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToEndorse" FromRole="MemberPlan_Endorse" ToRole="Endorsement" />
-          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" FromRole="MemberPlan_Endorse" ToRole="Member_Endorse" />
           <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToPolicy" FromRole="MemberPlan_Endorse" ToRole="Policy" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" FromRole="MemberPlan_Endorse" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="MemberPlan_H">
           <Key>
@@ -2753,8 +2945,8 @@
           <Property Name="IsActive" Type="Int16" />
           <NavigationProperty Name="BasicProduct" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToBasicProduct" FromRole="PCF_Endorse" ToRole="BasicProduct" />
           <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToEndorse" FromRole="PCF_Endorse" ToRole="Endorsement" />
-          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToMember" FromRole="PCF_Endorse" ToRole="Member_Endorse" />
           <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToPolicy" FromRole="PCF_Endorse" ToRole="Policy" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToMember" FromRole="PCF_Endorse" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="Plan">
           <Key>
@@ -2860,7 +3052,6 @@
           <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_Endorsement_ToPolicy" FromRole="Policy" ToRole="Endorsement" />
           <NavigationProperty Name="FinanceTransaction" Relationship="ISL_HEALTHModel.FK_FinanceTransaction_ToPolicy" FromRole="Policy" ToRole="FinanceTransaction" />
           <NavigationProperty Name="Member" Relationship="ISL_HEALTHModel.FK_Member_ToPolicy" FromRole="Policy" ToRole="Member" />
-          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" FromRole="Policy" ToRole="Member_Endorse" />
           <NavigationProperty Name="Member_Movement" Relationship="ISL_HEALTHModel.FK_Member_Movement_ToPolicy" FromRole="Policy" ToRole="Member_Movement" />
           <NavigationProperty Name="MemberPlan" Relationship="ISL_HEALTHModel.FK_MemberPlan_ToPolicy" FromRole="Policy" ToRole="MemberPlan" />
           <NavigationProperty Name="MemberPlan_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToPolicy" FromRole="Policy" ToRole="MemberPlan_Endorse" />
@@ -2871,6 +3062,9 @@
           <NavigationProperty Name="PlanDetail" Relationship="ISL_HEALTHModel.FK_PlanDetail_ToPolicy" FromRole="Policy" ToRole="PlanDetail" />
           <NavigationProperty Name="PlanDetail_Endorse" Relationship="ISL_HEALTHModel.FK_PlanDetail_EndorseToPolicy" FromRole="Policy" ToRole="PlanDetail_Endorse" />
           <NavigationProperty Name="Policy_Endorse" Relationship="ISL_HEALTHModel.FK_PolicyEndorseToPolicy" FromRole="Policy" ToRole="Policy_Endorse" />
+          <NavigationProperty Name="AdministrationFee" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToPolicy" FromRole="Policy" ToRole="AdministrationFee" />
+          <NavigationProperty Name="AdministrationFeeEndorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToPolicy" FromRole="Policy" ToRole="AdministrationFeeEndorsement" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" FromRole="Policy" ToRole="Member_Endorse" />
         </EntityType>
         <EntityType Name="Policy_Endorse">
           <Key>
@@ -3163,18 +3357,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Member_Endorse_ToClient">
-          <End Type="ISL_HEALTHModel.Client" Role="Client" Multiplicity="0..1" />
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Client">
-              <PropertyRef Name="ClientId" />
-            </Principal>
-            <Dependent Role="Member_Endorse">
-              <PropertyRef Name="ClientId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Member_Movement_Client_ToClient">
           <End Type="ISL_HEALTHModel.Client" Role="Client" Multiplicity="1" />
           <End Type="ISL_HEALTHModel.Member_Movement_Client" Role="Member_Movement_Client" Multiplicity="*" />
@@ -3292,18 +3474,6 @@
             </Principal>
             <Dependent Role="Endorsement">
               <PropertyRef Name="PolicyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Member_Endorse_ToEndorse">
-          <End Type="ISL_HEALTHModel.Endorsement" Role="Endorsement" Multiplicity="1" />
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Endorsement">
-              <PropertyRef Name="EndorseNumber" />
-            </Principal>
-            <Dependent Role="Member_Endorse">
-              <PropertyRef Name="EndorseNumber" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3475,54 +3645,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Member_Endorse_ToPolicy">
-          <End Type="ISL_HEALTHModel.Policy" Role="Policy" Multiplicity="1" />
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Policy">
-              <PropertyRef Name="PolicyId" />
-            </Principal>
-            <Dependent Role="Member_Endorse">
-              <PropertyRef Name="PolicyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MemberClientEndorse_ToMemberEndorse">
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
-          <End Type="ISL_HEALTHModel.MemberClientEndorse" Role="MemberClientEndorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member_Endorse">
-              <PropertyRef Name="MemberId" />
-            </Principal>
-            <Dependent Role="MemberClientEndorse">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MemberPlan_Endorse_ToMemberEndorsement">
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
-          <End Type="ISL_HEALTHModel.MemberPlan_Endorse" Role="MemberPlan_Endorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member_Endorse">
-              <PropertyRef Name="MemberId" />
-            </Principal>
-            <Dependent Role="MemberPlan_Endorse">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PCFEndorse_ToMember">
-          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
-          <End Type="ISL_HEALTHModel.PCF_Endorse" Role="PCF_Endorse" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member_Endorse">
-              <PropertyRef Name="MemberId" />
-            </Principal>
-            <Dependent Role="PCF_Endorse">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Member_Movement_ToPolicy">
           <End Type="ISL_HEALTHModel.Policy" Role="Policy" Multiplicity="1" />
           <End Type="ISL_HEALTHModel.Member_Movement" Role="Member_Movement" Multiplicity="*" />
@@ -3664,6 +3786,272 @@
             </Principal>
             <Dependent Role="PremiumRateDetails">
               <PropertyRef Name="RateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AdministrationFee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MemberId" Type="Int64" Nullable="false" />
+          <Property Name="MemberNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PolicyId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EndorseNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InvoiceDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Int16" />
+          <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToEndorsement" FromRole="AdministrationFee" ToRole="Endorsement" />
+          <NavigationProperty Name="FinanceTransaction" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToFinanceTransaction" FromRole="AdministrationFee" ToRole="FinanceTransaction" />
+          <NavigationProperty Name="Member" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToMember" FromRole="AdministrationFee" ToRole="Member" />
+          <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_AdministrationFee_ToPolicy" FromRole="AdministrationFee" ToRole="Policy" />
+        </EntityType>
+        <EntityType Name="AdministrationFeeEndorsement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MemberId" Type="Int64" Nullable="false" />
+          <Property Name="MemberNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PolicyId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EndorseNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InvoiceDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Int16" />
+          <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToEndorsement" FromRole="AdministrationFeeEndorsement" ToRole="Endorsement" />
+          <NavigationProperty Name="FinanceTransaction" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToFinanceTransaction" FromRole="AdministrationFeeEndorsement" ToRole="FinanceTransaction" />
+          <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToPolicy" FromRole="AdministrationFeeEndorsement" ToRole="Policy" />
+          <NavigationProperty Name="Member_Endorse" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToMemberEnd" FromRole="AdministrationFeeEndorsement" ToRole="Member_Endorse" />
+        </EntityType>
+        <Association Name="FK_AdministrationFee_ToEndorsement">
+          <End Type="ISL_HEALTHModel.Endorsement" Role="Endorsement" Multiplicity="0..1" />
+          <End Type="ISL_HEALTHModel.AdministrationFee" Role="AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToFinanceTransaction">
+          <End Type="ISL_HEALTHModel.FinanceTransaction" Role="FinanceTransaction" Multiplicity="0..1" />
+          <End Type="ISL_HEALTHModel.AdministrationFee" Role="AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinanceTransaction">
+              <PropertyRef Name="TransactionNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="TransactionNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToMember">
+          <End Type="ISL_HEALTHModel.Member" Role="Member" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.AdministrationFee" Role="AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFee_ToPolicy">
+          <End Type="ISL_HEALTHModel.Policy" Role="Policy" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.AdministrationFee" Role="AdministrationFee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="PolicyId" />
+            </Principal>
+            <Dependent Role="AdministrationFee">
+              <PropertyRef Name="PolicyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToEndorsement">
+          <End Type="ISL_HEALTHModel.Endorsement" Role="Endorsement" Multiplicity="0..1" />
+          <End Type="ISL_HEALTHModel.AdministrationFeeEndorsement" Role="AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToFinanceTransaction">
+          <End Type="ISL_HEALTHModel.FinanceTransaction" Role="FinanceTransaction" Multiplicity="0..1" />
+          <End Type="ISL_HEALTHModel.AdministrationFeeEndorsement" Role="AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinanceTransaction">
+              <PropertyRef Name="TransactionNumber" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="TransactionNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdministrationFeeEnd_ToPolicy">
+          <End Type="ISL_HEALTHModel.Policy" Role="Policy" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.AdministrationFeeEndorsement" Role="AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="PolicyId" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="PolicyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Member_Endorse">
+          <Key>
+            <PropertyRef Name="MemberId" />
+          </Key>
+          <Property Name="EndorseNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PolicyId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MemberId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MemberOriginId" Type="Int64" Nullable="false" />
+          <Property Name="MemberNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ClientId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CardNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PlanId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SequencialNo" Type="Int32" />
+          <Property Name="Age" Type="Int16" />
+          <Property Name="EntryDate" Type="DateTime" Precision="3" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="LastEndorseDate" Type="DateTime" Precision="3" />
+          <Property Name="LastClaimDate" Type="DateTime" Precision="3" />
+          <Property Name="ClaimNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ExitDate" Type="DateTime" Precision="3" />
+          <Property Name="TerminateDate" Type="DateTime" Precision="3" />
+          <Property Name="IssueDate" Type="DateTime" Precision="3" />
+          <Property Name="ProcessDate" Type="DateTime" Precision="3" />
+          <Property Name="MemberStatus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AdmedikaCode" Type="Int16" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Int16" />
+          <NavigationProperty Name="AdministrationFeeEndorsement" Relationship="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToMemberEnd" FromRole="Member_Endorse" ToRole="AdministrationFeeEndorsement" />
+          <NavigationProperty Name="Client" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToClient" FromRole="Member_Endorse" ToRole="Client" />
+          <NavigationProperty Name="Endorsement" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" FromRole="Member_Endorse" ToRole="Endorsement" />
+          <NavigationProperty Name="Member" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToMember" FromRole="Member_Endorse" ToRole="Member" />
+          <NavigationProperty Name="Policy" Relationship="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" FromRole="Member_Endorse" ToRole="Policy" />
+          <NavigationProperty Name="MemberClientEndorse" Relationship="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse" FromRole="Member_Endorse" ToRole="MemberClientEndorse" />
+          <NavigationProperty Name="MemberPlan_Endorse" Relationship="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" FromRole="Member_Endorse" ToRole="MemberPlan_Endorse" />
+          <NavigationProperty Name="PCF_Endorse" Relationship="ISL_HEALTHModel.FK_PCFEndorse_ToMember" FromRole="Member_Endorse" ToRole="PCF_Endorse" />
+        </EntityType>
+        <Association Name="FK_AdministrationFeeEnd_ToMemberEnd">
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.AdministrationFeeEndorsement" Role="AdministrationFeeEndorsement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="AdministrationFeeEndorsement">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Member_Endorse_ToClient">
+          <End Type="ISL_HEALTHModel.Client" Role="Client" Multiplicity="0..1" />
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="Member_Endorse">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Member_Endorse_ToEndorse">
+          <End Type="ISL_HEALTHModel.Endorsement" Role="Endorsement" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Endorsement">
+              <PropertyRef Name="EndorseNumber" />
+            </Principal>
+            <Dependent Role="Member_Endorse">
+              <PropertyRef Name="EndorseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Member_Endorse_ToMember">
+          <End Type="ISL_HEALTHModel.Member" Role="Member" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="Member_Endorse">
+              <PropertyRef Name="MemberOriginId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Member_Endorse_ToPolicy">
+          <End Type="ISL_HEALTHModel.Policy" Role="Policy" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="PolicyId" />
+            </Principal>
+            <Dependent Role="Member_Endorse">
+              <PropertyRef Name="PolicyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberClientEndorse_ToMemberEndorse">
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.MemberClientEndorse" Role="MemberClientEndorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="MemberClientEndorse">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MemberPlan_Endorse_ToMemberEndorsement">
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.MemberPlan_Endorse" Role="MemberPlan_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="MemberPlan_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PCFEndorse_ToMember">
+          <End Type="ISL_HEALTHModel.Member_Endorse" Role="Member_Endorse" Multiplicity="1" />
+          <End Type="ISL_HEALTHModel.PCF_Endorse" Role="PCF_Endorse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member_Endorse">
+              <PropertyRef Name="MemberId" />
+            </Principal>
+            <Dependent Role="PCF_Endorse">
+              <PropertyRef Name="MemberId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4004,38 +4392,6 @@
                 <ScalarProperty Name="MemberNumber" ColumnName="MemberNumber" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Member_Endorse">
-            <EntityTypeMapping TypeName="ISL_HEALTHModel.Member_Endorse">
-              <MappingFragment StoreEntitySet="Member_Endorse">
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="AdmedikaCode" ColumnName="AdmedikaCode" />
-                <ScalarProperty Name="MemberStatus" ColumnName="MemberStatus" />
-                <ScalarProperty Name="ProcessDate" ColumnName="ProcessDate" />
-                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
-                <ScalarProperty Name="TerminateDate" ColumnName="TerminateDate" />
-                <ScalarProperty Name="ExitDate" ColumnName="ExitDate" />
-                <ScalarProperty Name="ClaimNumber" ColumnName="ClaimNumber" />
-                <ScalarProperty Name="LastClaimDate" ColumnName="LastClaimDate" />
-                <ScalarProperty Name="LastEndorseDate" ColumnName="LastEndorseDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
-                <ScalarProperty Name="Age" ColumnName="Age" />
-                <ScalarProperty Name="SequencialNo" ColumnName="SequencialNo" />
-                <ScalarProperty Name="PlanId" ColumnName="PlanId" />
-                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
-                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
-                <ScalarProperty Name="MemberNumber" ColumnName="MemberNumber" />
-                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
-                <ScalarProperty Name="EndorseNumber" ColumnName="EndorseNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4437,6 +4793,79 @@
                 <ScalarProperty Name="PaymentDuration" ColumnName="PaymentDuration" />
                 <ScalarProperty Name="RateId" ColumnName="RateId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdministrationFee">
+            <EntityTypeMapping TypeName="ISL_HEALTHModel.AdministrationFee">
+              <MappingFragment StoreEntitySet="AdministrationFee">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+                <ScalarProperty Name="EndorseNumber" ColumnName="EndorseNumber" />
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
+                <ScalarProperty Name="MemberNumber" ColumnName="MemberNumber" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="TransactionNumber" ColumnName="TransactionNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdministrationFeeEndorsement">
+            <EntityTypeMapping TypeName="ISL_HEALTHModel.AdministrationFeeEndorsement">
+              <MappingFragment StoreEntitySet="AdministrationFeeEndorsement">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+                <ScalarProperty Name="EndorseNumber" ColumnName="EndorseNumber" />
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
+                <ScalarProperty Name="MemberNumber" ColumnName="MemberNumber" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="TransactionNumber" ColumnName="TransactionNumber" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Member_Endorse">
+            <EntityTypeMapping TypeName="ISL_HEALTHModel.Member_Endorse">
+              <MappingFragment StoreEntitySet="Member_Endorse">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="AdmedikaCode" ColumnName="AdmedikaCode" />
+                <ScalarProperty Name="MemberStatus" ColumnName="MemberStatus" />
+                <ScalarProperty Name="ProcessDate" ColumnName="ProcessDate" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="TerminateDate" ColumnName="TerminateDate" />
+                <ScalarProperty Name="ExitDate" ColumnName="ExitDate" />
+                <ScalarProperty Name="ClaimNumber" ColumnName="ClaimNumber" />
+                <ScalarProperty Name="LastClaimDate" ColumnName="LastClaimDate" />
+                <ScalarProperty Name="LastEndorseDate" ColumnName="LastEndorseDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="SequencialNo" ColumnName="SequencialNo" />
+                <ScalarProperty Name="PlanId" ColumnName="PlanId" />
+                <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="MemberNumber" ColumnName="MemberNumber" />
+                <ScalarProperty Name="MemberOriginId" ColumnName="MemberOriginId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
+                <ScalarProperty Name="EndorseNumber" ColumnName="EndorseNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

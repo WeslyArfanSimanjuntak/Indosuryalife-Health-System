@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Repository.Application.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
+using Web.MainApplication.Models;
 
 namespace Web.MainApplication.Controllers
 {
     public class HomeController : BaseController
     {
+        private DBEntities db = new DBEntities();
         public ActionResult Index()
         {
             return View();
@@ -56,11 +60,18 @@ namespace Web.MainApplication.Controllers
 
 
         }
-        public ActionResult About()
+        [AllowAnonymous]
+        public ActionResult About(string version)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            var versionInfo = db.CommonListValue.Where(x => x.CommonListValue2.Value == VersionApplication.ApplicationVersionsSequence).ToList().Where(x=>x.Text == version).FirstOrDefault();
+            ViewBag.Versions = db.CommonListValue.Where(x=>x.ParentId == versionInfo.ParentId).ToList();
+            //ViewBag.Versions = db.CommonListValue.Where(x => x.CommonListValue2.Value == VersionApplication.ApplicationVersionsSequence).FirstOrDefault().CommonListValue1.ToList();
+            return View("_Modal", new ModalView()
+            {
+                Title = "Version Notes",
+                Body = this.RenderRazorViewToString("_About", versionInfo)
+            });
         }
 
         public ActionResult Contact()

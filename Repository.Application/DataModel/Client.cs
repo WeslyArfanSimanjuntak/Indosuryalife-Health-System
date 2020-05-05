@@ -19,7 +19,6 @@ namespace Repository.Application.DataModel
         {
             this.Client1 = new HashSet<Client>();
             this.Client11 = new HashSet<Client>();
-            this.Member_Endorse = new HashSet<Member_Endorse>();
             this.Member_Movement_Client = new HashSet<Member_Movement_Client>();
             this.Member = new HashSet<Member>();
             this.MemberClientEndorse = new HashSet<MemberClientEndorse>();
@@ -27,6 +26,7 @@ namespace Repository.Application.DataModel
             this.MemberClientEndorse2 = new HashSet<MemberClientEndorse>();
             this.Policy = new HashSet<Policy>();
             this.Policy_Endorse = new HashSet<Policy_Endorse>();
+            this.Member_Endorse = new HashSet<Member_Endorse>();
         }
     
         public string ClientId { get; set; }
@@ -68,8 +68,6 @@ namespace Repository.Application.DataModel
         public virtual ICollection<Client> Client11 { get; set; }
         public virtual Client Client3 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Member_Endorse> Member_Endorse { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Member_Movement_Client> Member_Movement_Client { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Member> Member { get; set; }
@@ -83,5 +81,7 @@ namespace Repository.Application.DataModel
         public virtual ICollection<Policy> Policy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Policy_Endorse> Policy_Endorse { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Member_Endorse> Member_Endorse { get; set; }
     }
 }

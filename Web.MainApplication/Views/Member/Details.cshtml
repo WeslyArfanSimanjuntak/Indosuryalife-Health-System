@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Policy Details";
-
+    
 }
 
 
@@ -181,9 +181,9 @@
             </div>
             <div>
                 @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.DisplayFor(model => model.ClaimNumber)
-                </div>*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClaimNumber)
+                    </div>*@
             </div>
         </div>
         <div class="row">
@@ -195,9 +195,9 @@
             </div>
             <div>
                 @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.DisplayFor(model => model.ClaimNumber)
-                </div>*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClaimNumber)
+                    </div>*@
             </div>
         </div>
         <div class="row">
@@ -209,9 +209,9 @@
             </div>
             <div>
                 @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.DisplayFor(model => model.ClaimNumber)
-                </div>*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClaimNumber)
+                    </div>*@
             </div>
         </div>
         <div class="row">
@@ -223,9 +223,9 @@
             </div>
             <div>
                 @*@Html.Label("Claim Number", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.DisplayFor(model => model.ClaimNumber)
-                </div>*@
+                    <div class="col-md-4">
+                        @Html.DisplayFor(model => model.ClaimNumber)
+                    </div>*@
             </div>
         </div>
     </div>
@@ -243,78 +243,126 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_1">
-                    <div class="box-body">
-                        <table class="table table-bordered table-striped" id="PlanIdTable">
-                            <thead>
-                                <tr>
-                                    <th>Basic Product</th>
-                                    <th>Basic Product Name</th>
-                                    <th>Limit Code</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.MemberPlan)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BasicProductId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BasicProductLimitCode)
-                                        <td>
-                                            @Html.ActionLink("Details", "PolicyMemberBenefit", "Policy", new { id = item.BasicProductId, bpLimitId = item.BasicProductLimitCode }, htmlAttributes: new { @target = "_blank" })
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="box">
+                            <div class="box-header"></div>
+                            <div class="box-body">
+                                <table class="table table-bordered table-striped" id="PlanIdTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Basic Product</th>
+                                            <th>Basic Product Name</th>
+                                            <th>Limit Code</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MemberPlan)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BasicProductId)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BasicProductLimitCode)
+                                                <td>
+                                                    @Html.ActionLink("Details", "PolicyMemberBenefit", "Policy", new { id = item.BasicProductId, bpLimitId = item.BasicProductLimitCode }, htmlAttributes: new { @target = "_blank" })
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- / next tab-pane -->
                 <div class="tab-pane" id="tab_2">
-                    <div class="box-body">
-                        <table class="table table-bordered table-striped" id="PCFTable_@Model.MemberId">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>TransType</th>
-                                    <th>Basic Product</th>
-                                    <th>Basic Product Name</th>
-                                    <th>Limit Code</th>
-                                    <th>Amount</th>
-                                    <th>Invoice Number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.PCF)
-                                {
-                                <tr>
-                                    <td>
-                                        @(item.InvoiceDate.ToString("dd/MM/yyyy"))
-                                    </td>
-                                    <td>@item.TransType</td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BasicProductId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
-                                    </td>
-                                    <td>
-                                        @(Model.MemberPlan.Where(x => x.PolicyId == Model.PolicyId && Model.MemberId == x.MemberId && x.BasicProductId == item.BasicProductId).FirstOrDefault()?.BasicProductLimitCode)
-                                    </td>
-                                    <td class="text-right" format="float">
-                                        @(item.Amount.ToString().Replace(',', '.'))
-                                    </td>
-                                    <td>@item.TransactionNumber</td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="box">
+                            <div class="box-header">
+                                PCF
+                            </div>
+                            <div class="box-body">
+                                <table class="table table-bordered table-striped" id="PCFTable_@Model.MemberId">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>TransType</th>
+                                            <th>Basic Product</th>
+                                            <th>Basic Product Name</th>
+                                            <th>Limit Code</th>
+                                            <th>Amount</th>
+                                            <th>Invoice Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.PCF)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(item.InvoiceDate.ToString("dd/MM/yyyy"))
+                                                </td>
+                                                <td>@item.TransType</td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BasicProductId)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.BasicProduct.BasicProductName)
+                                                </td>
+                                                <td>
+                                                    @(Model.MemberPlan.Where(x => x.PolicyId == Model.PolicyId && Model.MemberId == x.MemberId && x.BasicProductId == item.BasicProductId).FirstOrDefault()?.BasicProductLimitCode)
+                                                </td>
+                                                <td class="text-right" format="float">
+                                                    @(item.Amount.ToString().Replace(',', '.'))
+                                                </td>
+                                                <td>@item.TransactionNumber</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box">
+                            <div class="box-header">
+                                Administration Fee
+                            </div>
+                            <div class="box-body">
+                                <table class="table table-bordered table-striped" id="AddministrationFeeTable_@Model.MemberId">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Endorsement</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Invoice Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var item in Model.AdministrationFee)
+                                            {
+                                        <tr>
+                                            <td>@(item.InvoiceDate.ToString("dd/MM/yyyy"))</td>
+                                            <td>@item.EndorseNumber</td>
+                                            <td>@item.Type</td>
+                                            <td class="text-right" format="float">
+                                                @(item.Amount.ToString().Replace(',', '.'))
+                                            </td>
+                                            <td>@item.TransactionNumber</td>
+
+                                        </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -367,10 +415,20 @@
         'autoWidth': false,
         'scrollX': true
     });
+    $('#AddministrationFeeTable_@Model.MemberId').DataTable({
+        'paging': true,
+        'lengthMenu': [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+        'pageLength': -1,
+        'searching': true,
+        'ordering': true,
+        'info': true,
+        'autoWidth': false,
+        'scrollX': true
+    });
 </script>
 
 @*<style type="text/css">
-    .table th, table td {
-        text-align: center;
-    }
-</style>*@
+        .table th, table td {
+            text-align: center;
+        }
+    </style>*@

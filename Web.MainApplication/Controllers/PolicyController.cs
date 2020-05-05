@@ -452,8 +452,18 @@ namespace Web.MainApplication.Controllers
                     }
 
                     var sex = member.Client.Sex == "Female" ? "F" : "M";
-                    var lengthOfBenefitDayPerYear = (member.EndDate - member.StartDate).Value.TotalDays / 365.25;
-                    var lengthOfBenefitDayPerYearTermLife = (member.EndDate - member.StartDate).Value.TotalDays / 365;
+                    var totalDaysOfBenefit = (member.EndDate - member.StartDate).Value.TotalDays;
+                    if (totalDaysOfBenefit > 366)
+                    {
+                        WarningMessagesAdd("Total Days Of Benefit More Than 366 days");
+                    }
+                    if (totalDaysOfBenefit == 366)
+                    {
+                        totalDaysOfBenefit = totalDaysOfBenefit - 1;
+                    }
+
+                    var lengthOfBenefitDayPerYear = totalDaysOfBenefit / 365;
+                    var lengthOfBenefitDayPerYearTermLife = totalDaysOfBenefit / 365;
                     var memberPlan = db.MemberPlan.Where(x => x.MemberId == member.MemberId && x.PolicyId == member.PolicyId).ToList();
                     db.PCF.RemoveRange(db.PCF.Where(x => x.MemberId == member.MemberId && x.PolicyId == member.PolicyId).ToList());
                     db.SaveChanges();
@@ -496,22 +506,22 @@ namespace Web.MainApplication.Controllers
                         decimal multiplierFactorPercentage = new decimal(0);
 
 
-                        if (member.Policy.PaymentFrequency == "M")
+                        if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                         {
                             frequecyToNumber = 1;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                         }
-                        else if (member.Policy.PaymentFrequency == "Q")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                         {
                             frequecyToNumber = 4;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                         }
-                        else if (member.Policy.PaymentFrequency == "S")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                         {
                             frequecyToNumber = 6;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                         }
-                        else if (member.Policy.PaymentFrequency == "Y")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly)
                         {
                             frequecyToNumber = 12;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -698,15 +708,16 @@ namespace Web.MainApplication.Controllers
             decimal? sumPremiRefund = 0;
             decimal? sumPremiCorrection = 0;
             var listOfReportModel = new List<MemberReportModel>();
-            foreach (var item in allDSMemberMovement.OrderBy(x => x.EffectiveDate).GroupBy(x => x.MemberId))
+            foreach (var item in allDSMemberMovement.GroupBy(x => x.MemberId))
             {
-                var memberMovement = allDSMemberMovement.Where(x => x.MemberId == item.Key).FirstOrDefault();
+                var memberMovement = allDSMemberMovement.Where(x => x.MemberId == item.Key).OrderByDescending(x => x.Id).FirstOrDefault();
                 try
                 {
                     //var reportModelExist = listOfReportModel.Where(x => x.MemberId == item.MemberId.ToString()).FirstOrDefault();
                     //if (reportModelExist == null)
                     //{
-                    var memberMovementClient = db.Member_Movement_Client.Find(item.Key);
+                    db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+                    //var memberMovementClient = db.Member_Movement_Client.Find(item.Key);
                     var planId = "";
                     var planSequence = db.CommonListValue.Where(x => x.Text == AplicationConfig.PlanBasicProductSequence).FirstOrDefault();
                     var memberPlans = memberMovement.Member.MemberPlan.ToList();
@@ -720,10 +731,10 @@ namespace Web.MainApplication.Controllers
                         }
                     }
 
-                    foreach (var memberPlan in memberMovement.Member.MemberPlan.OrderBy(x => x.BasicProductLimitCode))
-                    {
-                        planId = planId + memberPlan.BasicProductLimitCode + " ";
-                    }
+                    //foreach (var memberPlan in memberMovement.Member.MemberPlan.OrderBy(x => x.BasicProductLimitCode))
+                    //{
+                    //    planId = planId + memberPlan.BasicProductLimitCode + " ";
+                    //}
                     //                 var query = database.Posts    // your starting point - table in the "from" statement
                     //.Join(database.Post_Metas, // the source table of the inner join
                     //   post => post.ID,        // Select the primary key (the first part of the "on" clause in an sql "join" statement)
@@ -731,7 +742,11 @@ namespace Web.MainApplication.Controllers
                     //   (post, meta) => new { Post = post, Meta = meta }) // selection
                     //.Where(postAndMeta => postAndMeta.Post.ID == id);
                     var itemMemberPCF = memberMovement.Member.PCF.Join(financeTransactions, post => post.TransactionNumber, meta => meta.TransactionNumber, (post, meta) => new { PCF = post }).Select(x => x.PCF).ToList();
-                    var recordMode = memberMovement.Member.Member_Movement.OrderByDescending(x => x.EffectiveDate).FirstOrDefault().RecordMode;
+                    var recordMode = memberMovement.RecordMode;
+                    if (recordMode == 0)
+                    {
+                        WarningMessagesAdd("Record Mode For " + memberMovement.Member.Client.FullName + " Is Not Valid");
+                    }
                     var commonListValue = db.CommonListValue.Where(x => x.CommonListValue2.Value == "RecordModeParent").ToList();
 
                     var keterangan = commonListValue.Where(x => x.Value == recordMode.ToString()).FirstOrDefault().Desc;
@@ -752,6 +767,9 @@ namespace Web.MainApplication.Controllers
                     var premiTLPlusRefundTL = itemMemberPCF.Where(x => x.BasicProductId == "TL" && x.TransType == "P").Sum(x => x.Amount);
                     var PremiTL = premiTLPlusRefundTL == 0 ? "-" : string.Format("{0:N}", premiTLPlusRefundTL);
                     var koreksiPremiDec = itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount);
+                    // Tambah AdministrationFee
+                    var itemMemberAdmFees = memberMovement.Member.AdministrationFee.Join(financeTransactions, post => post.TransactionNumber, meta => meta.TransactionNumber, (post, meta) => new { AdmFee = post }).Select(x => x.AdmFee).ToList();
+                    koreksiPremiDec = koreksiPremiDec + itemMemberAdmFees.Sum(x => x.Amount);
                     var koreksiPremi = koreksiPremiDec == 0 ? "-" : string.Format("{0:N}", itemMemberPCF.Where(x => x.TransType == "R").Sum(x => x.Amount)); ;
 
                     var RefundPremi = "-";
@@ -1004,6 +1022,11 @@ namespace Web.MainApplication.Controllers
                     var retval = File(ms, "application/pdf");
 
                     ms.Flush();
+
+                    if (Warn())
+                    {
+                        return View("_MessageToView");
+                    }
                     return retval;
                 }
             }
@@ -1428,19 +1451,19 @@ namespace Web.MainApplication.Controllers
                 printPolicySummary.Load(Path.Combine(Server.MapPath("~/Reports/PrintPolicySummary.rpt")));
 
                 string paymentFrequencyWord = "";
-                if (policy.PaymentFrequency == "M")
+                if (policy.PaymentFrequency == PaymentFrequency.Monthly)
                 {
                     paymentFrequencyWord = "Bulanan";
                 }
-                else if (policy.PaymentFrequency == "Q")
+                else if (policy.PaymentFrequency == PaymentFrequency.Quarterly)
                 {
                     paymentFrequencyWord = "Triwulan";
                 }
-                else if (policy.PaymentFrequency == "S")
+                else if (policy.PaymentFrequency == PaymentFrequency.Semesterly)
                 {
                     paymentFrequencyWord = "Semesteran";
                 }
-                else if (policy.PaymentFrequency == "Y")
+                else if (policy.PaymentFrequency == PaymentFrequency.Yearly)
                 {
                     paymentFrequencyWord = "Tahunan";
                 }

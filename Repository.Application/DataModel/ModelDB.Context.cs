@@ -41,7 +41,6 @@ namespace Repository.Application.DataModel
         public virtual DbSet<FinanceTransaction> FinanceTransaction { get; set; }
         public virtual DbSet<FinanceTransactionDetail> FinanceTransactionDetail { get; set; }
         public virtual DbSet<Member> Member { get; set; }
-        public virtual DbSet<Member_Endorse> Member_Endorse { get; set; }
         public virtual DbSet<Member_Movement> Member_Movement { get; set; }
         public virtual DbSet<Member_Movement_Client> Member_Movement_Client { get; set; }
         public virtual DbSet<MemberClientEndorse> MemberClientEndorse { get; set; }
@@ -59,5 +58,8 @@ namespace Repository.Application.DataModel
         public virtual DbSet<Policy_Endorse> Policy_Endorse { get; set; }
         public virtual DbSet<PremiumRate> PremiumRate { get; set; }
         public virtual DbSet<PremiumRateDetails> PremiumRateDetails { get; set; }
+        public virtual DbSet<AdministrationFee> AdministrationFee { get; set; }
+        public virtual DbSet<AdministrationFeeEndorsement> AdministrationFeeEndorsement { get; set; }
+        public virtual DbSet<Member_Endorse> Member_Endorse { get; set; }
     }
 }

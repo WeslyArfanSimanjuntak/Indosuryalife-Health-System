@@ -18,13 +18,15 @@ namespace Repository.Application.DataModel
         public Endorsement()
         {
             this.Endorsement1 = new HashSet<Endorsement>();
-            this.Member_Endorse = new HashSet<Member_Endorse>();
             this.Member_Movement = new HashSet<Member_Movement>();
             this.MemberPlan_Endorse = new HashSet<MemberPlan_Endorse>();
             this.MemberPlan_H = new HashSet<MemberPlan_H>();
             this.PCF_Endorse = new HashSet<PCF_Endorse>();
             this.PlanDetail_Endorse = new HashSet<PlanDetail_Endorse>();
             this.Plan_Endorse = new HashSet<Plan_Endorse>();
+            this.AdministrationFee = new HashSet<AdministrationFee>();
+            this.AdministrationFeeEndorsement = new HashSet<AdministrationFeeEndorsement>();
+            this.Member_Endorse = new HashSet<Member_Endorse>();
         }
     
         public int Id { get; set; }
@@ -48,8 +50,6 @@ namespace Repository.Application.DataModel
         public virtual Endorsement Endorsement2 { get; set; }
         public virtual Policy Policy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Member_Endorse> Member_Endorse { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Member_Movement> Member_Movement { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MemberPlan_Endorse> MemberPlan_Endorse { get; set; }
@@ -62,5 +62,11 @@ namespace Repository.Application.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Plan_Endorse> Plan_Endorse { get; set; }
         public virtual Policy_Endorse Policy_Endorse { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFee> AdministrationFee { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFeeEndorsement> AdministrationFeeEndorsement { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Member_Endorse> Member_Endorse { get; set; }
     }
 }

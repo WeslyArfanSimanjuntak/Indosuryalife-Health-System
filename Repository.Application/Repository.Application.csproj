@@ -113,6 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuditableObject.cs" />
+    <Compile Include="DataModel\AdministrationFee.cs">
+      <DependentUpon>ModelDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\AdministrationFeeEndorsement.cs">
+      <DependentUpon>ModelDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\AspNetGroups.cs">
       <DependentUpon>ModelDB.tt</DependentUpon>
     </Compile>

@@ -17,6 +17,7 @@ namespace Repository.Application.DataModel
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Member_Endorse()
         {
+            this.AdministrationFeeEndorsement = new HashSet<AdministrationFeeEndorsement>();
             this.MemberClientEndorse = new HashSet<MemberClientEndorse>();
             this.MemberPlan_Endorse = new HashSet<MemberPlan_Endorse>();
             this.PCF_Endorse = new HashSet<PCF_Endorse>();
@@ -25,6 +26,7 @@ namespace Repository.Application.DataModel
         public string EndorseNumber { get; set; }
         public string PolicyId { get; set; }
         public long MemberId { get; set; }
+        public long MemberOriginId { get; set; }
         public string MemberNumber { get; set; }
         public string ClientId { get; set; }
         public string CardNumber { get; set; }
@@ -49,8 +51,11 @@ namespace Repository.Application.DataModel
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<short> IsActive { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFeeEndorsement> AdministrationFeeEndorsement { get; set; }
         public virtual Client Client { get; set; }
         public virtual Endorsement Endorsement { get; set; }
+        public virtual Member Member { get; set; }
         public virtual Policy Policy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MemberClientEndorse> MemberClientEndorse { get; set; }

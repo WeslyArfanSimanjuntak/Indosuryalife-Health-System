@@ -283,7 +283,9 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <div id="applicationwebversion"><b>Version</b> @User.Identity.ApplicationVersion() @User.Identity.DatabaseInformation()</div>
+                <div id="applicationwebversion">
+                    <b>Version</b> @Ajax.ActionLink(User.Identity.ApplicationVersion() + " " + User.Identity.DatabaseInformation(), "About", "Home", new { version = User.Identity.ApplicationVersion() }, Html.AjaxOptionsDefault(), null)
+                </div>
             </div>
             <strong> <a href="@Web.MainApplication.Resources.SystemResources.CompanyWebSite">@Web.MainApplication.Resources.SystemResources.CompanyName</a>.</strong> All rights
             reserved.
@@ -313,11 +315,11 @@
                 }
 
             }
-            $("#applicationwebversion").hover(
-                function () {
-                    alert("I am hovered");
-                }
-            );
+            //$("#applicationwebversion").click(
+            //    function () {
+            //        alert("I am hovered");
+            //    }
+            //);
             //$("#applicationwebversion").on("hover", function () {
             //    alert("I am hovered");
             //});

@@ -52,6 +52,7 @@ namespace Web.MainApplication.Controllers
             }
             member.Policy.PaymentFrequency = db.CommonListValue.Where(x => x.CommonListValue2.Value == "Frequency").Where(x => x.Value == member.Policy.PaymentFrequency).FirstOrDefault() != null
                 ? db.CommonListValue.Where(x => x.CommonListValue2.Value == "Frequency").Where(x => x.Value == member.Policy.PaymentFrequency).FirstOrDefault().Text : member.Policy.PaymentFrequency;
+            ViewBag.AdministrationFee = member.AdministrationFee.ToList();
             return View(member);
         }
 
@@ -645,7 +646,7 @@ namespace Web.MainApplication.Controllers
                                 endDate = new DateTime(int.Parse(item.N_EndDate.Substring(0, 4)), int.Parse(item.N_EndDate.Substring(4, 2)), int.Parse(item.N_EndDate.Substring(6, 2)));
                             }
 
-                            var client = db.Client.Where(x => x.FullName.ToLower() == item.F_ParticipantName.ToLower() && x.BirthDate == birtDate).FirstOrDefault();
+                            var client = db.Client.Where(x => x.FullName.ToLower() == item.F_ParticipantName.ToLower() && x.BirthDate == birtDate && x.BankAccountNumber == item.S_BankAccountNo && x.BankAccountName == item.Q_BankAccountName).FirstOrDefault();
 
 
                             if (client == null)
@@ -693,6 +694,44 @@ namespace Web.MainApplication.Controllers
                             }
                             else
                             {
+                                var memberIsExist = db.Member.Where(x => x.ClientId == client.ClientId && x.PolicyId != policy.PolicyId && (x.MemberStatus == MemberStatus.Active || x.MemberStatus == MemberStatus.Calculated || x.MemberStatus == MemberStatus.Endorse)).FirstOrDefault();
+                                if (memberIsExist != null)
+                                {
+                                    WarningMessagesAdd(client.FullName + " Already Member Of Policy " + memberIsExist.Policy.PolicyNumber);
+                                }
+                                client.BankAccountCode = item.R_BankCode;
+                                client.BankAccountName = item.Q_BankAccountName;
+                                client.BankAccountNumber = item.S_BankAccountNo;
+                                client.BirthDate = birtDate;
+                                if (item.H_StatusRelation == "S")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Wife;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Husband;
+                                    }
+                                }
+                                if (item.H_StatusRelation == "C")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Daughter;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Son;
+                                    }
+                                }
+                                client.FullName = item.F_ParticipantName;
+                                client.MobilePhone1 = item.P_Contact;
+                                client.Sex = item.K_Gender == "M" ? "Male" : item.K_Gender == "F" ? "Female" : null;
+                                client.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
+                                client.Type = "Personal";
+                                client.SetPropertyUpdate();
+                                db.SaveChanges();
                                 listClientToInsert.Add(client);
                                 listClientToInsertWithAnotherProperty.Add((client, startDate, endDate, item.L_Benefit, item));
                             }
@@ -772,6 +811,55 @@ namespace Web.MainApplication.Controllers
                             }
                             else
                             {
+                                // checking whether already a member of another policy
+                                var memberIsExist = db.Member.Where(x => x.ClientId == client.ClientId && x.PolicyId != policy.PolicyId && (x.MemberStatus == MemberStatus.Active || x.MemberStatus == MemberStatus.Calculated || x.MemberStatus == MemberStatus.Endorse)).FirstOrDefault();
+                                if (memberIsExist != null)
+                                {
+                                    WarningMessagesAdd(client.FullName + " Already Member Of Policy " + memberIsExist.Policy.PolicyNumber);
+                                }
+                                client.BankAccountCode = item.R_BankCode;
+                                client.BankAccountName = item.Q_BankAccountName;
+                                client.BankAccountNumber = item.S_BankAccountNo;
+                                client.BirthDate = birtDate;
+                                if (item.H_StatusRelation == "S")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Wife;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Husband;
+                                    }
+                                }
+                                if (item.H_StatusRelation == "C")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Daughter;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Son;
+                                    }
+                                }
+                                client.FullName = item.F_ParticipantName;
+                                client.MobilePhone1 = item.P_Contact;
+                                client.Sex = item.K_Gender == "M" ? "Male" : item.K_Gender == "F" ? "Female" : null;
+                                client.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
+                                client.Type = "Personal";
+                                var clientRelateTo = listClientToInsertWithAnotherProperty.Where(x => x.uploadMember.G_EmployeeName == item.G_EmployeeName && x.uploadMember.H_StatusRelation == "E" && x.client.BankAccountName == item.Q_BankAccountName && x.client.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
+                                //var clientRelateTo = listClientToInsert.Where(x => x.BankAccountName == item.Q_BankAccountName && x.BankAccountNumber == item.S_BankAccountNo).FirstOrDefault();
+                                if (clientRelateTo.client != null)
+                                {
+                                    client.RelateTo = clientRelateTo.client?.ClientId.PadLeft(10, '0');
+                                }
+                                else
+                                {
+                                    WarningMessagesAdd(item.F_ParticipantName + " error, can not find client relation, " + item.G_EmployeeName);
+                                }
+                                client.SetPropertyUpdate();
+                                db.SaveChanges();
                                 listClientToInsert.Add(client);
                                 listClientToInsertWithAnotherProperty.Add((client, startDate, endDate, item.L_Benefit, item));
 
@@ -899,12 +987,10 @@ namespace Web.MainApplication.Controllers
                                     {
                                         db.SaveChanges();
                                         dbTransactionInsertingMember.Commit();
-
                                     }
                                     else
                                     {
                                         dbTransactionInsertingMember.Rollback();
-
                                     }
                                 }
                                 catch (Exception e)

@@ -38,7 +38,7 @@
             @Html.Label("Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-4">
                 <div class="input-group col-md-12">
-                    @Html.TextBox("StartDate", null, new { @class = "form-control", @Required = "@required" })
+                    @Html.TextBox("StartDate", DateTime.Now.AddDays(1 + -1 * DateTime.Now.Day).ToString("dd/MM/yyyy"), new { @class = "form-control", @Required = "@required" })
                     <span class="fa fa-calendar form-control-feedback"></span>
                 </div>
             </div>
@@ -49,7 +49,7 @@
         @Html.Label("End Date", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-4">
             <div class="input-group col-md-12">
-                @Html.TextBox("EndDate", Model.MatureDate.Value.ToString("dd/MM/yyyy"), new { @class = "form-control", @Required = "@required" })
+                @Html.TextBox("EndDate", DateTime.Now.AddDays(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day).ToString("dd/MM/yyyy"), new { @class = "form-control", @Required = "@required" })
                 <span class="fa fa-calendar form-control-feedback"></span>
             </div>
         </div>

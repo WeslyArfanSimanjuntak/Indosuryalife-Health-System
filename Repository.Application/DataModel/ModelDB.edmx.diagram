@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1c9d9e8443b747098d2103f591d00a65" Name="Diagram1" ZoomLevel="63">
+      <Diagram DiagramId="1c9d9e8443b747098d2103f591d00a65" Name="Diagram1" ZoomLevel="70">
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetGroups" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetGroupUser" Width="1.5" PointX="3" PointY="0.75" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.AspNetRoleGroup" Width="1.5" PointX="3" PointY="4.75" />
@@ -21,7 +21,6 @@
         <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransaction" Width="1.5" PointX="3" PointY="34.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.FinanceTransactionDetail" Width="1.5" PointX="5.25" PointY="36.875" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Member" Width="1.5" PointX="6" PointY="41.375" />
-        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Endorse" Width="1.5" PointX="11.25" PointY="47.25" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement" Width="1.5" PointX="8.25" PointY="47.125" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Movement_Client" Width="1.5" PointX="10.75" PointY="2.75" />
         <EntityTypeShape EntityType="ISL_HEALTHModel.MemberClientEndorse" Width="1.5" PointX="13.5" PointY="46" />
@@ -57,7 +56,6 @@
         <AssociationConnector Association="ISL_HEALTHModel.FK_BasicProductLimit_ToBenefit" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Client_ToClient" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Client_ToClientRelateTo" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToClient" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_Client_ToClient" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Member_ToClient" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToClientClientId" />
@@ -68,7 +66,6 @@
         <AssociationConnector Association="ISL_HEALTHModel.FK_CommonListValue_ToCommonListValue" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Endorsement_ToEndorsement" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Endorsement_ToPolicy" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_ToEndorsement" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToEndorse" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_H_ToEndorsement" />
@@ -83,10 +80,6 @@
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_H_ToMember" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_ToMember" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_PCF_ToMember" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" />
-        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToMember" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Movement_ToPolicy" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_ToPolicy" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToPolicy" />
@@ -99,7 +92,25 @@
         <AssociationConnector Association="ISL_HEALTHModel.FK_PlanDetail_EndorseToPolicy" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_PolicyEndorseToPolicy" />
         <AssociationConnector Association="ISL_HEALTHModel.FK_PremiumRateDetails_ToRate" />
-      </Diagram>
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AdministrationFee" Width="1.5" PointX="14.25" PointY="39.875" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.AdministrationFeeEndorsement" Width="1.5" PointX="16.5" PointY="42.875" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFee_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFee_ToFinanceTransaction" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFee_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFee_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToFinanceTransaction" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToPolicy" />
+        <EntityTypeShape EntityType="ISL_HEALTHModel.Member_Endorse" Width="1.5" PointX="8.25" PointY="32.75" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_AdministrationFeeEnd_ToMemberEnd" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToClient" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToMember" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_Member_Endorse_ToPolicy" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberClientEndorse_ToMemberEndorse" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_MemberPlan_Endorse_ToMemberEndorsement" />
+        <AssociationConnector Association="ISL_HEALTHModel.FK_PCFEndorse_ToMember" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

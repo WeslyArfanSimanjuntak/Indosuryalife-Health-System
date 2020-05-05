@@ -18,6 +18,8 @@ namespace Repository.Application.DataModel
         public FinanceTransaction()
         {
             this.FinanceTransactionDetail = new HashSet<FinanceTransactionDetail>();
+            this.AdministrationFee = new HashSet<AdministrationFee>();
+            this.AdministrationFeeEndorsement = new HashSet<AdministrationFeeEndorsement>();
         }
     
         public long ID { get; set; }
@@ -63,5 +65,9 @@ namespace Repository.Application.DataModel
         public virtual Policy Policy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FinanceTransactionDetail> FinanceTransactionDetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFee> AdministrationFee { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFeeEndorsement> AdministrationFeeEndorsement { get; set; }
     }
 }

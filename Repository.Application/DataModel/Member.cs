@@ -21,6 +21,8 @@ namespace Repository.Application.DataModel
             this.MemberPlan_H = new HashSet<MemberPlan_H>();
             this.MemberPlan = new HashSet<MemberPlan>();
             this.PCF = new HashSet<PCF>();
+            this.AdministrationFee = new HashSet<AdministrationFee>();
+            this.Member_Endorse = new HashSet<Member_Endorse>();
         }
     
         public string PolicyId { get; set; }
@@ -60,5 +62,9 @@ namespace Repository.Application.DataModel
         public virtual ICollection<MemberPlan> MemberPlan { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PCF> PCF { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AdministrationFee> AdministrationFee { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Member_Endorse> Member_Endorse { get; set; }
     }
 }

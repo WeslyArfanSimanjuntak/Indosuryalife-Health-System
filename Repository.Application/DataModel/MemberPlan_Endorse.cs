@@ -29,7 +29,7 @@ namespace Repository.Application.DataModel
     
         public virtual BasicProduct BasicProduct { get; set; }
         public virtual Endorsement Endorsement { get; set; }
-        public virtual Member_Endorse Member_Endorse { get; set; }
         public virtual Policy Policy { get; set; }
+        public virtual Member_Endorse Member_Endorse { get; set; }
     }
 }

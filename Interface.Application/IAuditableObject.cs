@@ -9,6 +9,5 @@ namespace Interface.Application
         Nullable<System.DateTime> CreatedDate { get; set; }
         Nullable<System.DateTime> UpdatedDate { get; set; }
         Nullable<short> IsActive { get; set; }
-        //Nullable<System.DateTime> MatureDate { get; set; }
     }
 }

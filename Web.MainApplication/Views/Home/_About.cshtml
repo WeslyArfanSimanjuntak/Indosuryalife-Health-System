@@ -1,0 +1,24 @@
+﻿@model Repository.Application.DataModel.CommonListValue
+@{
+    Layout = null;
+
+    var listVersion = (List<Repository.Application.DataModel.CommonListValue>)ViewBag.Versions;
+}
+<div>
+    <h3>Current Version</h3>
+    <h4>@Model.Text</h4>
+    @Model.Desc
+    <br />
+    <h3>Version History</h3>
+    @{ foreach (var item in listVersion.OrderByDescending(x => x.Id))
+        {
+            <h4>@item.Text</h4>
+            foreach (var itemDesc in item.Desc.Split(';'))
+            {
+                <p>
+                    @itemDesc
+                </p>
+            }
+        }
+    }
+</div>

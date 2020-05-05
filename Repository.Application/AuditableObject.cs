@@ -119,4 +119,10 @@ namespace Repository.Application.DataModel
     public partial class MemberClientEndorse : IAuditableObject
     {
     }
+    public partial class AdministrationFee : IAuditableObject
+    {
+    }
+    public partial class AdministrationFeeEndorsement : IAuditableObject
+    {
+    }
 }

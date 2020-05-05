@@ -126,6 +126,7 @@ namespace Web.MainApplication.Controllers
                 {
                     try
                     {
+                        db.PCF_Endorse.RemoveRange(memberEndorse.PCF_Endorse.Where(x => x.TransactionNumber == null));
 
                         memberEndorse.MemberStatus = terminateType;
                         memberEndorse.TerminateDate = model.TerminateDate;
@@ -224,7 +225,8 @@ namespace Web.MainApplication.Controllers
             {
                 return HttpNotFound();
             }
-            var memberOriginal = db.Member.Where(x => x.MemberNumber == member.MemberNumber).FirstOrDefault();
+            //var memberOriginal = db.Member.Where(x => x.MemberNumber == member.MemberNumber).FirstOrDefault();
+            var memberOriginal = member.Member;
             if (memberOriginal == null)
             {
                 return HttpNotFound();
@@ -418,6 +420,7 @@ namespace Web.MainApplication.Controllers
                             memberEndorse.TerminateDate = memberOriginal.TerminateDate;
 
                             memberEndorse.SetPropertyCreate();
+                            memberEndorse.MemberOriginId = memberOrigin.MemberOriginId;
                             db.Member_Endorse.Add(memberEndorse);
                             db.SaveChanges();
 
@@ -493,6 +496,7 @@ namespace Web.MainApplication.Controllers
                                 memberEndorse.TerminateDate = memberOriginal.TerminateDate;
 
                                 memberEndorse.SetPropertyCreate();
+                                memberEndorse.MemberOriginId = memberOrigin.MemberOriginId;
                                 db.Member_Endorse.Add(memberEndorse);
                                 db.SaveChanges();
 
@@ -1357,7 +1361,8 @@ namespace Web.MainApplication.Controllers
                                 foreach (var itemMemberEndorse in item.Member_Endorse)
                                 {
                                     // updating memberstatus of member master to be active
-                                    var member = db.Member.Where(x => x.MemberNumber == itemMemberEndorse.MemberNumber).FirstOrDefault();
+                                    //var member = db.Member.Where(x => x.MemberNumber == itemMemberEndorse.MemberNumber).FirstOrDefault();
+                                    var member = itemMemberEndorse.Member;
                                     if (member != null)
                                     {
                                         member.SetPropertyUpdate();
@@ -1381,7 +1386,8 @@ namespace Web.MainApplication.Controllers
                             db.PCF_Endorse.RemoveRange(item.PCF_Endorse.ToList());
                             db.MemberPlan_Endorse.RemoveRange(item.MemberPlan_Endorse.ToList());
 
-                            var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                            //var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                            var member = item.Member;
                             if (member != null)
                             {
                                 member.SetPropertyUpdate();
@@ -1396,6 +1402,12 @@ namespace Web.MainApplication.Controllers
                             {
                                 db.MemberClientEndorse.RemoveRange(allDataMemberEndorse);
                             }
+                            // 8a. Delete All AdministrationFeeEnd
+                            db.AdministrationFeeEndorsement.RemoveRange(item.AdministrationFeeEndorsement);
+
+                            // 8a. Activate all Member Back
+                            member.MemberStatus = MemberStatus.Active;
+                            db.Entry(member).State = EntityState.Modified;
                         }
 
                         db.Member_Endorse.RemoveRange(allMember);
@@ -1640,17 +1652,22 @@ namespace Web.MainApplication.Controllers
                     {
                         db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
                     }
-                    // 7. Delete MemberPlan_Endorse
+                    // 4.A Delete MemberPlan_Endorse
                     if (endorsement.MemberPlan_Endorse != null)
                     {
                         db.MemberPlan_Endorse.RemoveRange(endorsement.MemberPlan_Endorse);
                     }
+                    // 4.B Delete AdministrationFee
+                    db.AdministrationFeeEndorsement.RemoveRange(endorsement.AdministrationFeeEndorsement);
+                    // 4.C Delete MemberClientEndorse
+                    db.MemberClientEndorse.RemoveRange(db.MemberClientEndorse.Where(x => x.Member_Endorse.EndorseNumber == endorsement.EndorseNumber));
                     // 5. Delete Member_Endorse
                     if (endorsement.Member_Endorse != null)
                     {
                         foreach (var item in endorsement.Member_Endorse)
                         {
-                            var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                            //var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                            var member = item.Member;
                             var sameMembersInMemberEndorse = db.Member_Endorse.Where(x => x.MemberNumber == item.MemberNumber).Select(x => x.MemberNumber);
                             if (member != null && member.MemberStatus == MemberStatus.Endorse && sameMembersInMemberEndorse.Count() == 1)
                             {
@@ -1660,7 +1677,26 @@ namespace Web.MainApplication.Controllers
                         }
                         db.Member_Endorse.RemoveRange(endorsement.Member_Endorse);
                     }
-                    // 6. Delete Endorse
+                    // 6a. Delete all data in EndorsementChild;
+                    foreach (var endorseNumber  in endorsement.Endorsement1.Select(x=>x.EndorseNumber).ToList())
+                    {
+                        var endo = db.Endorsement.Find(endorseNumber);
+                        db.PCF_Endorse.RemoveRange(endo.PCF_Endorse);
+                        db.Policy_Endorse.Remove(endo.Policy_Endorse);
+                        db.PlanDetail_Endorse.RemoveRange(endo.PlanDetail_Endorse);
+                        db.Plan_Endorse.RemoveRange(endo.Plan_Endorse);
+                        db.MemberPlan_Endorse.RemoveRange(endo.MemberPlan_Endorse);
+                        db.AdministrationFeeEndorsement.RemoveRange(endo.AdministrationFeeEndorsement);
+                        db.MemberClientEndorse.RemoveRange(db.MemberClientEndorse.Where(x => x.Member_Endorse.EndorseNumber == endo.EndorseNumber));
+                        foreach (var item in endo.Member_Endorse)
+                        {
+                            item.Member.MemberStatus = MemberStatus.Active;
+                        }
+                        db.Member_Endorse.RemoveRange(endo.Member_Endorse);
+                        db.Endorsement.Remove(db.Endorsement.Find(endo.EndorseNumber));
+                    }
+
+                    // 6b. Delete Endorse
                     if (endorsement != null)
                     {
                         db.Endorsement.Remove(endorsement);
@@ -1847,6 +1883,44 @@ namespace Web.MainApplication.Controllers
                             }
                             else
                             {
+                                var memberIsExist = db.Member.Where(x => x.ClientId == client.ClientId && x.PolicyId != policy.PolicyId && (x.MemberStatus == MemberStatus.Active || x.MemberStatus == MemberStatus.Calculated || x.MemberStatus == MemberStatus.Endorse)).FirstOrDefault();
+                                if (memberIsExist != null)
+                                {
+                                    WarningMessagesAdd(client.FullName + " Already Member Of Policy " + memberIsExist.Policy.PolicyNumber);
+                                }
+                                client.BankAccountCode = item.R_BankCode;
+                                client.BankAccountName = item.Q_BankAccountName;
+                                client.BankAccountNumber = item.S_BankAccountNo;
+                                client.BirthDate = birtDate;
+                                if (item.H_StatusRelation == "S")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Wife;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Husband;
+                                    }
+                                }
+                                if (item.H_StatusRelation == "C")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Daughter;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Son;
+                                    }
+                                }
+                                client.FullName = item.F_ParticipantName;
+                                client.MobilePhone1 = item.P_Contact;
+                                client.Sex = item.K_Gender == "M" ? "Male" : item.K_Gender == "F" ? "Female" : null;
+                                client.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
+                                client.Type = "Personal";
+                                client.SetPropertyUpdate();
+                                db.SaveChanges();
                                 listClientToInsert.Add(client);
                                 listClientToInsertWithAnotherProperty.Add((client, startDate, endDate, item.L_Benefit, item));
                             }
@@ -1916,7 +1990,46 @@ namespace Web.MainApplication.Controllers
                                 lastClientIdSequence++;
                             }
                             else
-                            {
+                            { 
+                                // checking whether already a member of another policy
+                                var memberIsExist = db.Member.Where(x => x.ClientId == client.ClientId && x.PolicyId != policy.PolicyId && (x.MemberStatus == MemberStatus.Active || x.MemberStatus == MemberStatus.Calculated || x.MemberStatus == MemberStatus.Endorse)).FirstOrDefault();
+                                if (memberIsExist != null)
+                                {
+                                    WarningMessagesAdd(client.FullName + " Already Member Of Policy " + memberIsExist.Policy.PolicyNumber);
+                                }
+                                client.BankAccountCode = item.R_BankCode;
+                                client.BankAccountName = item.Q_BankAccountName;
+                                client.BankAccountNumber = item.S_BankAccountNo;
+                                client.BirthDate = birtDate;
+                                if (item.H_StatusRelation == "S")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Wife;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Husband;
+                                    }
+                                }
+                                if (item.H_StatusRelation == "C")
+                                {
+                                    if (item.K_Gender == "F")
+                                    {
+                                        client.ClientRelation = ClientRelation.Daughter;
+                                    }
+                                    else if (item.K_Gender == "M")
+                                    {
+                                        client.ClientRelation = ClientRelation.Son;
+                                    }
+                                }
+                                client.FullName = item.F_ParticipantName;
+                                client.MobilePhone1 = item.P_Contact;
+                                client.Sex = item.K_Gender == "M" ? "Male" : item.K_Gender == "F" ? "Female" : null;
+                                client.MaritalStatus = item.I_SorM == "M" ? "Married" : item.I_SorM == "S" ? "Single" : null;
+                                client.Type = "Personal";
+                                client.SetPropertyUpdate();
+                                db.SaveChanges();
                                 listClientToInsert.Add(client);
                                 listClientToInsertWithAnotherProperty.Add((client, startDate, endDate, item.L_Benefit, item));
 
@@ -2110,6 +2223,7 @@ namespace Web.MainApplication.Controllers
             }
             var commonListValue = db.CommonListValue.Where(x => x.CommonListValue2.Value == "Frequency").ToList();
             member.Endorsement.Policy_Endorse.PaymentFrequency = commonListValue.Where(x => x.Value == member.Endorsement.Policy_Endorse.PaymentFrequency).FirstOrDefault()?.Text;
+            
             return View(member);
         }
         public ActionResult Calculate(string id)
@@ -2284,11 +2398,15 @@ namespace Web.MainApplication.Controllers
 
                     if (WarningMessages().Count == 0)
                     {
-                        SuccessMessagesAdd(Message.ProcessSuccess);
                         foreach (var item in allMember)
                         {
                             sumOfPremi = sumOfPremi + this.CalculateMemberPremiMutationMember(item, 1, 1);
                         }
+                    }
+
+                    if (!Warn())
+                    {
+                        SuccessMessagesAdd(Message.ProcessSuccess);
                     }
                     var pcfTotalAmount2 = db.PCF_Endorse.Where(x => x.EndorseNumber == endorsement.EndorseNumber && x.PolicyId == endorsement.PolicyId && x.TransType == "P" && x.InvoiceDate < DateTime.Now).Select(x => x.Amount.Value).ToList();
 
@@ -2369,22 +2487,22 @@ namespace Web.MainApplication.Controllers
 
                         var frequecyToNumber = 0;
                         decimal multiplierFactorPercentage = new decimal(0);
-                        if (member.Policy.PaymentFrequency == "M")
+                        if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                         {
                             frequecyToNumber = 1;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                         }
-                        else if (member.Policy.PaymentFrequency == "Q")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                         {
                             frequecyToNumber = 4;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                         }
-                        else if (member.Policy.PaymentFrequency == "S")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                         {
                             frequecyToNumber = 6;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                         }
-                        else if (member.Policy.PaymentFrequency == "Y")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly)
                         {
                             frequecyToNumber = 12;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -2533,22 +2651,23 @@ namespace Web.MainApplication.Controllers
                     {
                         var frequecyToNumber = 0;
                         decimal multiplierFactorPercentage = new decimal(0);
-                        if (member.Policy.PaymentFrequency == "M")
+                        if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                         {
                             frequecyToNumber = 1;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                         }
-                        else if (member.Policy.PaymentFrequency == "Q")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                         {
                             frequecyToNumber = 4;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                         }
-                        else if (member.Policy.PaymentFrequency == "S")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                         {
                             frequecyToNumber = 6;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                         }
-                        else if (member.Policy.PaymentFrequency == "Y")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly
+                            )
                         {
                             frequecyToNumber = 12;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -2637,22 +2756,22 @@ namespace Web.MainApplication.Controllers
                     {
                         var frequecyToNumber = 0;
                         decimal multiplierFactorPercentage = new decimal(0);
-                        if (member.Policy.PaymentFrequency == "M")
+                        if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                         {
                             frequecyToNumber = 1;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                         }
-                        else if (member.Policy.PaymentFrequency == "Q")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                         {
                             frequecyToNumber = 4;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                         }
-                        else if (member.Policy.PaymentFrequency == "S")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                         {
                             frequecyToNumber = 6;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                         }
-                        else if (member.Policy.PaymentFrequency == "Y")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly)
                         {
                             frequecyToNumber = 12;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -2690,7 +2809,7 @@ namespace Web.MainApplication.Controllers
 
                                 var refundPercentage = Convert.ToDecimal(refundPercentageString);
                                 var amount = (item.InvoiceDate.AddMonths(frequecyToNumber) - member.TerminateDate).Value.Days * item.Amount * refundPercentage / (item.InvoiceDate.AddMonths(frequecyToNumber) - item.InvoiceDate).Days;
-                                newPCFEndorse.Amount = amount * -1;
+                                newPCFEndorse.Amount = amount * 0;
                                 newPCFEndorse.SetPropertyCreate();
                                 listNewEndorsePCF.Add(newPCFEndorse);
 
@@ -2705,7 +2824,7 @@ namespace Web.MainApplication.Controllers
                                 newPCFEndorse.TransType = TransactionType.Refund;
                                 newPCFEndorse.InvoiceDate = item.InvoiceDate;
                                 newPCFEndorse.DueDate = item.DueDate;
-                                newPCFEndorse.Amount = item.Amount * -1;
+                                newPCFEndorse.Amount = item.Amount * 0;
                                 newPCFEndorse.SetPropertyCreate();
                                 listNewEndorsePCF.Add(newPCFEndorse);
                             }
@@ -2778,8 +2897,17 @@ namespace Web.MainApplication.Controllers
                     }
 
                     var sex = member.Client.Sex == "Female" ? "F" : "M";
-                    var lengthOfBenefitDayPerYear = (member.EndDate - member.Endorsement.EndorseDate).Value.TotalDays / 365.25;
-                    var lengthOfBenefitDayPerYearTermLife = (member.EndDate - member.StartDate).Value.TotalDays / 365.25;
+                    var totalDaysOfBenefit = (member.EndDate - member.StartDate).Value.TotalDays;
+                    if (totalDaysOfBenefit > 366)
+                    {
+                        WarningMessagesAdd("Total Days Of Benefit More Than 366 days");
+                    }
+                    if (totalDaysOfBenefit == 366)
+                    {
+                        totalDaysOfBenefit = totalDaysOfBenefit - 1;
+                    }
+                    var lengthOfBenefitDayPerYear = totalDaysOfBenefit / 365;
+                    var lengthOfBenefitDayPerYearTermLife = totalDaysOfBenefit / 365;
 
                     var memberPlan = db.MemberPlan_Endorse.Where(x => x.MemberId == member.MemberId && x.PolicyId == member.PolicyId && x.EndorseNumber == member.EndorseNumber && x.IsActive == 1).ToList();
 
@@ -3046,8 +3174,17 @@ namespace Web.MainApplication.Controllers
                     }
 
                     var sex = member.Client.Sex == "Female" ? "F" : "M";
-                    var lengthOfBenefitDayPerYear = (member.EndDate - member.StartDate).Value.TotalDays / 365.25;
-                    var lengthOfBenefitDayPerYearTermLife = (member.EndDate - member.StartDate).Value.TotalDays / 365;
+                    var totalDaysOfBenefit = (member.EndDate - member.StartDate).Value.TotalDays;
+                    if (totalDaysOfBenefit > 366)
+                    {
+                        WarningMessagesAdd("Total Days Of Benefit More Than 366 days");
+                    }
+                    if (totalDaysOfBenefit == 366)
+                    {
+                        totalDaysOfBenefit = totalDaysOfBenefit - 1;
+                    }
+                    var lengthOfBenefitDayPerYear = totalDaysOfBenefit / 365.25;
+                    var lengthOfBenefitDayPerYearTermLife = totalDaysOfBenefit / 365;
                     var memberPlan = db.MemberPlan_Endorse.Where(x => x.MemberId == member.MemberId && x.PolicyId == member.PolicyId && x.EndorseNumber == member.EndorseNumber && x.IsActive == 1).ToList();
                     db.PCF_Endorse.RemoveRange(db.PCF_Endorse.Where(x => x.MemberId == member.MemberId && x.PolicyId == member.PolicyId && x.EndorseNumber == member.EndorseNumber).ToList());
                     db.SaveChanges();
@@ -3075,22 +3212,22 @@ namespace Web.MainApplication.Controllers
                         decimal multiplierFactorPercentage = new decimal(0);
 
 
-                        if (member.Policy.PaymentFrequency == "M")
+                        if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                         {
                             frequecyToNumber = 1;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                         }
-                        else if (member.Policy.PaymentFrequency == "Q")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                         {
                             frequecyToNumber = 4;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                         }
-                        else if (member.Policy.PaymentFrequency == "S")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                         {
                             frequecyToNumber = 6;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                         }
-                        else if (member.Policy.PaymentFrequency == "Y")
+                        else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly)
                         {
                             frequecyToNumber = 12;
                             multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -3247,7 +3384,8 @@ namespace Web.MainApplication.Controllers
                 try
                 {
                     var memberClientEndorse = member.MemberClientEndorse.FirstOrDefault();
-                    var memberOrigin = db.Member.Where(x => x.MemberNumber == member.MemberNumber).FirstOrDefault();
+                    //var memberOrigin = db.Member.Where(x => x.MemberNumber == member.MemberNumber).FirstOrDefault();
+                    var memberOrigin = member.Member;
                     if (memberClientEndorse == null)
                     {
                         WarningMessagesAdd("No Data Replaced For Member " + member.Client.FullName);
@@ -3258,6 +3396,9 @@ namespace Web.MainApplication.Controllers
                         WarningMessagesAdd(Message.ProcessFail);
                         return 0;
                     }
+                    // delete member administrationFee
+                    db.AdministrationFeeEndorsement.RemoveRange(member.AdministrationFeeEndorsement.Where(x => x.TransactionNumber == null));
+                    db.SaveChanges();
                     if (WarningMessages().Count == 0)
                     {
 
@@ -3463,8 +3604,17 @@ namespace Web.MainApplication.Controllers
                             }
 
                             var sex = memberClientEndorse.Sex == "Female" ? "F" : "M";
-                            var lengthOfBenefitDayPerYear = (member.EndDate - member.StartDate).Value.TotalDays / 365.25;
-                            var lengthOfBenefitDayPerYearTermLife = (member.EndDate - member.StartDate).Value.TotalDays / 365;
+                            var totalDaysOfBenefit = (member.EndDate - member.StartDate).Value.TotalDays;
+                            if (totalDaysOfBenefit > 366)
+                            {
+                                WarningMessagesAdd("Total Days Of Benefit More Than 366 days");
+                            }
+                            if (totalDaysOfBenefit == 366)
+                            {
+                                totalDaysOfBenefit = totalDaysOfBenefit - 1;
+                            }
+                            var lengthOfBenefitDayPerYear = totalDaysOfBenefit / 365;
+                            var lengthOfBenefitDayPerYearTermLife = totalDaysOfBenefit / 365;
 
                             foreach (var item in memberPlanOfMember)
                             {
@@ -3488,22 +3638,22 @@ namespace Web.MainApplication.Controllers
                                 decimal multiplierFactorPercentage = new decimal(0);
 
 
-                                if (member.Policy.PaymentFrequency == "M")
+                                if (member.Policy.PaymentFrequency == PaymentFrequency.Monthly)
                                 {
                                     frequecyToNumber = 1;
                                     multiplierFactorPercentage = decimal.Multiply(decimal.Divide(10, 100), 12);
                                 }
-                                else if (member.Policy.PaymentFrequency == "Q")
+                                else if (member.Policy.PaymentFrequency == PaymentFrequency.Quarterly)
                                 {
                                     frequecyToNumber = 4;
                                     multiplierFactorPercentage = decimal.Multiply(decimal.Divide(27, 100), 4);
                                 }
-                                else if (member.Policy.PaymentFrequency == "S")
+                                else if (member.Policy.PaymentFrequency == PaymentFrequency.Semesterly)
                                 {
                                     frequecyToNumber = 6;
                                     multiplierFactorPercentage = decimal.Multiply(decimal.Divide(52, 100), 2);
                                 }
-                                else if (member.Policy.PaymentFrequency == "Y")
+                                else if (member.Policy.PaymentFrequency == PaymentFrequency.Yearly)
                                 {
                                     frequecyToNumber = 12;
                                     multiplierFactorPercentage = decimal.Multiply(decimal.Divide(100, 100), 1);
@@ -3647,15 +3797,31 @@ namespace Web.MainApplication.Controllers
                             }
                             db.SaveChanges();
                         }
-                        if (memberClientEndorse.IsFinancialChange == 1 && memberClientEndorse.PrintNewCard == 1)
+                        if (memberClientEndorse.IsFinancialChange == 1)
                         {
-                            var printCardAmountString = db.CommonListValue.Where(x => x.Text == CommonListValueConst.PrintCardFee).FirstOrDefault()?.Value;
-                            var printCardAmount = Convert.ToDecimal(printCardAmountString);
-                            memberClientEndorse.PrintCardAmount = printCardAmount;
-                            if (WarningMessages().Count == 0)
+                            if (memberClientEndorse.PrintNewCard == 1)
                             {
-                                member.MemberStatus = MemberStatus.Calculated;
-                                db.Entry(member).State = System.Data.Entity.EntityState.Modified;
+                                var printCardAmountString = db.CommonListValue.Where(x => x.Text == CommonListValueConst.PrintCardFee).FirstOrDefault()?.Value;
+                                var printCardAmount = Convert.ToDecimal(printCardAmountString);
+                                memberClientEndorse.PrintCardAmount = printCardAmount;
+                                if (WarningMessages().Count == 0)
+                                {
+                                    member.MemberStatus = MemberStatus.Calculated;
+                                    db.Entry(member).State = System.Data.Entity.EntityState.Modified;
+                                }
+
+                                //Add Administration Fee(PrintCardFee)
+                                db.AdministrationFeeEndorsement.RemoveRange(member.AdministrationFeeEndorsement.Where(x => x.TransactionNumber == null));
+                                var newAdmFeeEnd = new AdministrationFeeEndorsement();
+                                newAdmFeeEnd.EndorseNumber = member.EndorseNumber;
+                                newAdmFeeEnd.MemberId = member.MemberId;
+                                newAdmFeeEnd.MemberNumber = member.MemberNumber;
+                                newAdmFeeEnd.PolicyId = member.PolicyId;
+                                newAdmFeeEnd.InvoiceDate = member.Endorsement.EndorseDate.Value;
+                                newAdmFeeEnd.Type = CommonListValueConst.PrintCardFee;
+                                newAdmFeeEnd.Amount = printCardAmount;
+                                newAdmFeeEnd.SetPropertyCreate();
+                                db.AdministrationFeeEndorsement.Add(newAdmFeeEnd);
                             }
                             db.SaveChanges();
                         }
@@ -4110,7 +4276,7 @@ namespace Web.MainApplication.Controllers
 
                                 foreach (var memberEndorseItem in endorsement.Member_Endorse)
                                 {
-                                    var member = db.Member.Where(x => x.MemberNumber == memberEndorseItem.MemberNumber).FirstOrDefault();
+                                    var member = endorsement.Policy.Member.Where(x => x.MemberNumber == memberEndorseItem.MemberNumber).FirstOrDefault();
                                     var memberPlanWillMoveToHistory = member.MemberPlan;
                                     //8. [Execution]Update Member,set Plan to current Plan and set EndorseNumber and LastEndorseDate
                                     member.PlanId = memberEndorseItem.PlanId;
@@ -4177,8 +4343,8 @@ namespace Web.MainApplication.Controllers
                                 // Generate Member Movement
                                 foreach (var item in endorsement.Member_Endorse)
                                 {
-                                    var itemMember = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
-
+                                    //var itemMember = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                    var itemMember = item.Member;
                                     var newMemberMovement = new Member_Movement();
                                     newMemberMovement.AdmedikaCode = itemMember.AdmedikaCode;
                                     newMemberMovement.Age = itemMember.Age;
@@ -4679,7 +4845,7 @@ namespace Web.MainApplication.Controllers
                             var memberMemberEndorsePair = new List<(Member member, Member_Endorse memberEndorse)>();
                             foreach (var item in endorsement.Member_Endorse)
                             {
-                                var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                var member = endorsement.Policy.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
                                 memberMemberEndorsePair.Add((member, item));
                             }
 
@@ -4885,7 +5051,7 @@ namespace Web.MainApplication.Controllers
                             var memberMemberEndorsePairTerminate = new List<(Member member, Member_Endorse memberEndorse)>();
                             foreach (var item in endorsement.Member_Endorse)
                             {
-                                var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                var member = endorsement.Policy.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
                                 memberMemberEndorsePairTerminate.Add((member, item));
                             }
 
@@ -5052,7 +5218,8 @@ namespace Web.MainApplication.Controllers
                                     newMember.IssueDate = DateTime.Now;
                                     newMember.LastClaimDate = item.LastClaimDate;
                                     newMember.LastEndorseDate = item.LastEndorseDate;
-                                    newMember.MemberNumber = (sequencialMemberNumber.LastSequential + 1).ToString().PadLeft(7, '0');
+                                    //newMember.MemberNumber = (sequencialMemberNumber.LastSequential + 1).ToString().PadLeft(7, '0');
+                                    newMember.MemberNumber = item.MemberNumber;
                                     newMember.MemberStatus = item.MemberStatus;
                                     newMember.PlanId = item.PlanId;
                                     newMember.PolicyId = item.PolicyId;
@@ -5344,7 +5511,9 @@ namespace Web.MainApplication.Controllers
                             var memberMemberEndorsePair = new List<(Member member, Member_Endorse memberEndorse)>();
                             foreach (var item in endorsement.Member_Endorse)
                             {
-                                var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                //var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
+                                var member = item.Member;
+
                                 memberMemberEndorsePair.Add((member, item));
                             }
 
@@ -5460,26 +5629,23 @@ namespace Web.MainApplication.Controllers
                         }
                         else if (endorsement.EndorseType == EndorseType.TransitionData)
                         {
-                            // PROCESS TERMINATE 
 
-                            //1. Generate Finance Transaction
-                            //2. Update PCF transaction number with generated number
-                            //3. Generated finance transaction detail
-                            //4. updated policy
-                            var memberMemberEndorsePairTerminate = new List<(Member member, Member_Endorse memberEndorse)>();
+                            var memberMemberEndorsePairTransition = new List<(Member member, Member_Endorse memberEndorse)>();
                             foreach (var item in endorsement.Member_Endorse)
                             {
-                                var member = db.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
-                                memberMemberEndorsePairTerminate.Add((member, item));
+                                
+                                memberMemberEndorsePairTransition.Add((item.Member, item));
                             }
 
-                            // Generate FinanceTransaction
                             bool isFinanceTransaction = false;
                             if (endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Count() > 0)
                             {
                                 isFinanceTransaction = true;
                             }
-
+                            if (endorsement.AdministrationFeeEndorsement.Where(x => x.TransactionNumber == null).Count() > 0)
+                            {
+                                isFinanceTransaction = true;
+                            }
                             if (isFinanceTransaction)
                             {
 
@@ -5492,7 +5658,16 @@ namespace Web.MainApplication.Controllers
                                 db.SaveChanges();
                                 db.Entry(transactionNumberSeq).State = EntityState.Modified;
                                 financeTransaction.EffectiveDate = policy.IssueDate;
-                                financeTransaction.TransactionDate = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null).Min(x => x.InvoiceDate);
+                                var pcfInvoiceDate = endorsement.PCF_Endorse.Where(x => x.TransactionNumber == null);
+                                if (pcfInvoiceDate.Count() > 0)
+                                {
+                                    financeTransaction.TransactionDate = pcfInvoiceDate.Min(x => x.InvoiceDate);
+                                }
+                                else if (endorsement.AdministrationFeeEndorsement.Count() > 0)
+                                {
+                                    financeTransaction.TransactionDate = endorsement.AdministrationFeeEndorsement.Min(x => x.InvoiceDate);
+                                }
+
                                 financeTransaction.DueDate = financeTransaction.EffectiveDate.Value.AddDays(30);
                                 financeTransaction.TransCodeId = "Invoice";
                                 financeTransaction.PolicyId = policy.PolicyId;
@@ -5506,7 +5681,7 @@ namespace Web.MainApplication.Controllers
                                 db.FinanceTransaction.Add(financeTransaction);
                                 db.SaveChanges();
 
-                                foreach (var memberMemberEndorsePair in memberMemberEndorsePairTerminate)
+                                foreach (var memberMemberEndorsePair in memberMemberEndorsePairTransition)
                                 {
                                     foreach (var item in memberMemberEndorsePair.member.MemberPlan)
                                     {
@@ -5556,6 +5731,24 @@ namespace Web.MainApplication.Controllers
                                     }
                                     db.PCF_Endorse.RemoveRange(memberMemberEndorsePair.memberEndorse.PCF_Endorse);
                                     db.SaveChanges();
+
+                                    //3. Salin AdministrationFeeEndorsement ke AdministrationFee
+                                    var administrationFeeEndorses = memberMemberEndorsePair.memberEndorse.AdministrationFeeEndorsement.ToList();
+                                    foreach (var item in administrationFeeEndorses)
+                                    {
+                                        var newAdmFee = new AdministrationFee();
+                                        newAdmFee.EndorseNumber = endorsement.EndorseNumber;
+                                        newAdmFee.MemberId = memberMemberEndorsePair.member.MemberId;
+                                        newAdmFee.MemberNumber = memberMemberEndorsePair.member.MemberNumber;
+                                        newAdmFee.PolicyId = memberMemberEndorsePair.member.PolicyId;
+                                        newAdmFee.InvoiceDate = item.InvoiceDate;
+                                        newAdmFee.TransactionNumber = financeTransaction.TransactionNumber;
+                                        newAdmFee.Type = CommonListValueConst.PrintCardFee;
+                                        newAdmFee.Amount = item.Amount;
+                                        newAdmFee.SetPropertyCreate();
+                                        db.AdministrationFee.Add(newAdmFee);
+                                    }
+                                    db.SaveChanges();
                                 }
 
                                 // Generate Finance Transaction Detail
@@ -5574,7 +5767,7 @@ namespace Web.MainApplication.Controllers
                             }
 
                             // Generate Member Movement
-                            foreach (var item in memberMemberEndorsePairTerminate)
+                            foreach (var item in memberMemberEndorsePairTransition)
                             {
                                 var itemMember = item.member;
                                 var newMemberMovement = new Member_Movement();
@@ -5598,7 +5791,7 @@ namespace Web.MainApplication.Controllers
                                 newMemberMovement.PolicyId = itemMember.PolicyId;
                                 //newMemberMovement.ProcessDate = itemMember.ProcessDate;
 
-                                newMemberMovement.RecordMode = RecordModeMemberMovement.MovePlan;
+                                newMemberMovement.RecordMode = RecordMode.RenewalWithNewCard;
 
                                 newMemberMovement.SequencialNo = itemMember.SequencialNo;
                                 newMemberMovement.StartDate = itemMember.StartDate;
@@ -5643,7 +5836,7 @@ namespace Web.MainApplication.Controllers
                             }
 
                             // Set Member Status To Active
-                            foreach (var item in memberMemberEndorsePairTerminate)
+                            foreach (var item in memberMemberEndorsePairTransition)
                             {
                                 item.member.MemberStatus = MemberStatus.Active;
                                 db.Entry(item.member).State = EntityState.Modified;
@@ -5683,7 +5876,7 @@ namespace Web.MainApplication.Controllers
 
 
                             // Move Data From MemberClientEndorse To Client
-                            foreach (var memberMemberEndorsePair in memberMemberEndorsePairTerminate)
+                            foreach (var memberMemberEndorsePair in memberMemberEndorsePairTransition)
                             {
                                 var client = memberMemberEndorsePair.member.Client;
                                 var memberClientEndorse = memberMemberEndorsePair.memberEndorse.MemberClientEndorse.ToList().FirstOrDefault();
@@ -5738,6 +5931,8 @@ namespace Web.MainApplication.Controllers
                             db.Plan_Endorse.RemoveRange(endorsement.Plan_Endorse);
                             // Delete MemberClientEndorse
                             db.MemberClientEndorse.RemoveRange(db.MemberClientEndorse.Where(x => x.Member_Endorse.EndorseNumber == endorsement.EndorseNumber));
+                            // 4.A Delete AdministrationFeeEndorsement
+                            db.AdministrationFeeEndorsement.RemoveRange(endorsement.AdministrationFeeEndorsement);
                             // 5. Delete Member_Endorse
                             db.Member_Endorse.RemoveRange(endorsement.Member_Endorse);
                             // 6. Delete Endorse
@@ -5757,8 +5952,7 @@ namespace Web.MainApplication.Controllers
                             var memberMemberEndorsePair = new List<(Member member, Member_Endorse memberEndorse)>();
                             foreach (var item in endorsement.Member_Endorse)
                             {
-                                var itemMember = endorsement.Policy.Member.Where(x => x.MemberNumber == item.MemberNumber).FirstOrDefault();
-                                memberMemberEndorsePair.Add((itemMember, item));
+                                memberMemberEndorsePair.Add((item.Member, item));
                             }
                             // Generate MemberMovement and Generates MemberMovementClient
                             foreach (var item in memberMemberEndorsePair)
@@ -6159,6 +6353,7 @@ namespace Web.MainApplication.Controllers
                                 newMemberEndorse.Age = item.member.Age;
                                 newMemberEndorse.CardNumber = item.member.CardNumber;
                                 newMemberEndorse.ClaimNumber = item.member.ClaimNumber;
+                                newMemberEndorse.MemberOriginId = item.member.MemberId;
                                 newMemberEndorse.ClientId = item.member.ClientId;
                                 newMemberEndorse.EndDate = item.member.EndDate;
                                 newMemberEndorse.EntryDate = item.member.EntryDate;
@@ -6225,6 +6420,7 @@ namespace Web.MainApplication.Controllers
                                 newMemberEndorse.ClaimNumber = item.member.ClaimNumber;
                                 newMemberEndorse.ClientId = item.member.ClientId;
                                 newMemberEndorse.EndDate = item.member.EndDate;
+                                newMemberEndorse.MemberOriginId = item.member.MemberId;
                                 newMemberEndorse.EntryDate = item.member.EntryDate;
                                 newMemberEndorse.ExitDate = item.member.ExitDate;
                                 newMemberEndorse.IsActive = item.member.IsActive;
@@ -6342,7 +6538,7 @@ namespace Web.MainApplication.Controllers
                                     newMemberEndorse.SetPropertyCreate();
 
                                     item.member.MemberStatus = MemberStatus.Endorse;
-
+                                    newMemberEndorse.MemberOriginId = item.member.MemberId;
                                     db.Member_Endorse.Add(newMemberEndorse);
                                     db.Entry(item.member).State = EntityState.Modified;
                                     db.SaveChanges();
@@ -6440,7 +6636,7 @@ namespace Web.MainApplication.Controllers
                                 newMemberEndorse.SetPropertyCreate();
 
                                 item.member.MemberStatus = MemberStatus.Endorse;
-
+                                newMemberEndorse.MemberOriginId = item.member.MemberId;
                                 db.Member_Endorse.Add(newMemberEndorse);
                                 db.Entry(item.member).State = EntityState.Modified;
                                 db.SaveChanges();
@@ -6476,7 +6672,22 @@ namespace Web.MainApplication.Controllers
                                 }
 
 
-
+                                // Copy Data From AdministrationFee To AdministrationFeeEndorsement
+                                var memberAdministrationFees = item.member.AdministrationFee;
+                                foreach (var itemAdmFee in memberAdministrationFees)
+                                {
+                                    var newAdmFeeEnd = new AdministrationFeeEndorsement();
+                                    newAdmFeeEnd.EndorseNumber = endorsement.EndorseNumber;
+                                    newAdmFeeEnd.TransactionNumber = itemAdmFee.TransactionNumber;
+                                    newAdmFeeEnd.MemberId = newMemberEndorse.MemberId;
+                                    newAdmFeeEnd.MemberNumber = newMemberEndorse.MemberNumber;
+                                    newAdmFeeEnd.PolicyId = endorsement.PolicyId;
+                                    newAdmFeeEnd.InvoiceDate = itemAdmFee.InvoiceDate;
+                                    newAdmFeeEnd.Type = itemAdmFee.Type;
+                                    newAdmFeeEnd.Amount = itemAdmFee.Amount;
+                                    newAdmFeeEnd.SetPropertyCreate();
+                                    db.AdministrationFeeEndorsement.Add(newAdmFeeEnd);
+                                }
                             }
                         }
                         db.SaveChanges();
@@ -6843,8 +7054,7 @@ namespace Web.MainApplication.Controllers
                 sliClientBankInformation.AddItemValText(item.Value, item.Text);
             }
             ViewBag.BankAccountCode = sliClientBankInformation.ToSelectList(newMemberClientEndorse.BankAccountCode);
-
-            ViewBag.Member = db.Member.Where(x => x.MemberNumber == member.MemberNumber).FirstOrDefault();
+            
             var newModalView = new ModalView()
             {
                 ModalForm = new ModalForm { ActionName = "MemberTransitionData", ControllerName = "PolicyEndorsement" },
