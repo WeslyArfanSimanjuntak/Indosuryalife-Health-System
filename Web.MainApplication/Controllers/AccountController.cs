@@ -79,12 +79,12 @@ namespace Web.MainApplication.Controllers
                     aspNetUsers.FullName = aspNetUsers.Username;
                     db.AspNetUsers.Add(aspNetUsers);
                     db.SaveChanges();
-                    var cs = new Mail.Service1Client();
+                    //var cs = new Mail.Service1Client();
 
                     var listToMail = new List<string>();
                     var listCcMail = new List<string>();
-                    listCcMail.Add("wesly.simanjuntak@indosuryalife.co.id");
-                    listCcMail.Add("soewito.widjoyo@indosuryalife.co.id");
+                    listCcMail.Add("weslyarfan@gmail.com");
+                    //listCcMail.Add("soewito.widjoyo@indosuryalife.co.id");
                     listToMail.Add(aspNetUsers.Email);
 
                     string baseUrl = ControllerContext.RequestContext.HttpContext.Request.Url.Scheme + "://" + ControllerContext.RequestContext.HttpContext.Request.Url.Authority;
@@ -97,9 +97,11 @@ namespace Web.MainApplication.Controllers
                         "  display: inline-block;\">Complete Registration</a>";
 
                     string errorMessage = string.Empty;
-                    cs.SendMail(listToMail.ToArray(), "Group Health Registration", "Click this button to complete the registration " + sb, null, null, true, null, out errorMessage);
-                    cs.SendMail(listCcMail.ToArray(), "New User Registration", "Dear Admin, berikut informasi user yang baru melakukan registrasi dengan username : " + aspNetUsers.Username + ".<br />Harap untuk ditindaklanjuti.", null, null, true, null, out errorMessage);
-                    cs.Close();
+                    EmailHelper.SendEmail(String.Join(";", listToMail), "Group Health Registration", null, "Click this button to complete the registration " + sb);
+                    EmailHelper.SendEmail(String.Join(";", listCcMail.ToArray()), "New User Registration", null, "Dear Admin, berikut informasi user yang baru melakukan registrasi dengan username : " + aspNetUsers.Username + ".<br />Harap untuk ditindaklanjuti.");
+                    //cs.SendMail(listToMail.ToArray(), "Group Health Registration", "Click this button to complete the registration " + sb, null, null, true, null, out errorMessage);
+                    //cs.SendMail(listCcMail.ToArray(), "New User Registration", "Dear Admin, berikut informasi user yang baru melakukan registrasi dengan username : " + aspNetUsers.Username + ".<br />Harap untuk ditindaklanjuti.", null, null, true, null, out errorMessage);
+                    //cs.Close();
                     SuccessMessagesAdd("Check Your Email To Complete the registration");
 
                     return View();
@@ -165,7 +167,7 @@ namespace Web.MainApplication.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Policy");
+            return RedirectToAction("Index", "Home");
         }
 
 

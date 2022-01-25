@@ -19,7 +19,7 @@ namespace Web.MainApplication.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class SystemResources {
@@ -61,7 +61,7 @@ namespace Web.MainApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indosuryalife Health System.
+        ///   Looks up a localized string similar to Application Name.
         /// </summary>
         public static string ApplicationName {
             get {
@@ -70,7 +70,7 @@ namespace Web.MainApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indosuryalife Health System.
+        ///   Looks up a localized string similar to Application Name.
         /// </summary>
         public static string ApplicationNameShort {
             get {
@@ -106,7 +106,7 @@ namespace Web.MainApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ISL Health.
+        ///   Looks up a localized string similar to Company Name.
         /// </summary>
         public static string CompanyName {
             get {
@@ -115,7 +115,7 @@ namespace Web.MainApplication.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to indosuryalifehealthsystem.com.
+        ///   Looks up a localized string similar to companywebsite.com.
         /// </summary>
         public static string CompanyWebSite {
             get {
